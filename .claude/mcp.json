@@ -1,0 +1,61 @@
+{
+  "mcpServers": {
+    "perplexity-mcp": {
+      "env": {
+        "PERPLEXITY_API_KEY": "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",
+        "PERPLEXITY_MODEL": "sonar"
+      },
+      "command": "uvx",
+      "args": [
+        "perplexity-mcp"
+      ]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    },
+    "exa": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.exa.ai/mcp?exaApiKey=0d15573c-bc28-4ef0-952d-dfc607cb124b"
+      ]
+    },
+    "sequentialthinking": {
+      "url": "https://remote.mcpservers.org/sequentialthinking/mcp"
+    },
+    "semgrep": {
+      "command": "uvx",
+      "args": [
+        "semgrep-mcp"
+      ]
+    },
+  "Ref": {
+    "command": "npx",
+    "args": ["ref-tools-mcp@latest"],
+    "env": {
+      "REF_API_KEY": "ref-bb70dbbc2c328eb6f1c6"
+    }
+  },
+      "vercel": {
+        "command": "npx",
+        "args": ["vercel-mcp VERCEL_API_KEY=vuyaTF0VVgJxNCcoW9wWyxsp"]
+  
+      },
+  "supabase": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "@supabase/mcp-server-supabase@latest",
+      "--access-token",
+      "sbp_b2251c5fd55690fef127ff068d58863b5d87bf0b"
+    ]
+  },
+    "context7": {
+      "url": "https://mcp.context7.com/mcp"
+    }
+  }
+}
