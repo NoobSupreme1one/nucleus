@@ -1,6 +1,7 @@
 import type { Express, RequestHandler } from 'express';
 import { insertUserSchema } from '@shared/validation';
 import type { User } from '@shared/types';
+import { localStorage } from './localStorage';
 
 // Simple in-memory session store for development
 const sessions = new Map<string, any>();
@@ -75,6 +76,9 @@ export async function setupAuth(app: Express) {
         };
         users.set(userId, user);
         
+        // Also store in localStorage for leaderboard integration
+        await localStorage.upsertUser(user);
+        
         // Create session
         const token = `dev-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         sessions.set(token, { user });
@@ -92,6 +96,9 @@ export async function setupAuth(app: Express) {
           message: 'Logged in successfully (development mode)'
         });
       } else {
+        // Ensure existing user is also in localStorage
+        await localStorage.upsertUser(user);
+        
         // Create session for existing user
         const token = `dev-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         sessions.set(token, { user });
@@ -224,6 +231,9 @@ export async function setupAuth(app: Express) {
         updatedAt: new Date()
       };
       users.set(userId, newUser);
+      
+      // Also store in localStorage for leaderboard integration
+      await localStorage.upsertUser(newUser);
 
       // Create session
       const token = `dev-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;

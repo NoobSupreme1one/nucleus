@@ -2,8 +2,9 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth as setupLocalAuth, isAuthenticated as isLocalAuthenticated } from "./localAuth";
+import { localStorage } from "./localStorage";
 import { setupAuth as setupSupabaseAuth, isAuthenticated as isSupabaseAuthenticated } from "./supabaseAuth";
+import { setupAuth as setupLocalAuth, isAuthenticated as isLocalAuthenticated } from "./localAuth";
 import { validateStartupIdea, generateMatchingInsights } from "./services/gemini";
 import { insertIdeaSchema, insertSubmissionSchema, insertMessageSchema } from "@shared/validation";
 import multer from 'multer';
@@ -29,23 +30,26 @@ const upload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware - use Supabase auth if configured, otherwise fall back to local auth
-  const useSupabaseAuth = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // Use local auth in development, Supabase in production
+  const isProduction = process.env.NODE_ENV === 'production';
   
-  if (useSupabaseAuth) {
+  if (isProduction) {
     await setupSupabaseAuth(app);
   } else {
     await setupLocalAuth(app);
   }
 
   // Helper function to get the appropriate authentication middleware
-  const getAuthMiddleware = () => useSupabaseAuth ? isSupabaseAuthenticated : isLocalAuthenticated;
+  const getAuthMiddleware = () => isProduction ? isSupabaseAuthenticated : isLocalAuthenticated;
+  
+  // Helper function to get the appropriate storage
+  const getStorage = () => isProduction ? storage : localStorage;
 
   // Leaderboard routes
   app.get('/api/leaderboard', async (req, res) => {
     try {
       const limit = parseInt(req.query.limit as string) || 100;
-      const leaderboard = await storage.getLeaderboard(limit);
+      const leaderboard = await getStorage().getLeaderboard(limit);
       res.json(leaderboard);
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
@@ -60,24 +64,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertIdeaSchema.parse({ ...req.body, userId });
       
       // Create the idea first
-      const idea = await storage.createIdea(validatedData);
+      const idea = await getStorage().createIdea(validatedData);
       
-      // Validate with Perplexity
-      const validation = await validateStartupIdea({
-        title: validatedData.title,
-        marketCategory: validatedData.marketCategory,
-        problemDescription: validatedData.problemDescription,
-        solutionDescription: validatedData.solutionDescription,
-        targetAudience: validatedData.targetAudience
-      });
+      // Validate with Gemini AI
+      const validation = await validateStartupIdea(
+        validatedData.title,
+        validatedData.marketCategory,
+        validatedData.problemDescription,
+        validatedData.solutionDescription,
+        validatedData.targetAudience
+      );
       
       // Update idea with validation results
-      await storage.updateIdeaValidation(idea.id, validation.score, validation.analysisReport);
+      await getStorage().updateIdeaValidation(idea.id, validation.overallScore, validation);
       
       // Update user's total idea score (use highest score)
-      const userIdeas = await storage.getUserIdeas(userId);
-      const highestScore = Math.max(...userIdeas.map(i => i.validationScore || 0), validation.score);
-      await storage.updateUserIdeaScore(userId, highestScore);
+      const userIdeas = await getStorage().getUserIdeas(userId);
+      const highestScore = Math.max(...userIdeas.map(i => i.validationScore || 0), validation.overallScore);
+      await getStorage().updateUserIdeaScore(userId, highestScore);
       
       res.json({ ideaId: idea.id, validation });
     } catch (error) {
@@ -88,7 +92,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/ideas/:id', getAuthMiddleware(), async (req: any, res) => {
     try {
-      const idea = await storage.getIdea(req.params.id);
+      const idea = await getStorage().getIdea(req.params.id);
       if (!idea) {
         return res.status(404).json({ message: "Idea not found" });
       }
@@ -109,7 +113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/ideas', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
-      const ideas = await storage.getUserIdeas(userId);
+      const ideas = await getStorage().getUserIdeas(userId);
       res.json(ideas);
     } catch (error) {
       console.error("Error fetching user ideas:", error);
@@ -129,7 +133,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fileUrls
       });
       
-      const submission = await storage.createSubmission(validatedData);
+      const submission = await getStorage().createSubmission(validatedData);
       res.json(submission);
     } catch (error) {
       console.error("Error creating submission:", error);
@@ -140,7 +144,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/submissions', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
-      const submissions = await storage.getUserSubmissions(userId);
+      const submissions = await getStorage().getUserSubmissions(userId);
       res.json(submissions);
     } catch (error) {
       console.error("Error fetching submissions:", error);
@@ -150,7 +154,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/submissions/:id', [getAuthMiddleware(), upload.array('files', 5)], async (req: any, res) => {
     try {
-      const submission = await storage.getSubmission(req.params.id);
+      const submission = await getStorage().getSubmission(req.params.id);
       if (!submission) {
         return res.status(404).json({ message: "Submission not found" });
       }
@@ -162,7 +166,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const fileUrls = req.files ? req.files.map((file: any) => `/uploads/${file.filename}`) : submission.fileUrls;
       
-      const updatedSubmission = await storage.updateSubmission(req.params.id, {
+      const updatedSubmission = await getStorage().updateSubmission(req.params.id, {
         ...req.body,
         fileUrls
       });
@@ -179,7 +183,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.id;
       const limit = parseInt(req.query.limit as string) || 10;
-      const potentialMatches = await storage.findPotentialMatches(userId, limit);
+      const potentialMatches = await getStorage().findPotentialMatches(userId, limit);
       res.json(potentialMatches);
     } catch (error) {
       console.error("Error fetching potential matches:", error);
@@ -197,7 +201,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Check if match already exists
-      const existingMatches = await storage.getUserMatches(userId);
+      const existingMatches = await getStorage().getUserMatches(userId);
       const existingMatch = existingMatches.find(m => 
         (m.user1Id === userId && m.user2Id === targetUserId) ||
         (m.user1Id === targetUserId && m.user2Id === userId)
@@ -205,13 +209,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (existingMatch) {
         // Update existing match
-        const updatedMatch = await storage.updateMatchInterest(existingMatch.id, userId, interested);
+        const updatedMatch = await getStorage().updateMatchInterest(existingMatch.id, userId, interested);
         return res.json(updatedMatch);
       }
       
       // Create new match
-      const currentUser = await storage.getUser(userId);
-      const targetUser = await storage.getUser(targetUserId);
+      const currentUser = await getStorage().getUser(userId);
+      const targetUser = await getStorage().getUser(targetUserId);
       
       if (!currentUser || !targetUser) {
         return res.status(404).json({ message: "User not found" });
@@ -220,7 +224,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate compatibility score
       const insights = await generateMatchingInsights(currentUser, targetUser);
       
-      const match = await storage.createMatch({
+      const match = await getStorage().createMatch({
         user1Id: userId,
         user2Id: targetUserId,
         compatibilityScore: insights.compatibilityScore,
@@ -238,7 +242,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/matches', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
-      const matches = await storage.getUserMatches(userId);
+      const matches = await getStorage().getUserMatches(userId);
       res.json(matches);
     } catch (error) {
       console.error("Error fetching matches:", error);
@@ -249,7 +253,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/matches/mutual', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
-      const mutualMatches = await storage.getMutualMatches(userId);
+      const mutualMatches = await getStorage().getMutualMatches(userId);
       res.json(mutualMatches);
     } catch (error) {
       console.error("Error fetching mutual matches:", error);
@@ -265,7 +269,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { content } = req.body;
       
       // Verify user is part of this match
-      const match = await storage.getMatch(matchId);
+      const match = await getStorage().getMatch(matchId);
       if (!match || (match.user1Id !== userId && match.user2Id !== userId)) {
         return res.status(403).json({ message: "Access denied" });
       }
@@ -276,7 +280,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         content
       });
       
-      const message = await storage.createMessage(validatedData);
+      const message = await getStorage().createMessage(validatedData);
       res.json(message);
     } catch (error) {
       console.error("Error creating message:", error);
@@ -290,12 +294,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { matchId } = req.params;
       
       // Verify user is part of this match
-      const match = await storage.getMatch(matchId);
+      const match = await getStorage().getMatch(matchId);
       if (!match || (match.user1Id !== userId && match.user2Id !== userId)) {
         return res.status(403).json({ message: "Access denied" });
       }
       
-      const messages = await storage.getMatchMessages(matchId);
+      const messages = await getStorage().getMatchMessages(matchId);
       res.json(messages);
     } catch (error) {
       console.error("Error fetching messages:", error);

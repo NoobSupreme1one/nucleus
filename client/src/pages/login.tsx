@@ -13,7 +13,9 @@ import { apiRequest } from "@/lib/queryClient";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -28,6 +30,8 @@ export default function Login() {
     defaultValues: {
       email: "",
       password: "",
+      firstName: "",
+      lastName: "",
     },
   });
 
@@ -76,6 +80,44 @@ export default function Login() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              {isSignUp && (
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>First Name</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="First name" 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Name</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Last name" 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
+              
               <FormField
                 control={form.control}
                 name="email"
@@ -103,7 +145,7 @@ export default function Login() {
                     <FormControl>
                       <Input 
                         type="password"
-                        placeholder="Enter your password" 
+                        placeholder={isSignUp ? "Create a password (min 6 characters)" : "Enter your password"} 
                         {...field} 
                       />
                     </FormControl>
@@ -138,11 +180,6 @@ export default function Login() {
             </p>
           </div>
 
-          <div className="mt-4 text-center">
-            <p className="text-xs text-gray-500">
-              Development Mode: Use any email/password combination
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>
