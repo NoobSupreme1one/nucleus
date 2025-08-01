@@ -75,7 +75,7 @@ export default function Dashboard() {
               <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
                 <i className="fas fa-handshake text-white text-sm"></i>
               </div>
-              <span className="text-xl font-bold text-gray-900">FounderMatch</span>
+              <span className="text-xl font-bold text-gray-900">Nucleus</span>
             </div>
             
             <div className="flex items-center space-x-4">

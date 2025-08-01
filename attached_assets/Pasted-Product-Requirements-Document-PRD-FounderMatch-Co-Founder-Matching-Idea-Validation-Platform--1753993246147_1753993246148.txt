@@ -1,9 +1,9 @@
 Product Requirements Document (PRD)
-FounderMatch - Co-Founder Matching & Idea Validation Platform
+Nucleus - Co-Founder Matching & Idea Validation Platform
 
 1. Executive Summary
 1.1 Product Overview
-FounderMatch is a revolutionary co-founder matching platform that combines startup idea validation with skill-based founder matching through a proof-of-work approach. Users validate their startup ideas, choose their role (Engineer/Designer/Marketer), and create portfolio submissions to match with complementary co-founders.
+Nucleus is a revolutionary co-founder matching platform that combines startup idea validation with skill-based founder matching through a proof-of-work approach. Users validate their startup ideas, choose their role (Engineer/Designer/Marketer), and create portfolio submissions to match with complementary co-founders.
 
 1.2 Mission Statement
 To eliminate the two biggest barriers to startup success: finding the right co-founder and validating market-ready ideas through a seamless, evidence-based matching experience.
@@ -981,9 +981,9 @@ Operations: $200K - $300K
 Total: $1.3M - $2M for Year 1
 
 14. Conclusion
-FounderMatch represents a unique opportunity to address two critical pain points in the startup ecosystem: idea validation and co-founder matching. By combining these needs with a proof-of-work approach and enterprise monetization strategy, the platform can achieve sustainable growth while creating genuine value for entrepreneurs and investors.
+Nucleus represents a unique opportunity to address two critical pain points in the startup ecosystem: idea validation and co-founder matching. By combining these needs with a proof-of-work approach and enterprise monetization strategy, the platform can achieve sustainable growth while creating genuine value for entrepreneurs and investors.
 
-The differentiated approach of portfolio-based matching, comprehensive idea validation, and multi-tier monetization positions FounderMatch for rapid adoption and strong unit economics. With proper execution of this PRD, the platform can become the definitive solution for serious entrepreneurs seeking validated ideas and qualified co-founders.
+The differentiated approach of portfolio-based matching, comprehensive idea validation, and multi-tier monetization positions Nucleus for rapid adoption and strong unit economics. With proper execution of this PRD, the platform can become the definitive solution for serious entrepreneurs seeking validated ideas and qualified co-founders.
 
 Next Steps:
 
@@ -997,4 +997,4 @@ Initiate early enterprise partnership discussions
 
 Establish legal and compliance framework
 
-The startup co-founder matching market is ripe for disruption, and FounderMatch's unique value proposition provides a compelling opportunity to capture significant market share while building a sustainable, profitable business.
+The startup co-founder matching market is ripe for disruption, and Nucleus's unique value proposition provides a compelling opportunity to capture significant market share while building a sustainable, profitable business.

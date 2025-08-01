@@ -23,7 +23,7 @@ export default function Landing() {
               <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
                 <i className="fas fa-handshake text-white text-sm"></i>
               </div>
-              <span className="text-xl font-bold text-gray-900">FounderMatch</span>
+              <span className="text-xl font-bold text-gray-900">Nucleus</span>
             </div>
             
             <div className="hidden md:flex items-center space-x-8">
@@ -161,7 +161,7 @@ export default function Landing() {
       <section id="features" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How FounderMatch Works</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How Nucleus Works</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Our unique proof-of-work approach ensures you find co-founders based on demonstrated skills, not just credentials.
             </p>
@@ -217,7 +217,7 @@ export default function Landing() {
             Ready to Find Your Co-Founder?
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join thousands of entrepreneurs who are validating ideas and building teams on FounderMatch.
+            Join thousands of entrepreneurs who are validating ideas and building teams on Nucleus.
           </p>
           <Button 
             size="lg"

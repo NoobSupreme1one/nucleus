@@ -2,7 +2,8 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./localAuth";
+import { setupAuth as setupLocalAuth, isAuthenticated as isLocalAuthenticated } from "./localAuth";
+import { setupAuth as setupSupabaseAuth, isAuthenticated as isSupabaseAuthenticated } from "./supabaseAuth";
 import { validateStartupIdea, generateMatchingInsights } from "./services/gemini";
 import { insertIdeaSchema, insertSubmissionSchema, insertMessageSchema } from "@shared/validation";
 import multer from 'multer';
@@ -28,8 +29,17 @@ const upload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
-  await setupAuth(app);
+  // Auth middleware - use Supabase auth if configured, otherwise fall back to local auth
+  const useSupabaseAuth = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (useSupabaseAuth) {
+    await setupSupabaseAuth(app);
+  } else {
+    await setupLocalAuth(app);
+  }
+
+  // Helper function to get the appropriate authentication middleware
+  const getAuthMiddleware = () => useSupabaseAuth ? isSupabaseAuthenticated : isLocalAuthenticated;
 
   // Leaderboard routes
   app.get('/api/leaderboard', async (req, res) => {
@@ -44,7 +54,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Idea validation routes
-  app.post('/api/ideas/validate', isAuthenticated, async (req: any, res) => {
+  app.post('/api/ideas/validate', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
       const validatedData = insertIdeaSchema.parse({ ...req.body, userId });
@@ -76,7 +86,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/ideas/:id', isAuthenticated, async (req: any, res) => {
+  app.get('/api/ideas/:id', getAuthMiddleware(), async (req: any, res) => {
     try {
       const idea = await storage.getIdea(req.params.id);
       if (!idea) {
@@ -96,7 +106,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/ideas', isAuthenticated, async (req: any, res) => {
+  app.get('/api/ideas', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
       const ideas = await storage.getUserIdeas(userId);
@@ -108,9 +118,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Submission routes
-  app.post('/api/submissions', [isAuthenticated, upload.array('files', 5)], async (req: any, res) => {
+  app.post('/api/submissions', [getAuthMiddleware(), upload.array('files', 5)], async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+              const userId = req.user.id;
       const fileUrls = req.files ? req.files.map((file: any) => `/uploads/${file.filename}`) : [];
       
       const validatedData = insertSubmissionSchema.parse({
@@ -127,7 +137,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/submissions', isAuthenticated, async (req: any, res) => {
+  app.get('/api/submissions', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
       const submissions = await storage.getUserSubmissions(userId);
@@ -138,7 +148,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/submissions/:id', [isAuthenticated, upload.array('files', 5)], async (req: any, res) => {
+  app.put('/api/submissions/:id', [getAuthMiddleware(), upload.array('files', 5)], async (req: any, res) => {
     try {
       const submission = await storage.getSubmission(req.params.id);
       if (!submission) {
@@ -165,7 +175,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Matching routes
-  app.get('/api/matches/potential', isAuthenticated, async (req: any, res) => {
+  app.get('/api/matches/potential', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
       const limit = parseInt(req.query.limit as string) || 10;
@@ -177,7 +187,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/matches', isAuthenticated, async (req: any, res) => {
+  app.post('/api/matches', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
       const { targetUserId, interested } = req.body;
@@ -225,7 +235,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/matches', isAuthenticated, async (req: any, res) => {
+  app.get('/api/matches', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
       const matches = await storage.getUserMatches(userId);
@@ -236,7 +246,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/matches/mutual', isAuthenticated, async (req: any, res) => {
+  app.get('/api/matches/mutual', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
       const mutualMatches = await storage.getMutualMatches(userId);
@@ -248,7 +258,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Message routes
-  app.post('/api/matches/:matchId/messages', isAuthenticated, async (req: any, res) => {
+  app.post('/api/matches/:matchId/messages', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
       const { matchId } = req.params;
@@ -274,7 +284,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/matches/:matchId/messages', isAuthenticated, async (req: any, res) => {
+  app.get('/api/matches/:matchId/messages', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
       const { matchId } = req.params;
