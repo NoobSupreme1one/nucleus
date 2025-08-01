@@ -96,7 +96,7 @@ Respond with valid JSON only.`;
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'llama-3.1-sonar-small-128k-online',
+        model: 'sonar',
         messages: [
           {
             role: 'system',
@@ -118,7 +118,13 @@ Respond with valid JSON only.`;
     });
 
     if (!response.ok) {
-      throw new Error(`Perplexity API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error(`Perplexity API error details:`, {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText
+      });
+      throw new Error(`Perplexity API error: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
     const data: PerplexityResponse = await response.json();
@@ -260,7 +266,7 @@ Respond with JSON format: {"compatibilityScore": number, "insights": "detailed e
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'llama-3.1-sonar-small-128k-online',
+        model: 'sonar',
         messages: [
           {
             role: 'system',

@@ -6,6 +6,7 @@ import { localStorage } from "./localStorage";
 import { setupAuth as setupSupabaseAuth, isAuthenticated as isSupabaseAuthenticated } from "./supabaseAuth";
 import { setupAuth as setupLocalAuth, isAuthenticated as isLocalAuthenticated } from "./localAuth";
 import { validateStartupIdea, generateMatchingInsights } from "./services/gemini";
+import { performComprehensiveValidation } from "./services/enhanced-validation";
 import { insertIdeaSchema, insertSubmissionSchema, insertMessageSchema } from "@shared/validation";
 import multer from 'multer';
 import path from 'path';
@@ -66,8 +67,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create the idea first
       const idea = await getStorage().createIdea(validatedData);
       
-      // Validate with Gemini AI
-      const validation = await validateStartupIdea(
+      // Perform comprehensive validation with enhanced analysis
+      const validation = await performComprehensiveValidation(
         validatedData.title,
         validatedData.marketCategory,
         validatedData.problemDescription,
@@ -107,6 +108,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching idea:", error);
       res.status(500).json({ message: "Failed to fetch idea" });
+    }
+  });
+
+  // Pro Report Generation
+  app.post('/api/ideas/:id/generate-pro-report', getAuthMiddleware(), async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const ideaId = req.params.id;
+      
+      // Check if user is Pro subscriber
+      const user = await getStorage().getUser(userId);
+      if (!user || user.subscriptionTier !== 'pro') {
+        return res.status(403).json({ message: "Pro subscription required" });
+      }
+      
+      // Get the idea
+      const idea = await getStorage().getIdea(ideaId);
+      if (!idea || idea.userId !== userId) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+      
+      // Generate enhanced Pro report
+      const proReport = await generateProValidationReport(
+        idea.title,
+        idea.marketCategory,
+        idea.problemDescription,
+        idea.solutionDescription,
+        idea.targetAudience
+      );
+      
+      // Update idea with Pro report
+      const currentAnalysis = idea.analysisReport as any || {};
+      const updatedAnalysis = {
+        ...currentAnalysis,
+        proReport,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      await getStorage().updateIdeaValidation(ideaId, idea.validationScore || 0, updatedAnalysis);
+      
+      res.json({ success: true, proReport });
+    } catch (error) {
+      console.error("Error generating Pro report:", error);
+      res.status(500).json({ message: "Failed to generate Pro report" });
     }
   });
 
