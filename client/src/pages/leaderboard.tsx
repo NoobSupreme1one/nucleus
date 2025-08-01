@@ -10,7 +10,7 @@ import LeaderboardCard from "@/components/LeaderboardCard";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import type { User } from "@shared/schema";
+import type { User } from "@shared/types";
 
 export default function Leaderboard() {
   const [, setLocation] = useLocation();

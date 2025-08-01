@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { User } from "@shared/schema";
+import type { User } from "@shared/types";
 
 interface LeaderboardCardProps {
   user: User;

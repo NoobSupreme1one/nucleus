@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import type { User } from "@shared/schema";
+import type { User } from "@shared/types";
 import LeaderboardCard from "@/components/LeaderboardCard";
 
 export default function Landing() {

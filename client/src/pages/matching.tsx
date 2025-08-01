@@ -8,7 +8,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { useAuth } from "@/hooks/useAuth";
 import ProfileCard from "@/components/ProfileCard";
-import type { User } from "@shared/schema";
+import type { User } from "@shared/types";
 
 export default function Matching() {
   const [, setLocation] = useLocation();

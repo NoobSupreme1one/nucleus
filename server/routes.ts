@@ -2,9 +2,9 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
-import { validateStartupIdea, generateMatchingInsights } from "./services/perplexity";
-import { insertIdeaSchema, insertSubmissionSchema, insertMessageSchema } from "@shared/schema";
+import { setupAuth, isAuthenticated } from "./localAuth";
+import { validateStartupIdea, generateMatchingInsights } from "./services/gemini";
+import { insertIdeaSchema, insertSubmissionSchema, insertMessageSchema } from "@shared/validation";
 import multer from 'multer';
 import path from 'path';
 
@@ -31,42 +31,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
-
-  // User profile routes
-  app.put('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const { role, location, bio } = req.body;
-      
-      const updatedUser = await storage.upsertUser({
-        id: userId,
-        email: req.user.claims.email,
-        firstName: req.user.claims.first_name,
-        lastName: req.user.claims.last_name,
-        profileImageUrl: req.user.claims.profile_image_url,
-        role,
-        location,
-        bio,
-      });
-      
-      res.json(updatedUser);
-    } catch (error) {
-      console.error("Error updating user:", error);
-      res.status(500).json({ message: "Failed to update user profile" });
-    }
-  });
-
   // Leaderboard routes
   app.get('/api/leaderboard', async (req, res) => {
     try {
@@ -82,7 +46,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Idea validation routes
   app.post('/api/ideas/validate', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const validatedData = insertIdeaSchema.parse({ ...req.body, userId });
       
       // Create the idea first
@@ -120,7 +84,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Check if user owns this idea
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       if (idea.userId !== userId) {
         return res.status(403).json({ message: "Access denied" });
       }
@@ -134,7 +98,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/ideas', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const ideas = await storage.getUserIdeas(userId);
       res.json(ideas);
     } catch (error) {
@@ -165,7 +129,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/submissions', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const submissions = await storage.getUserSubmissions(userId);
       res.json(submissions);
     } catch (error) {
@@ -181,7 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Submission not found" });
       }
       
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       if (submission.userId !== userId) {
         return res.status(403).json({ message: "Access denied" });
       }
@@ -203,7 +167,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Matching routes
   app.get('/api/matches/potential', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const limit = parseInt(req.query.limit as string) || 10;
       const potentialMatches = await storage.findPotentialMatches(userId, limit);
       res.json(potentialMatches);
@@ -215,7 +179,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/matches', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { targetUserId, interested } = req.body;
       
       if (!targetUserId) {
@@ -263,7 +227,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/matches', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const matches = await storage.getUserMatches(userId);
       res.json(matches);
     } catch (error) {
@@ -274,7 +238,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/matches/mutual', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const mutualMatches = await storage.getMutualMatches(userId);
       res.json(mutualMatches);
     } catch (error) {
@@ -286,7 +250,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Message routes
   app.post('/api/matches/:matchId/messages', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { matchId } = req.params;
       const { content } = req.body;
       
@@ -312,7 +276,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/matches/:matchId/messages', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { matchId } = req.params;
       
       // Verify user is part of this match

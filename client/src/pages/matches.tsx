@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { useEffect } from "react";
-import type { Match, Message, User } from "@shared/schema";
+import type { Match, Message, User } from "@shared/types";
 
 export default function Matches() {
   const [, setLocation] = useLocation();

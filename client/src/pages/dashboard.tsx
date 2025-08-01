@@ -8,7 +8,7 @@ import LeaderboardCard from "@/components/LeaderboardCard";
 import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import type { User, Match, Idea } from "@shared/schema";
+import type { User, Match, Idea } from "@shared/types";
 
 export default function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();

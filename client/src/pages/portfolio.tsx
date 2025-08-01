@@ -17,7 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { useEffect } from "react";
-import type { Submission } from "@shared/schema";
+import type { Submission } from "@shared/types";
 
 const profileSchema = z.object({
   role: z.enum(['engineer', 'designer', 'marketer']),

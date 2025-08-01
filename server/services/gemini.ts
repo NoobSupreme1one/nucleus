@@ -1,9 +1,7 @@
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || ""
-});
+// Initialize Google Gemini
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY || '');
 
 export interface IdeaValidationResult {
   overallScore: number;
@@ -31,6 +29,12 @@ export async function validateStartupIdea(
   targetAudience: string
 ): Promise<IdeaValidationResult> {
   try {
+    if (!process.env.GOOGLE_GEMINI_API_KEY) {
+      throw new Error("GOOGLE_GEMINI_API_KEY is not configured");
+    }
+
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
     const prompt = `
     You are a startup validation expert. Analyze the following startup idea and provide a comprehensive assessment with a score out of 1000 points.
 
@@ -69,35 +73,29 @@ export async function validateStartupIdea(
     Provide specific, actionable recommendations and be realistic in your assessment.
     `;
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: "You are a startup validation expert with deep knowledge of market analysis, technical feasibility, and business strategy. Provide thorough, realistic assessments."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      response_format: { type: "json_object" },
-      temperature: 0.7,
-    });
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    
+    // Extract JSON from the response
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('No valid JSON found in Gemini response');
+    }
 
-    const result = JSON.parse(response.choices[0].message.content || '{}');
+    const resultData = JSON.parse(jsonMatch[0]);
     
     // Validate the response structure
-    if (!result.overallScore || !result.marketAnalysis || !result.technicalFeasibility) {
-      throw new Error('Invalid response structure from OpenAI');
+    if (!resultData.overallScore || !resultData.marketAnalysis || !resultData.technicalFeasibility) {
+      throw new Error('Invalid response structure from Gemini');
     }
 
     // Ensure score is within valid range
-    result.overallScore = Math.max(0, Math.min(1000, result.overallScore));
-    result.marketAnalysis.score = Math.max(0, Math.min(400, result.marketAnalysis.score));
-    result.technicalFeasibility.score = Math.max(0, Math.min(300, result.technicalFeasibility.score));
+    resultData.overallScore = Math.max(0, Math.min(1000, resultData.overallScore));
+    resultData.marketAnalysis.score = Math.max(0, Math.min(400, resultData.marketAnalysis.score));
+    resultData.technicalFeasibility.score = Math.max(0, Math.min(300, resultData.technicalFeasibility.score));
 
-    return result as IdeaValidationResult;
+    return resultData as IdeaValidationResult;
   } catch (error) {
     console.error('Error validating startup idea:', error);
     throw new Error('Failed to validate startup idea: ' + (error as Error).message);
@@ -110,6 +108,12 @@ export async function generateMatchingInsights(user1: any, user2: any): Promise<
   considerations: string[];
 }> {
   try {
+    if (!process.env.GOOGLE_GEMINI_API_KEY) {
+      throw new Error("GOOGLE_GEMINI_API_KEY is not configured");
+    }
+
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
     const prompt = `
     Analyze the compatibility between these two potential co-founders and provide matching insights.
 
@@ -133,17 +137,20 @@ export async function generateMatchingInsights(user1: any, user2: any): Promise<
     }
     `;
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" },
-      temperature: 0.3,
-    });
-
-    const result = JSON.parse(response.choices[0].message.content || '{}');
-    result.compatibilityScore = Math.max(0, Math.min(100, result.compatibilityScore));
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
     
-    return result;
+    // Extract JSON from the response
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('No valid JSON found in Gemini response');
+    }
+
+    const resultData = JSON.parse(jsonMatch[0]);
+    resultData.compatibilityScore = Math.max(0, Math.min(100, resultData.compatibilityScore));
+    
+    return resultData;
   } catch (error) {
     console.error('Error generating matching insights:', error);
     // Return default compatibility score based on role complementarity
@@ -155,3 +162,19 @@ export async function generateMatchingInsights(user1: any, user2: any): Promise<
     };
   }
 }
+
+export async function generateText(prompt: string): Promise<string> {
+  try {
+    if (!process.env.GOOGLE_GEMINI_API_KEY) {
+      throw new Error("GOOGLE_GEMINI_API_KEY is not configured");
+    }
+
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return response.text();
+  } catch (error) {
+    console.error('Error generating text:', error);
+    throw new Error('Failed to generate text: ' + (error as Error).message);
+  }
+} 

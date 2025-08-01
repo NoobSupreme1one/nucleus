@@ -1,28 +1,24 @@
-import {
-  users,
-  ideas,
-  submissions,
-  matches,
-  messages,
-  type User,
-  type UpsertUser,
-  type InsertIdea,
-  type Idea,
-  type InsertSubmission,
-  type Submission,
-  type InsertMatch,
-  type Match,
-  type InsertMessage,
-  type Message,
-} from "@shared/schema";
-import { db } from "./db";
-import { eq, desc, sql, and, or, ne, isNull } from "drizzle-orm";
+import { prisma } from "./prisma";
+import type {
+  User,
+  InsertUser,
+  Idea,
+  InsertIdea,
+  InsertSubmission,
+  Submission,
+  InsertMatch,
+  Match,
+  InsertMessage,
+  Message,
+  MatchWithUsers,
+  MessageWithSender,
+} from "@shared/types";
 
 // Interface for storage operations
 export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
-  upsertUser(user: UpsertUser): Promise<User>;
+  upsertUser(user: InsertUser): Promise<User>;
   updateUserIdeaScore(userId: string, score: number): Promise<void>;
   getLeaderboard(limit?: number): Promise<User[]>;
   
@@ -41,175 +37,189 @@ export interface IStorage {
   // Match operations
   createMatch(match: InsertMatch): Promise<Match>;
   getMatch(id: string): Promise<Match | undefined>;
-  getUserMatches(userId: string): Promise<(Match & { user1: User; user2: User })[]>;
-  getMutualMatches(userId: string): Promise<(Match & { user1: User; user2: User })[]>;
+  getUserMatches(userId: string): Promise<MatchWithUsers[]>;
+  getMutualMatches(userId: string): Promise<MatchWithUsers[]>;
   updateMatchInterest(matchId: string, userId: string, interested: boolean): Promise<Match>;
   findPotentialMatches(userId: string, limit?: number): Promise<User[]>;
   
   // Message operations
   createMessage(message: InsertMessage): Promise<Message>;
-  getMatchMessages(matchId: string): Promise<(Message & { sender: User })[]>;
+  getMatchMessages(matchId: string): Promise<MessageWithSender[]>;
 }
 
 export class DatabaseStorage implements IStorage {
   // User operations
   async getUser(id: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
+    return await prisma.user.findUnique({
+      where: { id }
+    });
   }
 
-  async upsertUser(userData: UpsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values(userData)
-      .onConflictDoUpdate({
-        target: users.id,
-        set: {
-          ...userData,
-          updatedAt: new Date(),
-        },
-      })
-      .returning();
-    return user;
+  async upsertUser(userData: InsertUser): Promise<User> {
+    return await prisma.user.upsert({
+      where: { id: userData.id },
+      update: {
+        ...userData,
+        updatedAt: new Date(),
+      },
+      create: userData,
+    });
   }
 
   async updateUserIdeaScore(userId: string, score: number): Promise<void> {
-    await db
-      .update(users)
-      .set({ totalIdeaScore: score })
-      .where(eq(users.id, userId));
+    await prisma.user.update({
+      where: { id: userId },
+      data: { totalIdeaScore: score }
+    });
   }
 
   async getLeaderboard(limit = 100): Promise<User[]> {
-    return await db
-      .select()
-      .from(users)
-      .where(ne(users.totalIdeaScore, 0))
-      .orderBy(desc(users.totalIdeaScore))
-      .limit(limit);
+    return await prisma.user.findMany({
+      where: {
+        totalIdeaScore: {
+          not: 0
+        }
+      },
+      orderBy: {
+        totalIdeaScore: 'desc'
+      },
+      take: limit
+    });
   }
 
   // Idea operations
   async createIdea(idea: InsertIdea): Promise<Idea> {
-    const [newIdea] = await db.insert(ideas).values(idea).returning();
-    return newIdea;
+    return await prisma.idea.create({
+      data: idea
+    });
   }
 
   async getIdea(id: string): Promise<Idea | undefined> {
-    const [idea] = await db.select().from(ideas).where(eq(ideas.id, id));
-    return idea;
+    return await prisma.idea.findUnique({
+      where: { id }
+    });
   }
 
   async getUserIdeas(userId: string): Promise<Idea[]> {
-    return await db
-      .select()
-      .from(ideas)
-      .where(eq(ideas.userId, userId))
-      .orderBy(desc(ideas.createdAt));
+    return await prisma.idea.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' }
+    });
   }
 
   async updateIdeaValidation(ideaId: string, score: number, report: any): Promise<void> {
-    await db
-      .update(ideas)
-      .set({ validationScore: score, analysisReport: report })
-      .where(eq(ideas.id, ideaId));
+    await prisma.idea.update({
+      where: { id: ideaId },
+      data: { 
+        validationScore: score, 
+        analysisReport: report 
+      }
+    });
   }
 
   // Submission operations
   async createSubmission(submission: InsertSubmission): Promise<Submission> {
-    const [newSubmission] = await db.insert(submissions).values(submission).returning();
-    return newSubmission;
+    return await prisma.submission.create({
+      data: submission
+    });
   }
 
   async getUserSubmissions(userId: string): Promise<Submission[]> {
-    return await db
-      .select()
-      .from(submissions)
-      .where(eq(submissions.userId, userId))
-      .orderBy(desc(submissions.createdAt));
+    return await prisma.submission.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' }
+    });
   }
 
   async getSubmission(id: string): Promise<Submission | undefined> {
-    const [submission] = await db.select().from(submissions).where(eq(submissions.id, id));
-    return submission;
+    return await prisma.submission.findUnique({
+      where: { id }
+    });
   }
 
   async updateSubmission(id: string, submission: Partial<InsertSubmission>): Promise<Submission> {
-    const [updated] = await db
-      .update(submissions)
-      .set(submission)
-      .where(eq(submissions.id, id))
-      .returning();
-    return updated;
+    return await prisma.submission.update({
+      where: { id },
+      data: submission
+    });
   }
 
   // Match operations
   async createMatch(match: InsertMatch): Promise<Match> {
-    const [newMatch] = await db.insert(matches).values(match).returning();
-    return newMatch;
+    return await prisma.match.create({
+      data: match
+    });
   }
 
   async getMatch(id: string): Promise<Match | undefined> {
-    const [match] = await db.select().from(matches).where(eq(matches.id, id));
-    return match;
+    return await prisma.match.findUnique({
+      where: { id }
+    });
   }
 
-  async getUserMatches(userId: string): Promise<(Match & { user1: User; user2: User })[]> {
-    return await db
-      .select({
-        matches,
-        user1: users,
-        user2: sql<User>`NULL`
-      })
-      .from(matches)
-      .innerJoin(users, eq(matches.user1Id, users.id))
-      .where(or(eq(matches.user1Id, userId), eq(matches.user2Id, userId)))
-      .orderBy(desc(matches.updatedAt)) as any;
+  async getUserMatches(userId: string): Promise<MatchWithUsers[]> {
+    return await prisma.match.findMany({
+      where: {
+        OR: [
+          { user1Id: userId },
+          { user2Id: userId }
+        ]
+      },
+      include: {
+        user1: true,
+        user2: true
+      },
+      orderBy: { updatedAt: 'desc' }
+    });
   }
 
-  async getMutualMatches(userId: string): Promise<(Match & { user1: User; user2: User })[]> {
-    return await db
-      .select({
-        matches,
-        user1: users,
-        user2: sql<User>`NULL`
-      })
-      .from(matches)
-      .innerJoin(users, eq(matches.user1Id, users.id))
-      .where(
-        and(
-          or(eq(matches.user1Id, userId), eq(matches.user2Id, userId)),
-          eq(matches.status, 'mutual')
-        )
-      )
-      .orderBy(desc(matches.updatedAt)) as any;
+  async getMutualMatches(userId: string): Promise<MatchWithUsers[]> {
+    return await prisma.match.findMany({
+      where: {
+        AND: [
+          {
+            OR: [
+              { user1Id: userId },
+              { user2Id: userId }
+            ]
+          },
+          { status: 'mutual' }
+        ]
+      },
+      include: {
+        user1: true,
+        user2: true
+      },
+      orderBy: { updatedAt: 'desc' }
+    });
   }
 
   async updateMatchInterest(matchId: string, userId: string, interested: boolean): Promise<Match> {
     // First get the match to determine which user field to update
-    const [match] = await db.select().from(matches).where(eq(matches.id, matchId));
+    const match = await prisma.match.findUnique({
+      where: { id: matchId }
+    });
     if (!match) throw new Error('Match not found');
 
     const isUser1 = match.user1Id === userId;
-    const updateField = isUser1 ? { user1Interested: interested } : { user2Interested: interested };
+    const updateData = isUser1 
+      ? { user1Interested: interested }
+      : { user2Interested: interested };
 
-    const [updatedMatch] = await db
-      .update(matches)
-      .set({
-        ...updateField,
+    const updatedMatch = await prisma.match.update({
+      where: { id: matchId },
+      data: {
+        ...updateData,
         updatedAt: new Date(),
-      })
-      .where(eq(matches.id, matchId))
-      .returning();
+      }
+    });
 
     // Check if both users are interested to update status
     if (updatedMatch.user1Interested && updatedMatch.user2Interested) {
-      const [finalMatch] = await db
-        .update(matches)
-        .set({ status: 'mutual' })
-        .where(eq(matches.id, matchId))
-        .returning();
-      return finalMatch;
+      return await prisma.match.update({
+        where: { id: matchId },
+        data: { status: 'mutual' }
+      });
     }
 
     return updatedMatch;
@@ -217,47 +227,61 @@ export class DatabaseStorage implements IStorage {
 
   async findPotentialMatches(userId: string, limit = 10): Promise<User[]> {
     // Get user's role to find complementary roles
-    const [currentUser] = await db.select().from(users).where(eq(users.id, userId));
+    const currentUser = await prisma.user.findUnique({
+      where: { id: userId }
+    });
     if (!currentUser) return [];
 
     // Get users already matched with
-    const existingMatches = await db
-      .select({ userId: sql<string>`CASE WHEN ${matches.user1Id} = ${userId} THEN ${matches.user2Id} ELSE ${matches.user1Id} END` })
-      .from(matches)
-      .where(or(eq(matches.user1Id, userId), eq(matches.user2Id, userId)));
+    const existingMatches = await prisma.match.findMany({
+      where: {
+        OR: [
+          { user1Id: userId },
+          { user2Id: userId }
+        ]
+      },
+      select: {
+        user1Id: true,
+        user2Id: true
+      }
+    });
 
-    const excludeUserIds = [userId, ...existingMatches.map(m => m.userId)];
+    const excludeUserIds = [
+      userId, 
+      ...existingMatches.map(m => m.user1Id === userId ? m.user2Id : m.user1Id)
+    ];
 
     // Find users with complementary roles
-    return await db
-      .select()
-      .from(users)
-      .where(
-        and(
-          ne(users.id, userId),
-          isNull(users.role).or(ne(users.role, currentUser.role))
-        )
-      )
-      .orderBy(desc(users.totalIdeaScore))
-      .limit(limit);
+    return await prisma.user.findMany({
+      where: {
+        AND: [
+          { id: { notIn: excludeUserIds } },
+          {
+            OR: [
+              { role: null },
+              { role: { not: currentUser.role } }
+            ]
+          }
+        ]
+      },
+      orderBy: { totalIdeaScore: 'desc' },
+      take: limit
+    });
   }
 
   // Message operations
   async createMessage(message: InsertMessage): Promise<Message> {
-    const [newMessage] = await db.insert(messages).values(message).returning();
-    return newMessage;
+    return await prisma.message.create({
+      data: message
+    });
   }
 
-  async getMatchMessages(matchId: string): Promise<(Message & { sender: User })[]> {
-    return await db
-      .select({
-        messages,
-        sender: users
-      })
-      .from(messages)
-      .innerJoin(users, eq(messages.senderId, users.id))
-      .where(eq(messages.matchId, matchId))
-      .orderBy(messages.createdAt) as any;
+  async getMatchMessages(matchId: string): Promise<MessageWithSender[]> {
+    return await prisma.message.findMany({
+      where: { matchId },
+      include: { sender: true },
+      orderBy: { createdAt: 'asc' }
+    });
   }
 }
 

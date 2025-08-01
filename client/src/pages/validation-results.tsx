@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { Idea } from "@shared/schema";
+import type { Idea } from "@shared/types";
 
 interface ValidationResultsProps {
   params: {

@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum Role {
+  engineer
+  designer
+  marketer
+}
+
+enum SubscriptionTier {
+  free
+  pro
+}
+
+enum MatchStatus {
+  pending
+  mutual
+  declined
+}
+
+enum MarketCategory {
+  saas
+  ecommerce
+  fintech
+  healthtech
+  edtech
+  other
+}
+
+// Session storage table (mandatory for Replit Auth)
+model Session {
+  sid    String   @id
+  sess   Json
+  expire DateTime
+
+  @@map("sessions")
+}
+
+// User storage table (mandatory for Replit Auth)
+model User {
+  id               String           @id @default(cuid())
+  email            String?          @unique
+  firstName        String?          @map("first_name")
+  lastName         String?          @map("last_name")
+  profileImageUrl  String?          @map("profile_image_url")
+  role             Role?
+  location         String?
+  bio              String?
+  subscriptionTier SubscriptionTier @default(free) @map("subscription_tier")
+  totalIdeaScore   Int              @default(0) @map("total_idea_score")
+  profileViews     Int              @default(0) @map("profile_views")
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+
+  // Relations
+  ideas            Idea[]
+  submissions      Submission[]
+  sentMatches      Match[]          @relation("User1Matches")
+  receivedMatches  Match[]          @relation("User2Matches")
+  messages         Message[]
+
+  @@map("users")
+}
+
+model Idea {
+  id                  String         @id @default(cuid())
+  userId              String         @map("user_id")
+  title               String
+  marketCategory      MarketCategory @map("market_category")
+  problemDescription  String         @map("problem_description")
+  solutionDescription String         @map("solution_description")
+  targetAudience      String         @map("target_audience")
+  validationScore     Int            @default(0) @map("validation_score")
+  analysisReport      Json?          @map("analysis_report")
+  createdAt           DateTime       @default(now()) @map("created_at")
+
+  // Relations
+  user                User           @relation(fields: [userId], references: [id])
+
+  @@map("ideas")
+}
+
+model Submission {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  role         Role
+  title        String
+  description  String
+  portfolioUrl String?  @map("portfolio_url")
+  githubUrl    String?  @map("github_url")
+  liveUrl      String?  @map("live_url")
+  fileUrls     String[] @map("file_urls")
+  qualityScore Int      @default(0) @map("quality_score")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@map("submissions")
+}
+
+model Match {
+  id                String      @id @default(cuid())
+  user1Id           String      @map("user1_id")
+  user2Id           String      @map("user2_id")
+  status            MatchStatus @default(pending)
+  compatibilityScore Int        @default(0) @map("compatibility_score")
+  user1Interested   Boolean     @default(false) @map("user1_interested")
+  user2Interested   Boolean     @default(false) @map("user2_interested")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  user1             User        @relation("User1Matches", fields: [user1Id], references: [id])
+  user2             User        @relation("User2Matches", fields: [user2Id], references: [id])
+  messages          Message[]
+
+  @@map("matches")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  matchId   String   @map("match_id")
+  senderId  String   @map("sender_id")
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  match     Match    @relation(fields: [matchId], references: [id])
+  sender    User     @relation(fields: [senderId], references: [id])
+
+  @@map("messages")
+}
