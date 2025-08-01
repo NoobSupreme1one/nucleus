@@ -30,15 +30,15 @@ export default function Landing() {
               <a href="#features" className="text-gray-600 hover:text-primary transition-colors">Features</a>
               <a href="#how-it-works" className="text-gray-600 hover:text-primary transition-colors">How It Works</a>
               <a href="#leaderboard" className="text-gray-600 hover:text-primary transition-colors">Leaderboard</a>
-              <Button 
-                variant="outline" 
-                onClick={() => window.location.href = '/api/login'}
+              <Button
+                variant="outline"
+                onClick={() => window.location.href = '/login'}
               >
                 Sign In
               </Button>
-              <Button 
+              <Button
                 className="gradient-primary hover:shadow-lg transition-all"
-                onClick={() => window.location.href = '/api/login'}
+                onClick={() => window.location.href = '/login'}
               >
                 Get Started
               </Button>
@@ -63,18 +63,18 @@ export default function Landing() {
               Validate your startup ideas and match with complementary co-founders through our proof-of-work platform. Show your skills, not just your resume.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
+              <Button
                 size="lg"
                 className="gradient-primary hover:shadow-xl transition-all text-lg px-8 py-4"
-                onClick={() => window.location.href = '/api/login'}
+                onClick={() => window.location.href = '/login'}
               >
                 Start Matching Today
               </Button>
-              <Button 
+              <Button
                 size="lg"
-                variant="outline" 
+                variant="outline"
                 className="text-lg px-8 py-4 hover:border-primary hover:text-primary transition-all"
-                onClick={() => window.location.href = '/api/login'}
+                onClick={() => window.location.href = '/login'}
               >
                 Validate Your Idea
               </Button>
@@ -144,10 +144,10 @@ export default function Landing() {
               )}
               
               <div className="text-center mt-8">
-                <Button 
-                  variant="link" 
+                <Button
+                  variant="link"
                   className="text-primary hover:text-primary/80"
-                  onClick={() => window.location.href = '/api/login'}
+                  onClick={() => window.location.href = '/login'}
                 >
                   View Full Leaderboard (Top 100) <i className="fas fa-arrow-right ml-1"></i>
                 </Button>
@@ -219,11 +219,11 @@ export default function Landing() {
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Join thousands of entrepreneurs who are validating ideas and building teams on Nucleus.
           </p>
-          <Button 
+          <Button
             size="lg"
             variant="secondary"
             className="text-lg px-8 py-4 bg-white text-primary hover:bg-gray-50 transition-all"
-            onClick={() => window.location.href = '/api/login'}
+            onClick={() => window.location.href = '/login'}
           >
             Get Started Free <i className="fas fa-arrow-right ml-2"></i>
           </Button>

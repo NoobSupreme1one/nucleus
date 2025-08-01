@@ -16,13 +16,19 @@ export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 // Middleware to check if user is authenticated
 export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
   try {
+    // Try to get token from Authorization header first, then from cookies
+    let token: string | undefined;
+
     const authHeader = req.headers.authorization;
-    
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ message: 'No token provided' });
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.substring(7);
+    } else if (req.cookies && req.cookies.access_token) {
+      token = req.cookies.access_token;
     }
 
-    const token = authHeader.substring(7);
+    if (!token) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
     
     // Verify the JWT token with Supabase
     const { data: { user }, error } = await supabase.auth.getUser(token);
