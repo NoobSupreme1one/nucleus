@@ -51,26 +51,33 @@ model Session {
 
 // User storage table
 model User {
-  id               String           @id @default(cuid())
-  email            String?          @unique
-  firstName        String?          @map("first_name")
-  lastName         String?          @map("last_name")
-  profileImageUrl  String?          @map("profile_image_url")
-  role             Role?
-  location         String?
-  bio              String?
-  subscriptionTier SubscriptionTier @default(free) @map("subscription_tier")
-  totalIdeaScore   Int              @default(0) @map("total_idea_score")
-  profileViews     Int              @default(0) @map("profile_views")
-  createdAt        DateTime         @default(now()) @map("created_at")
-  updatedAt        DateTime         @updatedAt @map("updated_at")
+  id                    String           @id @default(cuid())
+  email                 String?          @unique
+  firstName             String?          @map("first_name")
+  lastName              String?          @map("last_name")
+  profileImageUrl       String?          @map("profile_image_url")
+  role                  Role?
+  location              String?
+  bio                   String?
+  subscriptionTier      SubscriptionTier @default(free) @map("subscription_tier")
+  totalIdeaScore        Int              @default(0) @map("total_idea_score")
+  profileViews          Int              @default(0) @map("profile_views")
+
+  // Privacy settings
+  profilePublic         Boolean          @default(true) @map("profile_public")
+  ideasPublic           Boolean          @default(true) @map("ideas_public")
+  allowFounderMatching  Boolean          @default(true) @map("allow_founder_matching")
+  allowDirectContact    Boolean          @default(true) @map("allow_direct_contact")
+
+  createdAt             DateTime         @default(now()) @map("created_at")
+  updatedAt             DateTime         @updatedAt @map("updated_at")
 
   // Relations
-  ideas            Idea[]
-  submissions      Submission[]
-  sentMatches      Match[]          @relation("User1Matches")
-  receivedMatches  Match[]          @relation("User2Matches")
-  messages         Message[]
+  ideas                 Idea[]
+  submissions           Submission[]
+  sentMatches           Match[]          @relation("User1Matches")
+  receivedMatches       Match[]          @relation("User2Matches")
+  messages              Message[]
 
   @@map("users")
 }

@@ -65,4 +65,224 @@ export type IdeaWithUser = Idea & {
 
 export type SubmissionWithUser = Submission & {
   user: User;
-}; 
+};
+
+// Privacy Settings Interface
+export interface UserPrivacySettings {
+  profilePublic: boolean;
+  ideasPublic: boolean;
+  allowFounderMatching: boolean;
+  allowDirectContact: boolean;
+}
+
+// Domain Suggestion Interface
+export interface DomainSuggestion {
+  domain: string;
+  available: boolean;
+  price?: number;
+  registrar?: string;
+  alternatives?: string[];
+}
+
+// Funding Opportunity Interface
+export interface FundingOpportunity {
+  id: string;
+  name: string;
+  type: 'grant' | 'accelerator' | 'vc' | 'angel' | 'crowdfunding' | 'government';
+  description: string;
+  amount: string;
+  stage: string[];
+  marketCategories: MarketCategory[];
+  applicationDeadline?: string;
+  website: string;
+  requirements: string[];
+  matchScore: number;
+}
+
+// Founder Match Interface
+export interface FounderMatch {
+  user: User;
+  matchScore: number;
+  commonInterests: string[];
+  complementarySkills: string[];
+  sharedMarketCategories: MarketCategory[];
+  contactAllowed: boolean;
+}
+
+// Error Types
+export interface ProReportError {
+  code: string;
+  message: string;
+  details?: any;
+}
+
+// Response Interfaces
+export interface ProReportResponse {
+  success: boolean;
+  proReport?: ProBusinessReport;
+  error?: ProReportError;
+}
+
+// Pro Business Report Interface
+export interface ProBusinessReport {
+  // Executive Summary
+  executiveSummary: {
+    businessOverview: string;
+    missionStatement: string;
+    visionStatement: string;
+    keySuccessFactors: string[];
+    investmentHighlights: string[];
+  };
+
+  // Company Description
+  companyDescription: {
+    businessModel: string;
+    valueProposition: string;
+    competitiveAdvantages: string[];
+    businessStructure: string;
+    ownershipStructure: string;
+  };
+
+  // Enhanced Market Analysis
+  enhancedMarketAnalysis: {
+    marketSize: string;
+    marketGrowthRate: string;
+    targetMarketSegments: string[];
+    customerPersonas: Array<{
+      name: string;
+      demographics: string;
+      painPoints: string[];
+      buyingBehavior: string;
+    }>;
+    marketTrends: string[];
+    competitiveLandscape: {
+      directCompetitors: Array<{
+        name: string;
+        marketShare: string;
+        strengths: string[];
+        weaknesses: string[];
+      }>;
+      indirectCompetitors: string[];
+      competitivePositioning: string;
+    };
+  };
+
+  // Organization & Management
+  organizationManagement: {
+    organizationalStructure: string;
+    keyPersonnel: Array<{
+      role: string;
+      responsibilities: string[];
+      qualifications: string;
+    }>;
+    advisoryBoard: string[];
+    hiringPlan: Array<{
+      role: string;
+      timeline: string;
+      priority: 'high' | 'medium' | 'low';
+    }>;
+    compensationStrategy: string;
+  };
+
+  // Product/Service Line
+  productServiceLine: {
+    productDescription: string;
+    productLifecycle: string;
+    researchDevelopment: string[];
+    intellectualProperty: string[];
+    productRoadmap: Array<{
+      feature: string;
+      timeline: string;
+      priority: 'high' | 'medium' | 'low';
+    }>;
+    qualityAssurance: string;
+  };
+
+  // Marketing & Sales Strategy
+  marketingSalesStrategy: {
+    marketingStrategy: string;
+    salesStrategy: string;
+    pricingStrategy: string;
+    distributionChannels: string[];
+    customerAcquisitionStrategy: string;
+    customerRetentionStrategy: string;
+    brandingStrategy: string;
+    digitalMarketingPlan: string[];
+  };
+
+  // Financial Projections
+  financialProjections: {
+    revenueProjections: Array<{
+      year: number;
+      revenue: number;
+      growth: number;
+    }>;
+    expenseProjections: Array<{
+      year: number;
+      expenses: number;
+      breakdown: Record<string, number>;
+    }>;
+    profitabilityAnalysis: {
+      grossMargin: number;
+      netMargin: number;
+      breakEvenPoint: string;
+    };
+    cashFlowProjections: Array<{
+      year: number;
+      cashFlow: number;
+      cumulativeCashFlow: number;
+    }>;
+    fundingRequirements: {
+      totalFunding: number;
+      useOfFunds: Record<string, number>;
+      fundingStages: Array<{
+        stage: string;
+        amount: number;
+        timeline: string;
+      }>;
+    };
+  };
+
+  // Funding Opportunities
+  fundingOpportunities: FundingOpportunity[];
+
+  // Startup Resources & Tools
+  startupResources: {
+    legalResources: Array<{
+      name: string;
+      description: string;
+      website: string;
+      category: string;
+    }>;
+    accountingResources: Array<{
+      name: string;
+      description: string;
+      website: string;
+      category: string;
+    }>;
+    marketingTools: Array<{
+      name: string;
+      description: string;
+      website: string;
+      category: string;
+    }>;
+    technicalServices: Array<{
+      name: string;
+      description: string;
+      website: string;
+      category: string;
+    }>;
+  };
+
+  // Domain Suggestions
+  domainSuggestions: DomainSuggestion[];
+
+  // Founder Matching
+  founderMatches: FounderMatch[];
+
+  // Metadata
+  generatedAt: Date;
+  lastUpdated: Date;
+  version: string;
+  confidenceScore: number;
+}

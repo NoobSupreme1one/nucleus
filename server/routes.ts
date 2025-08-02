@@ -7,6 +7,9 @@ import { setupAuth as setupSupabaseAuth, isAuthenticated as isSupabaseAuthentica
 import { setupAuth as setupLocalAuth, isAuthenticated as isLocalAuthenticated } from "./localAuth";
 import { validateStartupIdea, generateMatchingInsights } from "./services/gemini";
 import { performComprehensiveValidation } from "./services/enhanced-validation";
+import { ProReportGeneratorService } from "./services/pro-report-generator";
+import { PrivacyManagerService } from "./services/privacy-manager";
+import { AnalyticsService, createPerformanceMiddleware } from "./services/analytics";
 import { insertIdeaSchema, insertSubmissionSchema, insertMessageSchema } from "@shared/validation";
 import multer from 'multer';
 import path from 'path';
@@ -45,6 +48,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Helper function to get the appropriate storage
   const getStorage = () => isProduction ? storage : localStorage;
+
+  // Initialize analytics service
+  const storageInstance = getStorage();
+  const prisma = (storageInstance as any).prisma;
+  const analytics = new AnalyticsService(prisma);
+
+  // Add performance monitoring middleware
+  app.use(createPerformanceMiddleware(analytics));
 
   // Leaderboard routes
   app.get('/api/leaderboard', async (req, res) => {
@@ -116,28 +127,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.id;
       const ideaId = req.params.id;
-      
+
       // Check if user is Pro subscriber
       const user = await getStorage().getUser(userId);
       if (!user || user.subscriptionTier !== 'pro') {
-        return res.status(403).json({ message: "Pro subscription required" });
+        return res.status(403).json({
+          success: false,
+          error: {
+            code: 'SUBSCRIPTION_REQUIRED',
+            message: 'Pro subscription required to generate comprehensive business reports'
+          }
+        });
       }
-      
+
       // Get the idea
       const idea = await getStorage().getIdea(ideaId);
-      if (!idea || idea.userId !== userId) {
-        return res.status(404).json({ message: "Idea not found" });
+      if (!idea) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            code: 'IDEA_NOT_FOUND',
+            message: 'Idea not found'
+          }
+        });
       }
-      
-      // Generate enhanced Pro report
-      const proReport = await generateProValidationReport(
+
+      if (idea.userId !== userId) {
+        return res.status(403).json({
+          success: false,
+          error: {
+            code: 'ACCESS_DENIED',
+            message: 'You can only generate reports for your own ideas'
+          }
+        });
+      }
+
+      // Initialize Pro Report Generator
+      const storage = getStorage();
+      const prisma = (storage as any).prisma; // Access prisma from storage
+      const proReportGenerator = new ProReportGeneratorService(prisma);
+
+      // Track pro report generation start
+      const startTime = Date.now();
+      analytics.trackEvent(userId, 'pro_report_generation_started', {
+        ideaId,
+        ideaTitle: idea.title,
+        marketCategory: idea.marketCategory,
+      });
+
+      // Generate comprehensive Pro report
+      const proReport = await proReportGenerator.generateProReport(
+        userId,
         idea.title,
         idea.marketCategory,
         idea.problemDescription,
         idea.solutionDescription,
         idea.targetAudience
       );
-      
+
+      // Track successful generation
+      const duration = Date.now() - startTime;
+      analytics.trackProReportGeneration(userId, ideaId, true, duration);
+
       // Update idea with Pro report
       const currentAnalysis = idea.analysisReport as any || {};
       const updatedAnalysis = {
@@ -145,13 +196,131 @@ export async function registerRoutes(app: Express): Promise<Server> {
         proReport,
         lastUpdated: new Date().toISOString()
       };
-      
-      await getStorage().updateIdeaValidation(ideaId, idea.validationScore || 0, updatedAnalysis);
-      
-      res.json({ success: true, proReport });
+
+      await storage.updateIdeaValidation(ideaId, idea.validationScore || 0, updatedAnalysis);
+
+      res.json({
+        success: true,
+        proReport,
+        message: 'Pro business report generated successfully'
+      });
     } catch (error) {
       console.error("Error generating Pro report:", error);
-      res.status(500).json({ message: "Failed to generate Pro report" });
+
+      // Determine error type and provide appropriate response
+      let errorCode = 'GENERATION_FAILED';
+      let errorMessage = 'Failed to generate Pro report';
+
+      if (error instanceof Error) {
+        if (error.message.includes('API')) {
+          errorCode = 'API_ERROR';
+          errorMessage = 'External service temporarily unavailable';
+        } else if (error.message.includes('database') || error.message.includes('prisma')) {
+          errorCode = 'DATABASE_ERROR';
+          errorMessage = 'Database error occurred';
+        }
+      }
+
+      // Track failed generation
+      const duration = Date.now() - (req as any).startTime || 0;
+      analytics.trackProReportGeneration(userId, ideaId, false, duration);
+      analytics.trackError(
+        req.path,
+        req.method,
+        errorCode,
+        errorMessage,
+        userId
+      );
+
+      res.status(500).json({
+        success: false,
+        error: {
+          code: errorCode,
+          message: errorMessage,
+          details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        }
+      });
+    }
+  });
+
+  // Privacy Settings API Endpoints
+  app.get('/api/users/privacy-settings', getAuthMiddleware(), async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const storage = getStorage();
+      const prisma = (storage as any).prisma;
+      const privacyManager = new PrivacyManagerService(prisma);
+
+      const privacySettings = await privacyManager.getUserPrivacySettings(userId);
+
+      if (!privacySettings) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            code: 'USER_NOT_FOUND',
+            message: 'User not found'
+          }
+        });
+      }
+
+      // Track privacy settings access
+      analytics.trackEvent(userId, 'privacy_settings_viewed', {});
+
+      res.json({
+        success: true,
+        privacySettings
+      });
+    } catch (error) {
+      console.error("Error fetching privacy settings:", error);
+      res.status(500).json({
+        success: false,
+        error: {
+          code: 'FETCH_FAILED',
+          message: 'Failed to fetch privacy settings'
+        }
+      });
+    }
+  });
+
+  app.put('/api/users/privacy-settings', getAuthMiddleware(), async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const storage = getStorage();
+      const prisma = (storage as any).prisma;
+      const privacyManager = new PrivacyManagerService(prisma);
+
+      // Validate input data
+      if (!privacyManager.validatePrivacySettings(req.body)) {
+        return res.status(400).json({
+          success: false,
+          error: {
+            code: 'INVALID_INPUT',
+            message: 'Invalid privacy settings data. All values must be boolean.'
+          }
+        });
+      }
+
+      const updatedSettings = await privacyManager.updatePrivacySettings(userId, req.body);
+
+      // Track privacy settings update
+      analytics.trackEvent(userId, 'privacy_settings_updated', {
+        settings: req.body,
+      });
+
+      res.json({
+        success: true,
+        privacySettings: updatedSettings,
+        message: 'Privacy settings updated successfully'
+      });
+    } catch (error) {
+      console.error("Error updating privacy settings:", error);
+      res.status(500).json({
+        success: false,
+        error: {
+          code: 'UPDATE_FAILED',
+          message: 'Failed to update privacy settings'
+        }
+      });
     }
   });
 
