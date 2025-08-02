@@ -23,7 +23,7 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
   });
 
   // Get current user to check subscription status
-  const { data: user } = useQuery({
+  const { data: user } = useQuery<any>({
     queryKey: ["/api/auth/user"],
   });
 
@@ -54,8 +54,8 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
 
   const handleGenerateProReport = () => {
     if (user?.subscriptionTier !== 'pro') {
-      // Redirect to upgrade page or show upgrade modal
-      setLocation('/upgrade');
+      // Redirect to pricing page
+      setLocation('/pricing');
       return;
     }
     setIsGeneratingProReport(true);

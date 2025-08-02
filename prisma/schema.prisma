@@ -69,6 +69,13 @@ model User {
   allowFounderMatching  Boolean          @default(true) @map("allow_founder_matching")
   allowDirectContact    Boolean          @default(true) @map("allow_direct_contact")
 
+  // Stripe subscription fields
+  stripeCustomerId      String?          @map("stripe_customer_id")
+  stripeSubscriptionId  String?          @map("stripe_subscription_id")
+  subscriptionStatus    String?          @map("subscription_status")
+  subscriptionPeriodEnd DateTime?        @map("subscription_period_end")
+  subscriptionCancelAtPeriodEnd Boolean? @default(false) @map("subscription_cancel_at_period_end")
+
   createdAt             DateTime         @default(now()) @map("created_at")
   updatedAt             DateTime         @updatedAt @map("updated_at")
 
@@ -78,6 +85,7 @@ model User {
   sentMatches           Match[]          @relation("User1Matches")
   receivedMatches       Match[]          @relation("User2Matches")
   messages              Message[]
+  subscriptionEvents    SubscriptionEvent[]
 
   @@map("users")
 }
@@ -150,4 +158,20 @@ model Message {
   sender    User     @relation(fields: [senderId], references: [id])
 
   @@map("messages")
+}
+
+// Subscription events for audit trail
+model SubscriptionEvent {
+  id              String   @id @default(cuid())
+  userId          String   @map("user_id")
+  stripeEventId   String   @unique @map("stripe_event_id")
+  eventType       String   @map("event_type")
+  subscriptionId  String   @map("subscription_id")
+  eventData       Json     @map("event_data")
+  processedAt     DateTime @default(now()) @map("processed_at")
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id])
+
+  @@map("subscription_events")
 }

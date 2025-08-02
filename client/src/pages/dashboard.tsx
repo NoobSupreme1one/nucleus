@@ -85,8 +85,14 @@ export default function Dashboard() {
                   Leaderboard
                 </Link>
               </Button>
-              <Button 
-                variant="outline" 
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/pricing">
+                  <i className="fas fa-crown mr-1"></i>
+                  Pricing
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => window.location.href = '/api/logout'}
               >
@@ -316,7 +322,10 @@ export default function Dashboard() {
                 
                 {user.subscriptionTier === 'free' && (
                   <div className="mt-6 pt-6 border-t border-gray-200">
-                    <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:shadow-lg transition-all">
+                    <Button
+                      className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:shadow-lg transition-all"
+                      onClick={() => window.location.href = '/pricing'}
+                    >
                       <i className="fas fa-crown mr-2"></i>
                       Upgrade to Pro
                     </Button>

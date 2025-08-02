@@ -10,28 +10,13 @@ import { performComprehensiveValidation } from "./services/enhanced-validation";
 import { ProReportGeneratorService } from "./services/pro-report-generator";
 import { PrivacyManagerService } from "./services/privacy-manager";
 import { AnalyticsService, createPerformanceMiddleware } from "./services/analytics";
+import { StripeService } from "./services/stripe";
+import { requireProSubscription, addSubscriptionInfo, rateLimitFreeUsers, requireFeature } from "./middleware/subscription";
 import { insertIdeaSchema, insertSubmissionSchema, insertMessageSchema } from "@shared/validation";
-import multer from 'multer';
+import { upload, getFileUrl, CloudStorageService } from './services/cloud-storage';
 import path from 'path';
 
-// Configure multer for file uploads
-const upload = multer({
-  dest: 'uploads/',
-  limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
-  },
-  fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx/;
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype);
-    
-    if (mimetype && extname) {
-      return cb(null, true);
-    } else {
-      cb(new Error('Only images and documents are allowed'));
-    }
-  }
-});
+// File upload is now handled by cloud-storage service
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Use local auth in development, Supabase in production
@@ -54,8 +39,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const prisma = (storageInstance as any).prisma;
   const analytics = new AnalyticsService(prisma);
 
+  // Initialize Stripe service
+  const stripeService = new StripeService(prisma);
+
   // Add performance monitoring middleware
   app.use(createPerformanceMiddleware(analytics));
+
+  // Stripe webhook endpoint (must be before JSON parsing middleware)
+  app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+    try {
+      const signature = req.headers['stripe-signature'] as string;
+      const event = stripeService.verifyWebhookSignature(req.body, signature);
+
+      console.log('Received Stripe webhook:', event.type);
+
+      // Handle subscription events
+      switch (event.type) {
+        case 'customer.subscription.created':
+        case 'customer.subscription.updated':
+        case 'customer.subscription.deleted':
+          const subscription = event.data.object as any;
+          await stripeService.updateSubscriptionFromWebhook(subscription, event.type);
+
+          // Log subscription event for audit trail
+          if (subscription.customer) {
+            const user = await prisma.user.findFirst({
+              where: { stripeCustomerId: subscription.customer },
+            });
+
+            if (user) {
+              await prisma.subscriptionEvent.create({
+                data: {
+                  userId: user.id,
+                  stripeEventId: event.id,
+                  eventType: event.type,
+                  subscriptionId: subscription.id,
+                  eventData: event.data.object,
+                },
+              });
+            }
+          }
+          break;
+
+        case 'invoice.payment_succeeded':
+        case 'invoice.payment_failed':
+          console.log(`Payment ${event.type} for invoice:`, event.data.object);
+          break;
+
+        default:
+          console.log(`Unhandled event type: ${event.type}`);
+      }
+
+      res.json({ received: true });
+    } catch (error) {
+      console.error('Stripe webhook error:', error);
+      res.status(400).json({ error: 'Webhook error' });
+    }
+  });
 
   // Leaderboard routes
   app.get('/api/leaderboard', async (req, res) => {
@@ -70,7 +110,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Idea validation routes
-  app.post('/api/ideas/validate', getAuthMiddleware(), async (req: any, res) => {
+  app.post('/api/ideas/validate',
+    getAuthMiddleware(),
+    rateLimitFreeUsers(prisma, 5, 60 * 60 * 1000), // 5 validations per hour for free users
+    async (req: any, res) => {
     try {
       const userId = req.user.id;
       const validatedData = insertIdeaSchema.parse({ ...req.body, userId });
@@ -123,22 +166,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Pro Report Generation
-  app.post('/api/ideas/:id/generate-pro-report', getAuthMiddleware(), async (req: any, res) => {
+  app.post('/api/ideas/:id/generate-pro-report',
+    getAuthMiddleware(),
+    requireProSubscription(prisma),
+    async (req: any, res) => {
     try {
       const userId = req.user.id;
       const ideaId = req.params.id;
-
-      // Check if user is Pro subscriber
-      const user = await getStorage().getUser(userId);
-      if (!user || user.subscriptionTier !== 'pro') {
-        return res.status(403).json({
-          success: false,
-          error: {
-            code: 'SUBSCRIPTION_REQUIRED',
-            message: 'Pro subscription required to generate comprehensive business reports'
-          }
-        });
-      }
 
       // Get the idea
       const idea = await getStorage().getIdea(ideaId);
@@ -338,8 +372,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Submission routes
   app.post('/api/submissions', [getAuthMiddleware(), upload.array('files', 5)], async (req: any, res) => {
     try {
-              const userId = req.user.id;
-      const fileUrls = req.files ? req.files.map((file: any) => `/uploads/${file.filename}`) : [];
+      const userId = req.user.id;
+      
+      // Handle file URLs from cloud storage or local storage
+      const fileUrls = req.files ? req.files.map((file: any) => getFileUrl(file)) : [];
       
       const validatedData = insertSubmissionSchema.parse({
         ...req.body,
@@ -348,6 +384,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       const submission = await getStorage().createSubmission(validatedData);
+      
+      // Log storage type for monitoring
+      console.log(`Submission created with ${CloudStorageService.isConfigured() ? 'cloud' : 'local'} storage`);
+      
       res.json(submission);
     } catch (error) {
       console.error("Error creating submission:", error);
@@ -378,12 +418,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "Access denied" });
       }
       
-      const fileUrls = req.files ? req.files.map((file: any) => `/uploads/${file.filename}`) : submission.fileUrls;
+      // Handle new file uploads or keep existing files
+      const fileUrls = req.files && req.files.length > 0 
+        ? req.files.map((file: any) => getFileUrl(file))
+        : submission.fileUrls;
       
       const updatedSubmission = await getStorage().updateSubmission(req.params.id, {
         ...req.body,
         fileUrls
       });
+      
+      console.log(`Submission updated with ${CloudStorageService.isConfigured() ? 'cloud' : 'local'} storage`);
       
       res.json(updatedSubmission);
     } catch (error) {
@@ -521,7 +566,73 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Serve uploaded files
+  // Subscription management routes
+  app.post('/api/subscription/create-checkout-session', getAuthMiddleware(), async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { priceId } = req.body;
+
+      if (!priceId) {
+        return res.status(400).json({ error: 'Price ID is required' });
+      }
+
+      const session = await stripeService.createCheckoutSession(
+        userId,
+        priceId,
+        `${req.headers.origin}/dashboard?subscription=success`,
+        `${req.headers.origin}/pricing?subscription=cancelled`
+      );
+
+      res.json({ sessionId: session.id, url: session.url });
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      res.status(500).json({ error: 'Failed to create checkout session' });
+    }
+  });
+
+  app.post('/api/subscription/create-portal-session', getAuthMiddleware(), async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+
+      const session = await stripeService.createCustomerPortalSession(
+        userId,
+        `${req.headers.origin}/dashboard`
+      );
+
+      res.json({ url: session.url });
+    } catch (error) {
+      console.error('Error creating portal session:', error);
+      res.status(500).json({ error: 'Failed to create portal session' });
+    }
+  });
+
+  app.get('/api/subscription/status', getAuthMiddleware(), async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const subscription = await stripeService.getUserSubscription(userId);
+      res.json(subscription);
+    } catch (error) {
+      console.error('Error getting subscription status:', error);
+      res.status(500).json({ error: 'Failed to get subscription status' });
+    }
+  });
+
+  // Health check endpoint
+  app.get('/api/health', async (req, res) => {
+    const health = {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      services: {
+        database: 'connected',
+        cloudStorage: CloudStorageService.isConfigured() ? 'configured' : 'local_fallback',
+        auth: isProduction ? 'supabase' : 'local',
+      }
+    };
+    
+    res.json(health);
+  });
+
+  // Serve uploaded files (for local fallback)
   app.use('/uploads', express.static('uploads'));
 
   const httpServer = createServer(app);

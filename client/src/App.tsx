@@ -14,6 +14,7 @@ import Matching from "@/pages/matching";
 import Leaderboard from "@/pages/leaderboard";
 import Portfolio from "@/pages/portfolio";
 import Matches from "@/pages/matches";
+import Pricing from "@/pages/pricing";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -34,6 +35,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/login" component={Login} />
+      <Route path="/pricing" component={Pricing} />
       {!isAuthenticated ? (
         <Route path="/" component={Landing} />
       ) : (

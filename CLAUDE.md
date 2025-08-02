@@ -79,3 +79,9 @@ RESTful API with authentication middleware:
 - **Development**: Single server on port 5000 with Vite dev middleware
 - **Production**: Built client served statically, API on same port
 - **Vercel**: Configured for full-stack deployment with proper routing
+
+### AI Integrations
+- ** Use Gemini/Imagen for all AI text and image generation
+- ** Only use perplexity api for performing research and analysis, and only use the "sonar" model..
+- ** DO NOT USE OPENAI API
+- ** DO NOT USE VERTEX AI
