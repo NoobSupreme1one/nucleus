@@ -10,8 +10,7 @@ import { accountLockoutProtection } from '../middleware/security';
 export function createAuthService(): AuthService {
   // Determine which auth provider to use
   const useSupabase = process.env.NEXT_PUBLIC_SUPABASE_URL && 
-                     process.env.SUPABASE_SERVICE_ROLE_KEY &&
-                     process.env.NODE_ENV === 'production';
+                     process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (useSupabase) {
     console.log('Using Supabase authentication provider');

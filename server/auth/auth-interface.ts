@@ -319,5 +319,119 @@ export class AuthService {
         });
       }
     });
+
+    // Google OAuth routes (only for Supabase provider)
+    if (this.provider.constructor.name === 'SupabaseAuthProvider') {
+      // Google OAuth login endpoint
+      app.get('/api/auth/google', async (req, res) => {
+        try {
+          const { createClient } = await import('@supabase/supabase-js');
+          const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321';
+          const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'your-anon-key';
+          
+          const supabase = createClient(supabaseUrl, supabaseAnonKey);
+          
+          const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+              redirectTo: `${req.protocol}://${req.get('host')}/auth/google/callback`,
+            },
+          });
+
+          if (error) {
+            console.error('Google OAuth error:', error);
+            return res.status(500).json({ 
+              success: false,
+              error: 'OAuth initialization failed' 
+            });
+          }
+
+          // Redirect to Google OAuth
+          res.redirect(data.url);
+        } catch (error) {
+          console.error('Google OAuth error:', error);
+          res.status(500).json({ 
+            success: false,
+            error: 'OAuth initialization failed' 
+          });
+        }
+      });
+
+      // Google OAuth callback endpoint
+      app.get('/auth/google/callback', async (req, res) => {
+        try {
+          const { code, error: oauthError } = req.query;
+
+          if (oauthError) {
+            console.error('OAuth error:', oauthError);
+            return res.redirect('/login?error=oauth_error');
+          }
+
+          if (!code) {
+            return res.redirect('/login?error=no_code');
+          }
+
+          const { createClient } = await import('@supabase/supabase-js');
+          const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321';
+          const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'your-anon-key';
+          
+          const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+          // Exchange code for session
+          const { data, error } = await supabase.auth.exchangeCodeForSession(code as string);
+
+          if (error || !data.session) {
+            console.error('Code exchange error:', error);
+            return res.redirect('/login?error=exchange_failed');
+          }
+
+          // Set cookies with tokens
+          res.cookie('access_token', data.session.access_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 60 * 60 * 1000 // 1 hour
+          });
+
+          if (data.session.refresh_token) {
+            res.cookie('refresh_token', data.session.refresh_token, {
+              httpOnly: true,
+              secure: process.env.NODE_ENV === 'production',
+              maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            });
+          }
+
+          // Get or create user in our database using the provider
+          const user = data.user;
+          const { storage } = await import('../storage');
+          await storage.upsertUser({
+            email: user.email || null,
+            firstName: user.user_metadata?.first_name || null,
+            lastName: user.user_metadata?.last_name || null,
+            profileImageUrl: user.user_metadata?.avatar_url || null,
+            role: null,
+            location: null,
+            bio: null,
+            subscriptionTier: 'free',
+            totalIdeaScore: 0,
+            profileViews: 0,
+            profilePublic: true,
+            ideasPublic: true,
+            allowFounderMatching: true,
+            allowDirectContact: true,
+            stripeCustomerId: null,
+            stripeSubscriptionId: null,
+            subscriptionStatus: null,
+            subscriptionPeriodEnd: null,
+            subscriptionCancelAtPeriodEnd: false,
+          });
+
+          // Redirect to dashboard
+          res.redirect('/');
+        } catch (error) {
+          console.error('OAuth callback error:', error);
+          res.redirect('/login?error=callback_failed');
+        }
+      });
+    }
   }
 }
