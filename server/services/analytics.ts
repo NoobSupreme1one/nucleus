@@ -29,14 +29,28 @@ export class AnalyticsService {
   private events: AnalyticsEvent[] = [];
   private performanceMetrics: PerformanceMetric[] = [];
   private businessMetrics: BusinessMetric[] = [];
+  private flushInterval: NodeJS.Timeout;
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
     
     // Flush events to database every 30 seconds
-    setInterval(() => {
+    this.flushInterval = setInterval(() => {
       this.flushEvents();
     }, 30000);
+    
+    // Graceful shutdown - flush remaining events
+    process.on('SIGTERM', () => this.shutdown());
+    process.on('SIGINT', () => this.shutdown());
+  }
+
+  /**
+   * Graceful shutdown - flush remaining data
+   */
+  async shutdown() {
+    clearInterval(this.flushInterval);
+    await this.flushEvents();
+    console.log('AnalyticsService: All pending events flushed');
   }
 
   /**
@@ -235,16 +249,65 @@ export class AnalyticsService {
     }
 
     try {
-      // In production, this would write to a proper analytics database
-      // For now, we'll just log the counts
-      console.log(`[Analytics] Flushing ${this.events.length} events, ${this.performanceMetrics.length} performance metrics, ${this.businessMetrics.length} business metrics`);
+      const eventsBatch = [...this.events];
+      const performanceBatch = [...this.performanceMetrics];
+      const businessBatch = [...this.businessMetrics];
 
-      // Clear the arrays
+      // Clear the arrays immediately to avoid duplicates
       this.events = [];
       this.performanceMetrics = [];
       this.businessMetrics = [];
+
+      // Batch insert analytics events
+      if (eventsBatch.length > 0) {
+        await this.prisma.analyticsEvent.createMany({
+          data: eventsBatch.map(event => ({
+            userId: event.userId,
+            event: event.event,
+            properties: event.properties,
+            createdAt: event.timestamp,
+          })),
+          skipDuplicates: true,
+        });
+      }
+
+      // Batch insert performance metrics
+      if (performanceBatch.length > 0) {
+        await this.prisma.performanceMetric.createMany({
+          data: performanceBatch.map(metric => ({
+            endpoint: metric.endpoint,
+            method: metric.method,
+            responseTime: metric.responseTime,
+            statusCode: metric.statusCode,
+            userId: metric.userId,
+            createdAt: metric.timestamp,
+          })),
+          skipDuplicates: true,
+        });
+      }
+
+      // Batch insert business metrics
+      if (businessBatch.length > 0) {
+        await this.prisma.businessMetric.createMany({
+          data: businessBatch.map(metric => ({
+            metric: metric.metric,
+            value: metric.value,
+            userId: metric.userId,
+            metadata: metric.metadata,
+            createdAt: metric.timestamp,
+          })),
+          skipDuplicates: true,
+        });
+      }
+
+      console.log(`[Analytics] Flushed ${eventsBatch.length} events, ${performanceBatch.length} performance metrics, ${businessBatch.length} business metrics to database`);
     } catch (error) {
-      console.error('Error flushing analytics events:', error);
+      console.error('Error flushing analytics events to database:', error);
+      
+      // Re-add events back to the queue on failure (with size limit)
+      this.events.unshift(...eventsBatch.slice(0, 1000));
+      this.performanceMetrics.unshift(...performanceBatch.slice(0, 1000));
+      this.businessMetrics.unshift(...businessBatch.slice(0, 1000));
     }
   }
 

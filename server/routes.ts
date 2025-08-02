@@ -14,6 +14,8 @@ import { StripeService } from "./services/stripe";
 import { requireProSubscription, addSubscriptionInfo, rateLimitFreeUsers, requireFeature } from "./middleware/subscription";
 import { insertIdeaSchema, insertSubmissionSchema, insertMessageSchema } from "@shared/validation";
 import { upload, getFileUrl, CloudStorageService } from './services/cloud-storage';
+import { ErrorTracker, addUserContextMiddleware, isSentryConfigured } from './services/sentry';
+import { rateLimiters, slowDownLimiters, ddosProtection, conditionalRateLimit, createUserBasedRateLimit } from './services/rate-limit';
 import path from 'path';
 
 // File upload is now handled by cloud-storage service
@@ -44,6 +46,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Add performance monitoring middleware
   app.use(createPerformanceMiddleware(analytics));
+
+  // Add DDoS protection (very strict)
+  app.use(conditionalRateLimit(ddosProtection));
+  
+  // Add general API rate limiting
+  app.use('/api', conditionalRateLimit(rateLimiters.general));
+
+  // Add Sentry user context middleware for authenticated routes
+  if (isSentryConfigured()) {
+    app.use(addUserContextMiddleware());
+  }
 
   // Stripe webhook endpoint (must be before JSON parsing middleware)
   app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
@@ -93,6 +106,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ received: true });
     } catch (error) {
       console.error('Stripe webhook error:', error);
+      
+      // Track payment errors with Sentry
+      ErrorTracker.trackPaymentError(error as Error, {
+        stripeEventType: req.body?.type,
+      });
+      
       res.status(400).json({ error: 'Webhook error' });
     }
   });
@@ -112,6 +131,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Idea validation routes
   app.post('/api/ideas/validate',
     getAuthMiddleware(),
+    conditionalRateLimit(rateLimiters.aiFeatures),
+    conditionalRateLimit(slowDownLimiters.ai),
     rateLimitFreeUsers(prisma, 5, 60 * 60 * 1000), // 5 validations per hour for free users
     async (req: any, res) => {
     try {
@@ -168,6 +189,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Pro Report Generation
   app.post('/api/ideas/:id/generate-pro-report',
     getAuthMiddleware(),
+    conditionalRateLimit(rateLimiters.proReports),
+    conditionalRateLimit(slowDownLimiters.ai),
     requireProSubscription(prisma),
     async (req: any, res) => {
     try {
@@ -370,7 +393,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Submission routes
-  app.post('/api/submissions', [getAuthMiddleware(), upload.array('files', 5)], async (req: any, res) => {
+  app.post('/api/submissions', [
+    getAuthMiddleware(), 
+    conditionalRateLimit(rateLimiters.fileUpload),
+    upload.array('files', 5)
+  ], async (req: any, res) => {
     try {
       const userId = req.user.id;
       
@@ -438,7 +465,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Matching routes
-  app.get('/api/matches/potential', getAuthMiddleware(), async (req: any, res) => {
+  app.get('/api/matches/potential', [
+    getAuthMiddleware(),
+    conditionalRateLimit(rateLimiters.search)
+  ], async (req: any, res) => {
     try {
       const userId = req.user.id;
       const limit = parseInt(req.query.limit as string) || 10;

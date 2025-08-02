@@ -2,6 +2,7 @@ import type { Express, RequestHandler } from 'express';
 import { insertUserSchema } from '@shared/validation';
 import type { User } from '@shared/types';
 import { localStorage } from './localStorage';
+import { accountLockoutProtection, trackLoginAttempt } from './middleware/security';
 
 // Simple in-memory session store for development
 const sessions = new Map<string, any>();
@@ -42,7 +43,14 @@ export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
 // Setup authentication routes
 export async function setupAuth(app: Express) {
   // Login endpoint - creates a mock user for development
-  app.post('/api/auth/login', async (req, res) => {
+  app.post('/api/auth/login', (req, res, next) => {
+    // Apply auth rate limiting in development too for testing
+    const authRateLimit = require('./services/rate-limit').rateLimiters.auth;
+    if (process.env.ENABLE_RATE_LIMITING === 'true') {
+      return authRateLimit(req, res, next);
+    }
+    next();
+  }, async (req, res) => {
     try {
       const { email, password } = req.body;
       

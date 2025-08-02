@@ -2,11 +2,44 @@ import express, { type Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { initializeSentry, sentryRequestHandler, sentryErrorHandler, isSentryConfigured } from "./services/sentry";
+import {
+  corsMiddleware,
+  helmetMiddleware,
+  sanitizeInput,
+  securityLogger
+} from "./middleware/security";
+import {
+  enhancedErrorHandler,
+  notFoundHandler,
+  setupGracefulShutdown,
+  setupUnhandledErrorHandlers
+} from "./middleware/error-handler";
+
+// Initialize Sentry as early as possible
+const sentryEnabled = initializeSentry();
+
+// Setup unhandled error handlers
+setupUnhandledErrorHandlers();
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+
+// Add Sentry request handler first (before other middleware)
+if (sentryEnabled) {
+  app.use(sentryRequestHandler());
+}
+
+// Add security middleware
+app.use(corsMiddleware);
+app.use(helmetMiddleware);
+app.use(securityLogger());
+
+app.use(express.json({ limit: '10mb' })); // Add size limit
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 app.use(cookieParser());
+
+// Add input sanitization (after body parsing)
+app.use(sanitizeInput());
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -41,13 +74,16 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+  // Add Sentry error handler before custom error handler
+  if (sentryEnabled) {
+    app.use(sentryErrorHandler());
+  }
 
-    res.status(status).json({ message });
-    throw err;
-  });
+  // Add 404 handler for unmatched routes
+  app.use(notFoundHandler());
+
+  // Use enhanced error handler
+  app.use(enhancedErrorHandler());
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
@@ -70,4 +106,7 @@ app.use((req, res, next) => {
   }, () => {
     log(`serving on port ${port}`);
   });
+
+  // Setup graceful shutdown
+  setupGracefulShutdown(server);
 })();

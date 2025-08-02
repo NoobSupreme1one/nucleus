@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Express, RequestHandler } from 'express';
 import { storage } from './storage';
+import { accountLockoutProtection, trackLoginAttempt } from './middleware/security';
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321';
@@ -61,7 +62,7 @@ export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
 // Setup authentication routes
 export async function setupAuth(app: Express) {
   // Login endpoint - handle email/password authentication
-  app.post('/api/auth/login', async (req, res) => {
+  app.post('/api/auth/login', accountLockoutProtection(), async (req, res) => {
     try {
       const { email, password } = req.body;
       
@@ -76,8 +77,13 @@ export async function setupAuth(app: Express) {
       });
 
       if (error || !data.session) {
+        // Track failed login attempt
+        trackLoginAttempt(false, email);
         return res.status(401).json({ message: error?.message || 'Login failed' });
       }
+
+      // Track successful login
+      trackLoginAttempt(true, email);
 
       // Set cookies with tokens
       res.cookie('access_token', data.session.access_token, {
