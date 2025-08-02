@@ -3,8 +3,7 @@ import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { localStorage } from "./localStorage";
-import { setupAuth as setupSupabaseAuth, isAuthenticated as isSupabaseAuthenticated } from "./supabaseAuth";
-import { setupAuth as setupLocalAuth, isAuthenticated as isLocalAuthenticated } from "./localAuth";
+import { setupAuth, getAuthMiddleware } from "./auth/auth-factory";
 import { validateStartupIdea, generateMatchingInsights } from "./services/gemini";
 import { performComprehensiveValidation } from "./services/enhanced-validation";
 import { ProReportGeneratorService } from "./services/pro-report-generator";
@@ -21,20 +20,14 @@ import path from 'path';
 // File upload is now handled by cloud-storage service
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Use local auth in development, Supabase in production
-  const isProduction = process.env.NODE_ENV === 'production';
-  
-  if (isProduction) {
-    await setupSupabaseAuth(app);
-  } else {
-    await setupLocalAuth(app);
-  }
+  // Setup unified authentication system
+  const authService = await setupAuth(app);
 
   // Helper function to get the appropriate authentication middleware
-  const getAuthMiddleware = () => isProduction ? isSupabaseAuthenticated : isLocalAuthenticated;
-  
+  const getAuthMiddleware = () => authService.createAuthMiddleware();
+
   // Helper function to get the appropriate storage
-  const getStorage = () => isProduction ? storage : localStorage;
+  const getStorage = () => process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY ? storage : localStorage;
 
   // Initialize analytics service
   const storageInstance = getStorage();

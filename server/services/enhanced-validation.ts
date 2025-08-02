@@ -2,6 +2,7 @@ import { validateStartupIdea as geminiValidate, IdeaValidationResult } from './g
 import { validateStartupIdea as perplexityValidate } from './perplexity';
 import { EnhancedScoringService } from './enhanced-scoring';
 import { EnhancedIdeaValidation } from '../../shared/types';
+import { CacheDecorators, cacheManager } from './cache-manager';
 
 export interface ComprehensiveValidationResult {
   overallScore: number;
@@ -86,7 +87,8 @@ export interface ComprehensiveValidationResult {
   lastUpdated: Date;
 }
 
-export async function performComprehensiveValidation(
+// Internal function without caching
+async function _performComprehensiveValidation(
   title: string,
   marketCategory: string,
   problemDescription: string,
@@ -229,7 +231,7 @@ export async function performComprehensiveValidation(
 }
 
 // Helper functions for market intelligence gathering
-async function gatherMarketIntelligence(title: string, marketCategory: string, targetAudience: string) {
+async function _gatherMarketIntelligence(title: string, marketCategory: string, targetAudience: string) {
   if (!process.env.PERPLEXITY_API_KEY) {
     return {
       marketSize: "Analysis requires API access",
@@ -281,7 +283,7 @@ async function gatherMarketIntelligence(title: string, marketCategory: string, t
   };
 }
 
-async function performCompetitiveAnalysis(title: string, marketCategory: string) {
+async function _performCompetitiveAnalysis(title: string, marketCategory: string) {
   if (!process.env.PERPLEXITY_API_KEY) {
     return {
       summary: "Competitive analysis requires API access",
@@ -334,7 +336,7 @@ async function performCompetitiveAnalysis(title: string, marketCategory: string)
   };
 }
 
-async function analyzeTrends(marketCategory: string) {
+async function _analyzeTrends(marketCategory: string) {
   if (!process.env.PERPLEXITY_API_KEY) {
     return { trends: ["Market trend analysis requires API access"] };
   }
@@ -373,6 +375,35 @@ async function analyzeTrends(marketCategory: string) {
   }
   
   return { trends: ["Market trend analysis in progress"] };
+}
+
+/**
+ * Cached version of comprehensive validation
+ */
+export async function performComprehensiveValidation(
+  title: string,
+  marketCategory: string,
+  problemDescription: string,
+  solutionDescription: string,
+  targetAudience: string
+): Promise<ComprehensiveValidationResult> {
+  const params = {
+    title,
+    marketCategory,
+    problemDescription,
+    solutionDescription,
+    targetAudience
+  };
+
+  return cacheManager.getOrSet(
+    'comprehensive-validation',
+    params,
+    () => _performComprehensiveValidation(title, marketCategory, problemDescription, solutionDescription, targetAudience),
+    {
+      ttl: 24 * 60 * 60 * 1000, // 24 hours
+      tags: ['ai-validation', `market:${marketCategory}`, 'comprehensive']
+    }
+  );
 }
 
 // Helper functions for data processing and analysis

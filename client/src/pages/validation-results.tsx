@@ -65,11 +65,16 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
+        <div className="text-center fade-in-up">
           <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 pulse-glow">
             <i className="fas fa-chart-line text-white text-2xl"></i>
           </div>
-          <p className="text-gray-600">Loading validation results...</p>
+          <p className="text-gray-600 animate-pulse">Loading validation results...</p>
+          <div className="mt-4 flex justify-center space-x-2">
+            <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-primary rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+            <div className="w-2 h-2 bg-primary rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+          </div>
         </div>
       </div>
     );
@@ -151,9 +156,9 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
       </header>
 
       <div className="max-w-4xl mx-auto px-4 py-20">
-        <Card className="shadow-xl mb-8">
+        <Card className="shadow-xl mb-8 fade-in-up hover-lift">
           <CardHeader className="text-center">
-            <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 float">
               <i className="fas fa-check text-white text-3xl"></i>
             </div>
             <CardTitle className="text-3xl font-bold text-gray-900">Validation Complete!</CardTitle>
@@ -161,22 +166,95 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
           </CardHeader>
           
           <CardContent>
-            {/* Score Display */}
-            <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 mb-8">
-              <div className="text-center">
-                <div className={`text-6xl font-bold gradient-text mb-2`}>
-                  {hasEnhancedScoring ? validation.enhancedScoring.overallScore : score}
+            {/* Enhanced Score Display */}
+            <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 mb-8 relative overflow-hidden">
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-4 right-4 text-6xl">
+                  <i className="fas fa-lightbulb"></i>
                 </div>
-                <div className="text-xl text-gray-600 mb-4">out of 1,000 points</div>
-                <Badge className={scoreBadge.color}>
-                  <i className="fas fa-thumbs-up mr-2"></i>
-                  {hasEnhancedScoring ? validation.enhancedScoring.gradeLevel : scoreBadge.text}
-                </Badge>
+              </div>
+
+              <div className="text-center relative z-10">
+                {/* Score with Progress Ring */}
+                <div className="relative inline-block mb-6">
+                  <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 120 120">
+                    <circle
+                      cx="60"
+                      cy="60"
+                      r="50"
+                      stroke="currentColor"
+                      strokeWidth="8"
+                      fill="none"
+                      className="text-gray-200"
+                    />
+                    <circle
+                      cx="60"
+                      cy="60"
+                      r="50"
+                      stroke="url(#gradient)"
+                      strokeWidth="8"
+                      fill="none"
+                      strokeDasharray={`${(hasEnhancedScoring ? validation.enhancedScoring.overallScore : score) * 314 / 1000} 314`}
+                      className="transition-all duration-1000 ease-out"
+                    />
+                    <defs>
+                      <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="hsl(249, 83%, 65%)" />
+                        <stop offset="100%" stopColor="hsl(262, 83%, 70%)" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold gradient-text">
+                        {hasEnhancedScoring ? validation.enhancedScoring.overallScore : score}
+                      </div>
+                      <div className="text-xs text-gray-500">/ 1000</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <Badge className={`${scoreBadge.color} text-lg px-4 py-2`}>
+                    <i className="fas fa-award mr-2"></i>
+                    {hasEnhancedScoring ? validation.enhancedScoring.gradeLevel : scoreBadge.text}
+                  </Badge>
+                </div>
+
                 {hasEnhancedScoring && validation.enhancedScoring.recommendation && (
-                  <p className="text-sm text-gray-600 mt-3 max-w-2xl mx-auto">
-                    {validation.enhancedScoring.recommendation}
-                  </p>
+                  <div className="bg-white/50 rounded-lg p-4 mt-4">
+                    <h4 className="font-semibold text-gray-900 mb-2 flex items-center justify-center">
+                      <i className="fas fa-robot mr-2 text-primary"></i>
+                      AI Recommendation
+                    </h4>
+                    <p className="text-sm text-gray-700 max-w-2xl mx-auto leading-relaxed">
+                      {validation.enhancedScoring.recommendation}
+                    </p>
+                  </div>
                 )}
+
+                {/* Quick Action Buttons */}
+                <div className="flex flex-wrap justify-center gap-3 mt-6">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="bg-white/80 hover:bg-white"
+                    onClick={() => document.getElementById('detailed-analysis')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    <i className="fas fa-chart-line mr-2"></i>
+                    View Details
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="bg-white/80 hover:bg-white"
+                    onClick={() => document.getElementById('recommendations')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    <i className="fas fa-lightbulb mr-2"></i>
+                    Next Steps
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -357,7 +435,7 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
 
                 {/* Analysis Breakdown */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <Card className="bg-gray-50">
+                  <Card className="bg-gray-50 hover-lift fade-in-left" style={{animationDelay: '0.2s'}}>
                     <CardHeader>
                       <CardTitle className="text-lg">Market Analysis</CardTitle>
                     </CardHeader>
@@ -403,7 +481,7 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
                     </CardContent>
                   </Card>
                   
-                  <Card className="bg-gray-50">
+                  <Card className="bg-gray-50 hover-lift fade-in-right" style={{animationDelay: '0.4s'}}>
                     <CardHeader>
                       <CardTitle className="text-lg">Technical Feasibility</CardTitle>
                     </CardHeader>
@@ -496,68 +574,117 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
                   </Card>
                 )}
                 
-                {/* Strategic Recommendations - Enhanced for Comprehensive Results */}
+                {/* Enhanced Strategic Recommendations */}
                 {(validation.recommendations || validation.strategicRecommendations) && (
-                  <div className="mb-8">
+                  <div id="recommendations" className="mb-8">
+                    <div className="text-center mb-8">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center justify-center">
+                        <i className="fas fa-lightbulb text-primary mr-3"></i>
+                        Your Action Plan
+                      </h3>
+                      <p className="text-gray-600 max-w-2xl mx-auto">
+                        Based on your validation results, here's your personalized roadmap to turn your idea into reality.
+                      </p>
+                    </div>
+
                     {isComprehensive && validation.strategicRecommendations ? (
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Immediate Actions */}
-                        <Card className="bg-red-50">
-                          <CardHeader>
-                            <CardTitle className="text-sm flex items-center">
-                              <i className="fas fa-bolt text-red-500 mr-2"></i>
-                              Immediate Actions
+                        <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200 hover:shadow-lg transition-all">
+                          <CardHeader className="pb-4">
+                            <CardTitle className="text-lg flex items-center">
+                              <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center mr-3">
+                                <i className="fas fa-bolt text-white"></i>
+                              </div>
+                              <div>
+                                <div className="font-bold">Start Now</div>
+                                <div className="text-sm text-red-600 font-normal">This Week</div>
+                              </div>
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
-                            <ul className="space-y-2 text-sm">
+                            <ul className="space-y-3">
                               {validation.strategicRecommendations.immediate?.slice(0, 3).map((rec: string, index: number) => (
-                                <li key={index} className="flex items-start">
-                                  <i className="fas fa-circle text-red-400 mr-2 mt-1 text-xs"></i>
-                                  <span>{rec}</span>
+                                <li key={index} className="flex items-start bg-white rounded-lg p-3 shadow-sm">
+                                  <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                    <span className="text-white text-xs font-bold">{index + 1}</span>
+                                  </div>
+                                  <span className="text-sm text-gray-700 leading-relaxed">{rec}</span>
                                 </li>
                               ))}
                             </ul>
+                            <div className="mt-4 pt-4 border-t border-red-200">
+                              <div className="flex items-center text-xs text-red-600">
+                                <i className="fas fa-clock mr-1"></i>
+                                <span>Priority: Critical</span>
+                              </div>
+                            </div>
                           </CardContent>
                         </Card>
 
                         {/* Short Term */}
-                        <Card className="bg-yellow-50">
-                          <CardHeader>
-                            <CardTitle className="text-sm flex items-center">
-                              <i className="fas fa-calendar-alt text-yellow-500 mr-2"></i>
-                              Short Term (3-6 months)
+                        <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200 hover:shadow-lg transition-all">
+                          <CardHeader className="pb-4">
+                            <CardTitle className="text-lg flex items-center">
+                              <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center mr-3">
+                                <i className="fas fa-calendar-alt text-white"></i>
+                              </div>
+                              <div>
+                                <div className="font-bold">Build Momentum</div>
+                                <div className="text-sm text-yellow-600 font-normal">Next 3-6 Months</div>
+                              </div>
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
-                            <ul className="space-y-2 text-sm">
+                            <ul className="space-y-3">
                               {validation.strategicRecommendations.shortTerm?.slice(0, 3).map((rec: string, index: number) => (
-                                <li key={index} className="flex items-start">
-                                  <i className="fas fa-circle text-yellow-400 mr-2 mt-1 text-xs"></i>
-                                  <span>{rec}</span>
+                                <li key={index} className="flex items-start bg-white rounded-lg p-3 shadow-sm">
+                                  <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                    <span className="text-white text-xs font-bold">{index + 1}</span>
+                                  </div>
+                                  <span className="text-sm text-gray-700 leading-relaxed">{rec}</span>
                                 </li>
                               ))}
                             </ul>
+                            <div className="mt-4 pt-4 border-t border-yellow-200">
+                              <div className="flex items-center text-xs text-yellow-600">
+                                <i className="fas fa-trending-up mr-1"></i>
+                                <span>Priority: High</span>
+                              </div>
+                            </div>
                           </CardContent>
                         </Card>
 
                         {/* Long Term */}
-                        <Card className="bg-green-50">
-                          <CardHeader>
-                            <CardTitle className="text-sm flex items-center">
-                              <i className="fas fa-telescope text-green-500 mr-2"></i>
-                              Long Term (6+ months)
+                        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200 hover:shadow-lg transition-all">
+                          <CardHeader className="pb-4">
+                            <CardTitle className="text-lg flex items-center">
+                              <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                <i className="fas fa-telescope text-white"></i>
+                              </div>
+                              <div>
+                                <div className="font-bold">Scale & Grow</div>
+                                <div className="text-sm text-green-600 font-normal">6+ Months</div>
+                              </div>
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
-                            <ul className="space-y-2 text-sm">
+                            <ul className="space-y-3">
                               {validation.strategicRecommendations.longTerm?.slice(0, 3).map((rec: string, index: number) => (
-                                <li key={index} className="flex items-start">
-                                  <i className="fas fa-circle text-green-400 mr-2 mt-1 text-xs"></i>
-                                  <span>{rec}</span>
+                                <li key={index} className="flex items-start bg-white rounded-lg p-3 shadow-sm">
+                                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                    <span className="text-white text-xs font-bold">{index + 1}</span>
+                                  </div>
+                                  <span className="text-sm text-gray-700 leading-relaxed">{rec}</span>
                                 </li>
                               ))}
                             </ul>
+                            <div className="mt-4 pt-4 border-t border-green-200">
+                              <div className="flex items-center text-xs text-green-600">
+                                <i className="fas fa-rocket mr-1"></i>
+                                <span>Priority: Strategic</span>
+                              </div>
+                            </div>
                           </CardContent>
                         </Card>
                       </div>
@@ -734,22 +861,68 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
 
 
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg"
-                className="gradient-primary hover:shadow-lg transition-all px-8 py-3"
-                onClick={() => setLocation("/matching")}
-              >
-                Find Co-Founders Now
-              </Button>
-              <Button 
-                size="lg"
-                variant="outline" 
-                className="px-8 py-3 hover:border-primary hover:text-primary transition-all"
-                onClick={() => setLocation("/validate-idea")}
-              >
-                Validate Another Idea
-              </Button>
+            {/* Enhanced Call-to-Action */}
+            <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl p-8 text-center">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Turn Your Idea Into Reality?</h3>
+              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                Your idea has been validated. Now it's time to find the right co-founder and start building.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+                <Button
+                  size="lg"
+                  className="gradient-primary hover:shadow-xl transition-all px-8 py-4 text-lg group"
+                  onClick={() => setLocation("/matching")}
+                >
+                  <i className="fas fa-users mr-2 group-hover:scale-110 transition-transform"></i>
+                  Find Your Co-Founder
+                  <i className="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="px-8 py-4 text-lg hover:border-primary hover:text-primary hover:bg-primary/5 transition-all group"
+                  onClick={() => setLocation("/validate-idea")}
+                >
+                  <i className="fas fa-lightbulb mr-2 group-hover:scale-110 transition-transform"></i>
+                  Validate Another Idea
+                </Button>
+              </div>
+
+              {/* Additional Actions */}
+              <div className="flex flex-wrap justify-center gap-3 text-sm">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-600 hover:text-primary"
+                  onClick={() => window.print()}
+                >
+                  <i className="fas fa-print mr-2"></i>
+                  Print Report
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-600 hover:text-primary"
+                  onClick={() => {
+                    const url = window.location.href;
+                    navigator.clipboard.writeText(url);
+                    // You could add a toast notification here
+                  }}
+                >
+                  <i className="fas fa-share mr-2"></i>
+                  Share Results
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-600 hover:text-primary"
+                  onClick={() => setLocation("/dashboard")}
+                >
+                  <i className="fas fa-dashboard mr-2"></i>
+                  View Dashboard
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

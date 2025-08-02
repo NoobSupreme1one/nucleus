@@ -170,17 +170,18 @@ export const SentryErrorBoundary = Sentry.withErrorBoundary;
 
 // Performance monitoring
 export function trackPageLoad(pageName: string) {
-  const transaction = Sentry.startTransaction({
+  // Use the newer Sentry span API
+  return Sentry.startSpan({
     name: `Page Load: ${pageName}`,
     op: 'navigation',
+  }, (span) => {
+    // Finish the span when the page is fully loaded
+    window.addEventListener('load', () => {
+      span.end();
+    });
+    
+    return span;
   });
-  
-  // Finish the transaction when the page is fully loaded
-  window.addEventListener('load', () => {
-    transaction.finish();
-  });
-  
-  return transaction;
 }
 
 // Check if Sentry is configured
