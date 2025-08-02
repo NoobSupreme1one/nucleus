@@ -40,8 +40,10 @@ const localStorageMock = {
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
+  get length() { return 0; },
+  key: vi.fn(() => null),
 };
-global.localStorage = localStorageMock;
+global.localStorage = localStorageMock as Storage;
 
 // Mock sessionStorage
 const sessionStorageMock = {
@@ -49,8 +51,10 @@ const sessionStorageMock = {
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
+  get length() { return 0; },
+  key: vi.fn(() => null),
 };
-global.sessionStorage = sessionStorageMock;
+global.sessionStorage = sessionStorageMock as Storage;
 
 // Mock environment variables
 vi.mock('../lib/env', () => ({

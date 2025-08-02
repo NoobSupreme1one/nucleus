@@ -1,0 +1,14 @@
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts 2
+
+Using local development authentication provider
+Sentry error monitoring initialized
+Using local development authentication provider
+Local auth provider initialized with default users
+Available test accounts:
+- test@example.com / password123
+- admin@example.com / admin123
+3:59:39 AM [express] serving on port 5000
+Received SIGTERM. Starting graceful shutdown...
+HTTP server closed.

@@ -50,20 +50,31 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   // User operations
   async getUser(id: string): Promise<User | undefined> {
-    return await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id }
     });
+    return user || undefined;
   }
 
   async upsertUser(userData: InsertUser): Promise<User> {
-    return await prisma.user.upsert({
-      where: { id: userData.id },
-      update: {
-        ...userData,
-        updatedAt: new Date(),
-      },
-      create: userData,
+    // Find existing user by email since InsertUser doesn't have id
+    const existingUser = await prisma.user.findUnique({
+      where: { email: userData.email! }
     });
+    
+    if (existingUser) {
+      return await prisma.user.update({
+        where: { id: existingUser.id },
+        data: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      });
+    } else {
+      return await prisma.user.create({
+        data: userData,
+      });
+    }
   }
 
   async updateUserIdeaScore(userId: string, score: number): Promise<void> {
@@ -95,9 +106,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getIdea(id: string): Promise<Idea | undefined> {
-    return await prisma.idea.findUnique({
+    const idea = await prisma.idea.findUnique({
       where: { id }
     });
+    return idea || undefined;
   }
 
   async getUserIdeas(userId: string): Promise<Idea[]> {
@@ -132,9 +144,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getSubmission(id: string): Promise<Submission | undefined> {
-    return await prisma.submission.findUnique({
+    const submission = await prisma.submission.findUnique({
       where: { id }
     });
+    return submission || undefined;
   }
 
   async updateSubmission(id: string, submission: Partial<InsertSubmission>): Promise<Submission> {
@@ -152,9 +165,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getMatch(id: string): Promise<Match | undefined> {
-    return await prisma.match.findUnique({
+    const match = await prisma.match.findUnique({
       where: { id }
     });
+    return match || undefined;
   }
 
   async getUserMatches(userId: string): Promise<MatchWithUsers[]> {

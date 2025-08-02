@@ -29,26 +29,35 @@ class LocalStorage implements IStorage {
 
   async upsertUser(userData: InsertUser): Promise<User> {
     const now = new Date();
-    const existingUser = this.users.get(userData.id);
+    const userId = `local-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const existingUser = Array.from(this.users.values()).find(u => u.email === userData.email);
     
     const user: User = {
-      ...userData,
-      bio: userData.bio || existingUser?.bio || "",
-      role: userData.role || existingUser?.role || null,
-      skills: userData.skills || existingUser?.skills || [],
-      interests: userData.interests || existingUser?.interests || [],
-      experience: userData.experience || existingUser?.experience || "Beginner",
-      location: userData.location || existingUser?.location || "Unknown",
-      linkedinUrl: userData.linkedinUrl || existingUser?.linkedinUrl || "",
-      githubUrl: userData.githubUrl || existingUser?.githubUrl || "",  
-      portfolioUrl: userData.portfolioUrl || existingUser?.portfolioUrl || "",
-      profilePicture: userData.profileImageUrl || existingUser?.profilePicture || "",
-      totalIdeaScore: userData.totalIdeaScore || existingUser?.totalIdeaScore || 0,
+      id: existingUser?.id || userId,
+      email: userData.email,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      profileImageUrl: userData.profileImageUrl,
+      role: userData.role,
+      location: userData.location,
+      bio: userData.bio,
+      subscriptionTier: userData.subscriptionTier,
+      totalIdeaScore: userData.totalIdeaScore,
+      profileViews: userData.profileViews,
+      profilePublic: userData.profilePublic,
+      ideasPublic: userData.ideasPublic,
+      allowFounderMatching: userData.allowFounderMatching,
+      allowDirectContact: userData.allowDirectContact,
+      stripeCustomerId: userData.stripeCustomerId,
+      stripeSubscriptionId: userData.stripeSubscriptionId,
+      subscriptionStatus: userData.subscriptionStatus,
+      subscriptionPeriodEnd: userData.subscriptionPeriodEnd,
+      subscriptionCancelAtPeriodEnd: userData.subscriptionCancelAtPeriodEnd,
       createdAt: existingUser?.createdAt || now,
       updatedAt: now,
     };
     
-    this.users.set(userData.id, user);
+    this.users.set(user.id, user);
     return user;
   }
 
@@ -84,7 +93,6 @@ class LocalStorage implements IStorage {
       validationScore: 0,
       analysisReport: null,
       createdAt: now,
-      updatedAt: now,
     };
     
     this.ideas.set(id, idea);

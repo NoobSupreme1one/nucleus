@@ -43,11 +43,25 @@ export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
     if (!dbUser) {
       // Create user if they don't exist
       await storage.upsertUser({
-        id: user.id,
-        email: user.email || undefined,
-        firstName: user.user_metadata?.first_name || undefined,
-        lastName: user.user_metadata?.last_name || undefined,
-        profileImageUrl: user.user_metadata?.avatar_url || undefined,
+        email: user.email || null,
+        firstName: user.user_metadata?.first_name || null,
+        lastName: user.user_metadata?.last_name || null,
+        profileImageUrl: user.user_metadata?.avatar_url || null,
+        role: null,
+        location: null,
+        bio: null,
+        subscriptionTier: 'free',
+        totalIdeaScore: 0,
+        profileViews: 0,
+        profilePublic: true,
+        ideasPublic: true,
+        allowFounderMatching: true,
+        allowDirectContact: true,
+        stripeCustomerId: null,
+        stripeSubscriptionId: null,
+        subscriptionStatus: null,
+        subscriptionPeriodEnd: null,
+        subscriptionCancelAtPeriodEnd: false,
       });
     }
 
@@ -103,11 +117,25 @@ export async function setupAuth(app: Express) {
       // Get or create user in our database
       const user = data.user;
       await storage.upsertUser({
-        id: user.id,
-        email: user.email || undefined,
-        firstName: user.user_metadata?.first_name || undefined,
-        lastName: user.user_metadata?.last_name || undefined,
-        profileImageUrl: user.user_metadata?.avatar_url || undefined,
+        email: user.email || null,
+        firstName: user.user_metadata?.first_name || null,
+        lastName: user.user_metadata?.last_name || null,
+        profileImageUrl: user.user_metadata?.avatar_url || null,
+        role: null,
+        location: null,
+        bio: null,
+        subscriptionTier: 'free',
+        totalIdeaScore: 0,
+        profileViews: 0,
+        profilePublic: true,
+        ideasPublic: true,
+        allowFounderMatching: true,
+        allowDirectContact: true,
+        stripeCustomerId: null,
+        stripeSubscriptionId: null,
+        subscriptionStatus: null,
+        subscriptionPeriodEnd: null,
+        subscriptionCancelAtPeriodEnd: false,
       });
 
       res.json({ 
@@ -168,11 +196,25 @@ export async function setupAuth(app: Express) {
 
         // Create user in our database
         await storage.upsertUser({
-          id: data.user.id,
-          email: data.user.email || undefined,
-          firstName: firstName || undefined,
-          lastName: lastName || undefined,
-          profileImageUrl: data.user.user_metadata?.avatar_url || undefined,
+          email: data.user.email || null,
+          firstName: firstName || null,
+          lastName: lastName || null,
+          profileImageUrl: data.user.user_metadata?.avatar_url || null,
+          role: null,
+          location: null,
+          bio: null,
+          subscriptionTier: 'free',
+          totalIdeaScore: 0,
+          profileViews: 0,
+          profilePublic: true,
+          ideasPublic: true,
+          allowFounderMatching: true,
+          allowDirectContact: true,
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionStatus: null,
+          subscriptionPeriodEnd: null,
+          subscriptionCancelAtPeriodEnd: false,
         });
 
         res.json({ 
@@ -240,14 +282,25 @@ export async function setupAuth(app: Express) {
       const { role, location, bio } = req.body;
       
       const updatedUser = await storage.upsertUser({
-        id: userId,
-        email: req.user.email,
-        firstName: req.user.user_metadata?.first_name,
-        lastName: req.user.user_metadata?.last_name,
-        profileImageUrl: req.user.user_metadata?.avatar_url,
-        role,
-        location,
-        bio,
+        email: req.user.email || null,
+        firstName: req.user.user_metadata?.first_name || null,
+        lastName: req.user.user_metadata?.last_name || null,
+        profileImageUrl: req.user.user_metadata?.avatar_url || null,
+        role: role || null,
+        location: location || null,
+        bio: bio || null,
+        subscriptionTier: 'free',
+        totalIdeaScore: 0,
+        profileViews: 0,
+        profilePublic: true,
+        ideasPublic: true,
+        allowFounderMatching: true,
+        allowDirectContact: true,
+        stripeCustomerId: null,
+        stripeSubscriptionId: null,
+        subscriptionStatus: null,
+        subscriptionPeriodEnd: null,
+        subscriptionCancelAtPeriodEnd: false,
       });
       
       res.json(updatedUser);

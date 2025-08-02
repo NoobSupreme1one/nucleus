@@ -4,9 +4,19 @@ import type { User } from "@shared/types";
 
 interface ProfileCardProps {
   user: User;
+  onSwipeLeft?: () => void;
+  onSwipeRight?: () => void;
+  onViewProfile?: () => void;
+  compatibilityScore?: number;
 }
 
-export default function ProfileCard({ user }: ProfileCardProps) {
+export default function ProfileCard({ 
+  user, 
+  onSwipeLeft, 
+  onSwipeRight, 
+  onViewProfile, 
+  compatibilityScore 
+}: ProfileCardProps) {
   const roleColors = {
     engineer: "bg-blue-100 text-blue-800",
     designer: "bg-purple-100 text-purple-800",

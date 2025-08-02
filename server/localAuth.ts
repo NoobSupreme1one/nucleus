@@ -70,22 +70,30 @@ export async function setupAuth(app: Express) {
           email: email,
           firstName: 'Dev',
           lastName: 'User',
-          bio: 'Development user',
-          skills: ['Development'],
-          interests: ['Testing'],
-          experience: 'Beginner',
+          profileImageUrl: 'https://via.placeholder.com/150',
+          role: null,
           location: 'Local',
-          linkedinUrl: '',
-          githubUrl: '',
-          portfolioUrl: '',
-          profilePicture: 'https://via.placeholder.com/150',
+          bio: 'Development user',
+          subscriptionTier: 'free',
+          totalIdeaScore: 0,
+          profileViews: 0,
+          profilePublic: true,
+          ideasPublic: true,
+          allowFounderMatching: true,
+          allowDirectContact: true,
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionStatus: null,
+          subscriptionPeriodEnd: null,
+          subscriptionCancelAtPeriodEnd: false,
           createdAt: new Date(),
           updatedAt: new Date()
         };
         users.set(userId, user);
         
         // Also store in localStorage for leaderboard integration
-        await localStorage.upsertUser(user);
+        const { id, createdAt, updatedAt, ...userWithoutId } = user;
+        await localStorage.upsertUser(userWithoutId);
         
         // Create session
         const token = `dev-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -105,7 +113,8 @@ export async function setupAuth(app: Express) {
         });
       } else {
         // Ensure existing user is also in localStorage
-        await localStorage.upsertUser(user);
+        const { id, createdAt, updatedAt, ...userWithoutId } = user;
+        await localStorage.upsertUser(userWithoutId);
         
         // Create session for existing user
         const token = `dev-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -226,22 +235,30 @@ export async function setupAuth(app: Express) {
         email: email,
         firstName: firstName || 'Dev',
         lastName: lastName || 'User',
-        bio: 'Development user',
-        skills: ['Development'],
-        interests: ['Testing'],
-        experience: 'Beginner',
+        profileImageUrl: 'https://via.placeholder.com/150',
+        role: null,
         location: 'Local',
-        linkedinUrl: '',
-        githubUrl: '',
-        portfolioUrl: '',
-        profilePicture: 'https://via.placeholder.com/150',
+        bio: 'Development user',
+        subscriptionTier: 'free',
+        totalIdeaScore: 0,
+        profileViews: 0,
+        profilePublic: true,
+        ideasPublic: true,
+        allowFounderMatching: true,
+        allowDirectContact: true,
+        stripeCustomerId: null,
+        stripeSubscriptionId: null,
+        subscriptionStatus: null,
+        subscriptionPeriodEnd: null,
+        subscriptionCancelAtPeriodEnd: false,
         createdAt: new Date(),
         updatedAt: new Date()
       };
       users.set(userId, newUser);
       
       // Also store in localStorage for leaderboard integration
-      await localStorage.upsertUser(newUser);
+      const { id, createdAt, updatedAt, ...newUserWithoutId } = newUser;
+      await localStorage.upsertUser(newUserWithoutId);
 
       // Create session
       const token = `dev-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;

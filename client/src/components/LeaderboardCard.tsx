@@ -6,9 +6,10 @@ interface LeaderboardCardProps {
   user: User;
   rank: number;
   isTopThree: boolean;
+  showFullProfile?: boolean;
 }
 
-export default function LeaderboardCard({ user, rank, isTopThree }: LeaderboardCardProps) {
+export default function LeaderboardCard({ user, rank, isTopThree, showFullProfile = true }: LeaderboardCardProps) {
   const roleColors = {
     engineer: "bg-blue-100 text-blue-800",
     designer: "bg-purple-100 text-purple-800",
