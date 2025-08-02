@@ -248,10 +248,11 @@ export class AnalyticsService {
       return;
     }
 
+    const eventsBatch = [...this.events];
+    const performanceBatch = [...this.performanceMetrics];
+    const businessBatch = [...this.businessMetrics];
+
     try {
-      const eventsBatch = [...this.events];
-      const performanceBatch = [...this.performanceMetrics];
-      const businessBatch = [...this.businessMetrics];
 
       // Clear the arrays immediately to avoid duplicates
       this.events = [];

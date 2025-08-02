@@ -123,6 +123,54 @@ export interface ProReportResponse {
   error?: ProReportError;
 }
 
+// Enhanced 1000-Point Scoring System
+export interface ScoringCategory {
+  name: string;
+  score: number;
+  maxScore: number;
+  criteria: ScoringCriterion[];
+}
+
+export interface ScoringCriterion {
+  name: string;
+  score: number;
+  maxScore: number;
+  description: string;
+  weight: number;
+}
+
+export interface EnhancedIdeaValidation {
+  overallScore: number;
+  maxScore: 1000;
+  gradeLevel: 'Poor' | 'Weak' | 'Moderate' | 'Strong' | 'Exceptional';
+  recommendation: string;
+  
+  categories: {
+    marketOpportunity: ScoringCategory;
+    problemSolutionFit: ScoringCategory;
+    executionFeasibility: ScoringCategory;
+    personalFit: ScoringCategory;
+    focusMomentum: ScoringCategory;
+    financialViability: ScoringCategory;
+    customerValidation: ScoringCategory;
+    competitiveIntelligence: ScoringCategory;
+    resourceRequirements: ScoringCategory;
+    riskAssessment: ScoringCategory;
+  };
+  
+  detailedAnalysis: {
+    strengths: string[];
+    weaknesses: string[];
+    opportunities: string[];
+    threats: string[];
+    keyRecommendations: string[];
+    nextSteps: string[];
+  };
+  
+  confidenceLevel: 'low' | 'medium' | 'high';
+  lastUpdated: Date;
+}
+
 // Pro Business Report Interface
 export interface ProBusinessReport {
   // Executive Summary

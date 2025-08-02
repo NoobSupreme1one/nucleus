@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library';
-import { ErrorTracker } from '../services/sentry';
+// import { ErrorTracker } from '../services/sentry'; // Temporarily disabled
 
 // Custom error classes
 export class AppError extends Error {
@@ -112,10 +112,11 @@ export function enhancedErrorHandler() {
 
     // Track error in Sentry if configured
     if (err.isOperational === false || err.statusCode >= 500) {
-      ErrorTracker.trackError(err, {
-        feature: 'error_handler',
-        metadata: errorContext,
-      });
+      // ErrorTracker.trackError(err, {
+      //   feature: 'error_handler',
+      //   metadata: errorContext,
+      // });
+      console.error('High severity error:', err.message);
     }
 
     // Handle different error types
@@ -310,18 +311,18 @@ export function setupGracefulShutdown(server: any) {
 export function setupUnhandledErrorHandlers() {
   process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
-    ErrorTracker.trackError(error, {
-      feature: 'uncaught_exception',
-      metadata: { type: 'uncaughtException' },
-    });
+    // ErrorTracker.trackError(error, {
+    //   feature: 'uncaught_exception',
+    //   metadata: { type: 'uncaughtException' },
+    // });
     process.exit(1);
   });
 
   process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-    ErrorTracker.trackError(new Error(`Unhandled Rejection: ${reason}`), {
-      feature: 'unhandled_rejection',
-      metadata: { type: 'unhandledRejection' },
-    });
+    // ErrorTracker.trackError(new Error(`Unhandled Rejection: ${reason}`), {
+    //   feature: 'unhandled_rejection',
+    //   metadata: { type: 'unhandledRejection' },
+    // });
   });
 }

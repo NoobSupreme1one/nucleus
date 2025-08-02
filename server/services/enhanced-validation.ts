@@ -1,9 +1,14 @@
 import { validateStartupIdea as geminiValidate, IdeaValidationResult } from './gemini';
 import { validateStartupIdea as perplexityValidate } from './perplexity';
+import { EnhancedScoringService } from './enhanced-scoring';
+import { EnhancedIdeaValidation } from '../../shared/types';
 
 export interface ComprehensiveValidationResult {
   overallScore: number;
   executiveSummary: string;
+  
+  // Enhanced 1000-point scoring system
+  enhancedScoring: EnhancedIdeaValidation;
   
   // Core Analysis
   marketAnalysis: {
@@ -112,9 +117,20 @@ export async function performComprehensiveValidation(
     // Combine and synthesize results
     const combinedScore = calculateCombinedScore(geminiData, perplexityData);
     
+    // Generate enhanced 1000-point scoring
+    const enhancedScoring = EnhancedScoringService.calculateEnhancedScore(
+      title,
+      marketCategory,
+      problemDescription,
+      solutionDescription,
+      targetAudience,
+      geminiData
+    );
+    
     const result: ComprehensiveValidationResult = {
-      overallScore: combinedScore,
-      executiveSummary: generateExecutiveSummary(title, combinedScore, geminiData, perplexityData),
+      overallScore: enhancedScoring.overallScore, // Use enhanced score as primary
+      executiveSummary: generateExecutiveSummary(title, enhancedScoring.overallScore, geminiData, perplexityData),
+      enhancedScoring,
       
       marketAnalysis: {
         marketSize: geminiData?.marketAnalysis?.marketSize || 'medium',
@@ -593,9 +609,18 @@ function extractTrends(content: string): string[] {
 
 // Fallback functions
 function createFallbackResult(basicResult: IdeaValidationResult, title: string): ComprehensiveValidationResult {
+  const fallbackEnhancedScoring = EnhancedScoringService.calculateEnhancedScore(
+    title,
+    'other',
+    'Market validation needed',
+    'Solution analysis pending',
+    'Target audience assessment required'
+  );
+
   return {
     overallScore: basicResult.overallScore,
     executiveSummary: `${title} demonstrates ${basicResult.overallScore >= 600 ? 'strong' : 'moderate'} market potential with a validation score of ${basicResult.overallScore}/1000. This analysis combines AI-powered strategic evaluation with market research insights to provide comprehensive startup guidance.`,
+    enhancedScoring: fallbackEnhancedScoring,
     marketAnalysis: {
       ...basicResult.marketAnalysis,
       detailedInsights: basicResult.detailedAnalysis,
@@ -682,9 +707,18 @@ function createFallbackResult(basicResult: IdeaValidationResult, title: string):
 }
 
 function createMinimalResult(title: string, marketCategory: string): ComprehensiveValidationResult {
+  const minimalEnhancedScoring = EnhancedScoringService.calculateEnhancedScore(
+    title,
+    marketCategory,
+    'Analysis pending',
+    'Analysis pending',
+    'Analysis pending'
+  );
+
   return {
     overallScore: 500,
     executiveSummary: `${title} requires comprehensive validation. Analysis services temporarily unavailable.`,
+    enhancedScoring: minimalEnhancedScoring,
     marketAnalysis: {
       marketSize: 'medium',
       competition: 'moderate', 

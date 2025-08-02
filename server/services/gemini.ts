@@ -36,7 +36,7 @@ export async function validateStartupIdea(
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const prompt = `
-    You are a startup validation expert. Analyze the following startup idea and provide a comprehensive assessment with a score out of 1000 points.
+    You are a startup validation expert specializing in solo developer startups. Analyze the following startup idea using our Enhanced 1000-Point Scoring System designed specifically for solo developers who struggle with focus and follow-through.
 
     Startup Idea:
     - Title: ${title}
@@ -52,25 +52,38 @@ export async function validateStartupIdea(
         "marketSize": "small" | "medium" | "large",
         "competition": "low" | "moderate" | "high", 
         "trends": "declining" | "stable" | "growing",
-        "score": number (0-400)
+        "score": number (0-150)
       },
       "technicalFeasibility": {
         "complexity": "low" | "medium" | "high",
         "resourcesNeeded": "minimal" | "reasonable" | "significant",
         "timeToMarket": "estimated timeframe",
-        "score": number (0-300)
+        "score": number (0-140)
       },
-      "recommendations": ["actionable recommendation 1", "actionable recommendation 2", "actionable recommendation 3"],
-      "detailedAnalysis": "comprehensive analysis paragraph explaining the scoring rationale"
+      "recommendations": ["actionable recommendation 1", "actionable recommendation 2", "actionable recommendation 3", "actionable recommendation 4", "actionable recommendation 5"],
+      "detailedAnalysis": "comprehensive analysis paragraph explaining the scoring rationale with focus on solo developer feasibility"
     }
 
-    Scoring criteria:
-    - Market Analysis (400 points): Market size, competition level, growth trends
-    - Technical Feasibility (300 points): Implementation complexity, resource requirements
-    - Problem-Solution Fit (200 points): How well the solution addresses the problem
-    - Target Market Clarity (100 points): How well-defined and reachable the target audience is
+    Enhanced 1000-Point Scoring Framework (10 categories):
+    1. Market Opportunity (150 points): Market size, competition analysis, market validation
+    2. Problem-Solution Fit (120 points): Problem validation, solution quality
+    3. Execution Feasibility (140 points): Technical requirements, business operations
+    4. Personal Fit (100 points): Founder-market fit, execution alignment
+    5. Focus & Momentum (120 points): Simplicity & focus, momentum building opportunities
+    6. Financial Viability (100 points): Revenue model clarity, financial requirements
+    7. Customer Validation (90 points): Customer understanding, validation methods
+    8. Competitive Intelligence (80 points): Direct/indirect competition analysis
+    9. Resource Requirements (70 points): Human resources, physical/digital resources
+    10. Risk Assessment (130 points): Market risks, execution risks
 
-    Provide specific, actionable recommendations and be realistic in your assessment.
+    Special focus areas for solo developers:
+    - Can this be built and executed by one person?
+    - Are there clear, achievable milestones to maintain motivation?
+    - How resistant is this idea to scope creep and distractions?
+    - What's the minimum viable version that can generate feedback?
+    - How quickly can the founder see progress and get user validation?
+
+    Provide specific, actionable recommendations tailored for a solo developer starting this venture.
     `;
 
     const result = await model.generateContent(prompt);
@@ -92,8 +105,8 @@ export async function validateStartupIdea(
 
     // Ensure score is within valid range
     resultData.overallScore = Math.max(0, Math.min(1000, resultData.overallScore));
-    resultData.marketAnalysis.score = Math.max(0, Math.min(400, resultData.marketAnalysis.score));
-    resultData.technicalFeasibility.score = Math.max(0, Math.min(300, resultData.technicalFeasibility.score));
+    resultData.marketAnalysis.score = Math.max(0, Math.min(150, resultData.marketAnalysis.score));
+    resultData.technicalFeasibility.score = Math.max(0, Math.min(140, resultData.technicalFeasibility.score));
 
     return resultData as IdeaValidationResult;
   } catch (error) {

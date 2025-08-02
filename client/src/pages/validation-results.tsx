@@ -100,21 +100,27 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
   // Check if this is comprehensive validation result
   const isComprehensive = validation && validation.marketAnalysis && validation.executiveSummary;
   
+  // Check if enhanced scoring is available
+  const hasEnhancedScoring = validation && validation.enhancedScoring;
+  
   // Check if Pro report exists
   const hasProReport = validation && validation.proReport;
   const isProUser = user?.subscriptionTier === 'pro';
 
   const getScoreColor = (score: number) => {
-    if (score >= 800) return "text-green-600";
-    if (score >= 600) return "text-yellow-600";
+    if (score >= 850) return "text-green-600";
+    if (score >= 750) return "text-blue-600";
+    if (score >= 650) return "text-yellow-600";
+    if (score >= 550) return "text-orange-600";
     return "text-red-600";
   };
 
   const getScoreBadge = (score: number) => {
-    if (score >= 800) return { text: "Excellent Potential", color: "bg-green-100 text-green-800" };
-    if (score >= 600) return { text: "Strong Potential", color: "bg-yellow-100 text-yellow-800" };
-    if (score >= 400) return { text: "Moderate Potential", color: "bg-orange-100 text-orange-800" };
-    return { text: "Needs Improvement", color: "bg-red-100 text-red-800" };
+    if (score >= 850) return { text: "Exceptional - Drop Everything!", color: "bg-green-100 text-green-800" };
+    if (score >= 750) return { text: "Strong - Develop Further", color: "bg-blue-100 text-blue-800" };
+    if (score >= 650) return { text: "Moderate - Needs Improvement", color: "bg-yellow-100 text-yellow-800" };
+    if (score >= 550) return { text: "Weak - Consider Pivots", color: "bg-orange-100 text-orange-800" };
+    return { text: "Poor - Move On", color: "bg-red-100 text-red-800" };
   };
 
   const scoreBadge = getScoreBadge(score);
@@ -159,13 +165,18 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
             <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 mb-8">
               <div className="text-center">
                 <div className={`text-6xl font-bold gradient-text mb-2`}>
-                  {score}
+                  {hasEnhancedScoring ? validation.enhancedScoring.overallScore : score}
                 </div>
                 <div className="text-xl text-gray-600 mb-4">out of 1,000 points</div>
                 <Badge className={scoreBadge.color}>
                   <i className="fas fa-thumbs-up mr-2"></i>
-                  {scoreBadge.text}
+                  {hasEnhancedScoring ? validation.enhancedScoring.gradeLevel : scoreBadge.text}
                 </Badge>
+                {hasEnhancedScoring && validation.enhancedScoring.recommendation && (
+                  <p className="text-sm text-gray-600 mt-3 max-w-2xl mx-auto">
+                    {validation.enhancedScoring.recommendation}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -213,6 +224,137 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
                   </Card>
                 )}
 
+                {/* Enhanced Scoring Breakdown */}
+                {hasEnhancedScoring && validation.enhancedScoring && (
+                  <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 mb-8">
+                    <CardHeader>
+                      <CardTitle className="text-xl flex items-center">
+                        <i className="fas fa-chart-bar text-indigo-500 mr-2"></i>
+                        Enhanced 1000-Point Scoring Breakdown
+                      </CardTitle>
+                      <p className="text-sm text-gray-600">
+                        Designed specifically for solo developers with focus on execution feasibility
+                      </p>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                        {Object.entries(validation.enhancedScoring.categories).map(([categoryKey, category]: [string, any]) => (
+                          <div key={categoryKey} className="bg-white rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="font-semibold text-sm text-gray-900">{category.name}</h4>
+                              <Badge variant="outline" className="text-xs">
+                                {category.score}/{category.maxScore}
+                              </Badge>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                              <div
+                                className={`h-2 rounded-full ${
+                                  (category.score / category.maxScore) >= 0.8 ? 'bg-green-500' :
+                                  (category.score / category.maxScore) >= 0.6 ? 'bg-yellow-500' :
+                                  'bg-red-500'
+                                }`}
+                                style={{ width: `${Math.max(5, (category.score / category.maxScore) * 100)}%` }}
+                              ></div>
+                            </div>
+                            <div className="text-xs text-gray-600">
+                              {Math.round((category.score / category.maxScore) * 100)}% score
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* SWOT Analysis */}
+                      {validation.enhancedScoring.detailedAnalysis && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                          <div className="grid grid-cols-1 gap-4">
+                            <div className="bg-green-50 rounded-lg p-4">
+                              <h4 className="font-semibold text-green-800 mb-3 flex items-center">
+                                <i className="fas fa-thumbs-up mr-2"></i>
+                                Strengths
+                              </h4>
+                              <ul className="space-y-1 text-sm text-green-700">
+                                {validation.enhancedScoring.detailedAnalysis.strengths?.slice(0, 3).map((strength: string, index: number) => (
+                                  <li key={index} className="flex items-start">
+                                    <span className="inline-block w-1.5 h-1.5 bg-green-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
+                                    <span>{strength}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                            
+                            <div className="bg-blue-50 rounded-lg p-4">
+                              <h4 className="font-semibold text-blue-800 mb-3 flex items-center">
+                                <i className="fas fa-lightbulb mr-2"></i>
+                                Opportunities
+                              </h4>
+                              <ul className="space-y-1 text-sm text-blue-700">
+                                {validation.enhancedScoring.detailedAnalysis.opportunities?.slice(0, 3).map((opportunity: string, index: number) => (
+                                  <li key={index} className="flex items-start">
+                                    <span className="inline-block w-1.5 h-1.5 bg-blue-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
+                                    <span>{opportunity}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 gap-4">
+                            <div className="bg-red-50 rounded-lg p-4">
+                              <h4 className="font-semibold text-red-800 mb-3 flex items-center">
+                                <i className="fas fa-exclamation-triangle mr-2"></i>
+                                Weaknesses
+                              </h4>
+                              <ul className="space-y-1 text-sm text-red-700">
+                                {validation.enhancedScoring.detailedAnalysis.weaknesses?.slice(0, 3).map((weakness: string, index: number) => (
+                                  <li key={index} className="flex items-start">
+                                    <span className="inline-block w-1.5 h-1.5 bg-red-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
+                                    <span>{weakness}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                            
+                            <div className="bg-orange-50 rounded-lg p-4">
+                              <h4 className="font-semibold text-orange-800 mb-3 flex items-center">
+                                <i className="fas fa-shield-alt mr-2"></i>
+                                Threats
+                              </h4>
+                              <ul className="space-y-1 text-sm text-orange-700">
+                                {validation.enhancedScoring.detailedAnalysis.threats?.slice(0, 3).map((threat: string, index: number) => (
+                                  <li key={index} className="flex items-start">
+                                    <span className="inline-block w-1.5 h-1.5 bg-orange-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
+                                    <span>{threat}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Next Steps */}
+                      {validation.enhancedScoring.detailedAnalysis?.nextSteps && (
+                        <div className="mt-6 p-4 bg-purple-50 rounded-lg">
+                          <h4 className="font-semibold text-purple-800 mb-3 flex items-center">
+                            <i className="fas fa-road mr-2"></i>
+                            Recommended Next Steps
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {validation.enhancedScoring.detailedAnalysis.nextSteps.slice(0, 4).map((step: string, index: number) => (
+                              <div key={index} className="flex items-start text-sm text-purple-700">
+                                <span className="inline-block w-5 h-5 bg-purple-200 text-purple-800 rounded-full text-xs flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
+                                  {index + 1}
+                                </span>
+                                <span>{step}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                )}
+
                 {/* Analysis Breakdown */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   <Card className="bg-gray-50">
@@ -243,7 +385,10 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
                           <div className="flex justify-between">
                             <span className="font-semibold">Score</span>
                             <span className="font-bold text-primary">
-                              {validation.marketAnalysis?.score || 0}/400
+                              {hasEnhancedScoring ? 
+                                `${validation.enhancedScoring.categories.marketOpportunity.score}/150` : 
+                                `${validation.marketAnalysis?.score || 0}/400`
+                              }
                             </span>
                           </div>
                         </div>
@@ -286,7 +431,10 @@ export default function ValidationResults({ params }: ValidationResultsProps) {
                           <div className="flex justify-between">
                             <span className="font-semibold">Score</span>
                             <span className="font-bold text-primary">
-                              {validation.technicalFeasibility?.score || 0}/300
+                              {hasEnhancedScoring ? 
+                                `${validation.enhancedScoring.categories.executionFeasibility.score}/140` : 
+                                `${validation.technicalFeasibility?.score || 0}/300`
+                              }
                             </span>
                           </div>
                         </div>

@@ -39,13 +39,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize analytics service
   const storageInstance = getStorage();
   const prisma = (storageInstance as any).prisma;
-  const analytics = new AnalyticsService(prisma);
+  // const analytics = new AnalyticsService(prisma); // Temporarily disabled
+  const analytics = {
+    trackEvent: () => {},
+    trackProReportGeneration: () => {},
+    trackError: () => {},
+  } as any; // Mock analytics for now
 
   // Initialize Stripe service
   const stripeService = new StripeService(prisma);
 
   // Add performance monitoring middleware
-  app.use(createPerformanceMiddleware(analytics));
+  // app.use(createPerformanceMiddleware(analytics)); // Temporarily disabled
 
   // Add DDoS protection (very strict)
   app.use(conditionalRateLimit(ddosProtection));
