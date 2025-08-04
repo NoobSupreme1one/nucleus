@@ -263,68 +263,44 @@ export async function setupAuth(app: Express) {
     }
   });
 
-  // Google OAuth login endpoint
-  app.get('/api/auth/google', async (req, res) => {
+  // OAuth callback handler for Supabase redirects
+  app.get('/auth/callback', async (req, res) => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${req.protocol}://${req.get('host')}/auth/google/callback`,
-        },
-      });
-
-      if (error) {
-        console.error('Google OAuth error:', error);
-        return res.status(500).json({ message: 'OAuth initialization failed' });
-      }
-
-      // Redirect to Google OAuth
-      res.redirect(data.url);
-    } catch (error) {
-      console.error('Google OAuth error:', error);
-      res.status(500).json({ message: 'OAuth initialization failed' });
-    }
-  });
-
-  // Google OAuth callback endpoint
-  app.get('/auth/google/callback', async (req, res) => {
-    try {
-      const { code, error: oauthError } = req.query;
+      const { access_token, refresh_token, error: oauthError } = req.query;
 
       if (oauthError) {
         console.error('OAuth error:', oauthError);
         return res.redirect('/login?error=oauth_error');
       }
 
-      if (!code) {
-        return res.redirect('/login?error=no_code');
+      if (!access_token) {
+        return res.redirect('/login?error=no_token');
       }
 
-      // Exchange code for session
-      const { data, error } = await supabase.auth.exchangeCodeForSession(code as string);
-
-      if (error || !data.session) {
-        console.error('Code exchange error:', error);
-        return res.redirect('/login?error=exchange_failed');
-      }
-
-      // Set cookies with tokens
-      res.cookie('access_token', data.session.access_token, {
+      // Set cookies with tokens from Supabase
+      res.cookie('access_token', access_token as string, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 60 * 60 * 1000 // 1 hour
       });
 
-      if (data.session.refresh_token) {
-        res.cookie('refresh_token', data.session.refresh_token, {
+      if (refresh_token) {
+        res.cookie('refresh_token', refresh_token as string, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
       }
 
+      // Get user info from Supabase using the token
+      const { data: { user }, error } = await supabase.auth.getUser(access_token as string);
+      
+      if (error || !user) {
+        console.error('Error getting user:', error);
+        return res.redirect('/login?error=user_fetch_failed');
+      }
+
       // Get or create user in our database
-      const user = data.user;
       await storage.upsertUser({
         email: user.email || null,
         firstName: user.user_metadata?.first_name || null,

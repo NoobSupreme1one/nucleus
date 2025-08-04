@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { Role, SubscriptionTier, MatchStatus, MarketCategory } from '@prisma/client';
+import pkg from '@prisma/client';
+const { Role, SubscriptionTier, MatchStatus, MarketCategory } = pkg;
 
 // Enum schemas
 export const roleSchema = z.nativeEnum(Role);

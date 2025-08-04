@@ -185,7 +185,11 @@ export default function Login() {
               type="button"
               variant="outline"
               className="w-full mt-4"
-              onClick={() => window.location.href = '/api/auth/google'}
+              onClick={() => {
+                const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+                const redirectTo = window.location.origin;
+                window.location.href = `${supabaseUrl}/auth/v1/authorize?provider=google&redirect_to=${redirectTo}`;
+              }}
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                 <path

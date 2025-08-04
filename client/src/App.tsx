@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import { initializePerformanceOptimizations } from "@/lib/performance";
+import { handleOAuthCallback } from "@/lib/oauthCallback";
 import { useEffect } from "react";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import NotFound from "@/pages/not-found";
@@ -63,6 +64,9 @@ function App() {
   useEffect(() => {
     // Initialize performance optimizations on app load
     initializePerformanceOptimizations();
+    
+    // Handle OAuth callback if tokens are present in URL
+    handleOAuthCallback();
   }, []);
 
   return (
