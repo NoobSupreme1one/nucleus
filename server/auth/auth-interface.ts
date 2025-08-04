@@ -6,65 +6,51 @@ import type { User } from '@shared/types';
  */
 export interface AuthProvider {
   /**
-   * Initialize the authentication provider
-   */
-  initialize(): Promise<void>;
-
-  /**
-   * Verify a token and return user information
-   */
-  verifyToken(token: string): Promise<AuthUser | null>;
-
-  /**
    * Authenticate user with email/password
    */
-  authenticate(email: string, password: string): Promise<AuthResult>;
+  login(credentials: LoginCredentials): Promise<{ user: AuthUser; accessToken: string; refreshToken?: string }>;
 
   /**
    * Register a new user
    */
-  register(userData: RegisterData): Promise<AuthResult>;
+  register(credentials: RegisterCredentials): Promise<{ user: AuthUser; needsConfirmation: boolean; accessToken?: string; refreshToken?: string }>;
+
+  /**
+   * Get user by access token
+   */
+  getUser(accessToken: string): Promise<AuthUser | null>;
 
   /**
    * Logout user and invalidate token
    */
-  logout(token: string): Promise<void>;
+  logout(accessToken: string): Promise<void>;
 
   /**
-   * Refresh an access token
+   * Confirm user signup (for providers that require email confirmation)
    */
-  refreshToken(refreshToken: string): Promise<AuthResult>;
-
-  /**
-   * Get user profile information
-   */
-  getUserProfile(userId: string): Promise<AuthUser | null>;
+  confirmSignUp?(email: string, confirmationCode: string): Promise<boolean>;
 }
 
 export interface AuthUser {
   id: string;
   email?: string;
-  firstName?: string;
-  lastName?: string;
-  profileImageUrl?: string;
-  metadata?: Record<string, any>;
+  user_metadata?: {
+    first_name?: string;
+    last_name?: string;
+    avatar_url?: string;
+  };
 }
 
-export interface AuthResult {
-  success: boolean;
-  user?: AuthUser;
-  accessToken?: string;
-  refreshToken?: string;
-  expiresIn?: number;
-  error?: string;
+export interface LoginCredentials {
+  email: string;
+  password: string;
 }
 
-export interface RegisterData {
+export interface RegisterCredentials {
   email: string;
   password: string;
   firstName?: string;
   lastName?: string;
-  metadata?: Record<string, any>;
 }
 
 /**

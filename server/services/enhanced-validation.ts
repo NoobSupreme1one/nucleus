@@ -1,4 +1,4 @@
-import { validateStartupIdea as geminiValidate, IdeaValidationResult } from './gemini';
+import { validateStartupIdea as bedrockValidate, IdeaValidationResult } from './bedrock';
 import { validateStartupIdea as perplexityValidate } from './perplexity';
 import { EnhancedScoringService } from './enhanced-scoring';
 import { EnhancedIdeaValidation } from '../../shared/types';
@@ -98,17 +98,17 @@ async function _performComprehensiveValidation(
   try {
     console.log(`[Enhanced Validation] Starting comprehensive analysis for: ${title}`);
     
-    // Run both Gemini and Perplexity analysis in parallel for speed
-    const [geminiResult, perplexityResult] = await Promise.allSettled([
-      geminiValidate(title, marketCategory, problemDescription, solutionDescription, targetAudience),
+    // Run both Bedrock and Perplexity analysis in parallel for speed
+    const [bedrockResult, perplexityResult] = await Promise.allSettled([
+      bedrockValidate(title, marketCategory, problemDescription, solutionDescription, targetAudience),
       perplexityValidate({ title, marketCategory, problemDescription, solutionDescription, targetAudience })
     ]);
     
     // Extract results safely
-    const geminiData = geminiResult.status === 'fulfilled' ? geminiResult.value : null;
+    const bedrockData = bedrockResult.status === 'fulfilled' ? bedrockResult.value : null;
     const perplexityData = perplexityResult.status === 'fulfilled' ? perplexityResult.value : null;
     
-    console.log(`[Enhanced Validation] Gemini analysis: ${geminiData ? 'completed' : 'failed'}`);
+    console.log(`[Enhanced Validation] Bedrock analysis: ${bedrockData ? 'completed' : 'failed'}`);
     console.log(`[Enhanced Validation] Perplexity analysis: ${perplexityData ? 'completed' : 'failed'}`);
     
     // Perform additional market research using Perplexity
@@ -117,7 +117,7 @@ async function _performComprehensiveValidation(
     const trendAnalysis = await analyzeTrends(marketCategory);
     
     // Combine and synthesize results
-    const combinedScore = calculateCombinedScore(geminiData, perplexityData);
+    const combinedScore = calculateCombinedScore(bedrockData, perplexityData);
     
     // Generate enhanced 1000-point scoring
     const enhancedScoring = EnhancedScoringService.calculateEnhancedScore(
@@ -126,24 +126,24 @@ async function _performComprehensiveValidation(
       problemDescription,
       solutionDescription,
       targetAudience,
-      geminiData
+      bedrockData
     );
     
     const result: ComprehensiveValidationResult = {
       overallScore: enhancedScoring.overallScore, // Use enhanced score as primary
-      executiveSummary: generateExecutiveSummary(title, enhancedScoring.overallScore, geminiData, perplexityData),
+      executiveSummary: generateExecutiveSummary(title, enhancedScoring.overallScore, bedrockData, perplexityData),
       enhancedScoring,
       
       marketAnalysis: {
-        marketSize: geminiData?.marketAnalysis?.marketSize || 'medium',
-        competition: geminiData?.marketAnalysis?.competition || 'moderate',
-        trends: geminiData?.marketAnalysis?.trends || 'stable',
+        marketSize: bedrockData?.marketAnalysis?.marketSize || 'medium',
+        competition: bedrockData?.marketAnalysis?.competition || 'moderate',
+        trends: bedrockData?.marketAnalysis?.trends || 'stable',
         score: Math.max(
-          geminiData?.marketAnalysis?.score || 0,
+          bedrockData?.marketAnalysis?.score || 0,
           perplexityData?.analysisReport?.marketValidation?.score || 0
         ),
         detailedInsights: perplexityData?.analysisReport?.marketValidation?.feedback || 
-                         geminiData?.detailedAnalysis || 
+                         bedrockData?.detailedAnalysis || 
                          "Market analysis indicates potential opportunity with standard competitive dynamics.",
         marketTrends: trendAnalysis.trends,
         competitorAnalysis: competitiveAnalysis.summary,
@@ -151,11 +151,11 @@ async function _performComprehensiveValidation(
       },
       
       technicalFeasibility: {
-        complexity: geminiData?.technicalFeasibility?.complexity || 'medium',
-        resourcesNeeded: geminiData?.technicalFeasibility?.resourcesNeeded || 'reasonable',
-        timeToMarket: geminiData?.technicalFeasibility?.timeToMarket || '6-12 months',
+        complexity: bedrockData?.technicalFeasibility?.complexity || 'medium',
+        resourcesNeeded: bedrockData?.technicalFeasibility?.resourcesNeeded || 'reasonable',
+        timeToMarket: bedrockData?.technicalFeasibility?.timeToMarket || '6-12 months',
         score: Math.max(
-          geminiData?.technicalFeasibility?.score || 0,
+          bedrockData?.technicalFeasibility?.score || 0,
           perplexityData?.analysisReport?.technicalFeasibility?.score || 0
         ),
         implementationRoadmap: generateImplementationRoadmap(title, solutionDescription),
@@ -191,14 +191,14 @@ async function _performComprehensiveValidation(
       financialProjections: {
         revenueModel: generateRevenueModel(targetAudience, marketCategory),
         costStructure: identifyCostStructure(solutionDescription, marketCategory),
-        fundingRequirements: estimateFundingRequirements(geminiData?.technicalFeasibility?.complexity || 'medium'),
+        fundingRequirements: estimateFundingRequirements(bedrockData?.technicalFeasibility?.complexity || 'medium'),
         breakEvenAnalysis: performBreakEvenAnalysis(targetAudience, marketCategory),
         riskFactors: identifyRiskFactors(marketCategory, competitiveAnalysis)
       },
       
       strategicRecommendations: {
         immediate: [
-          ...geminiData?.recommendations?.slice(0, 2) || [],
+          ...bedrockData?.recommendations?.slice(0, 2) || [],
           ...perplexityData?.analysisReport?.recommendations?.slice(0, 2) || []
         ].slice(0, 3),
         shortTerm: generateShortTermRecommendations(marketCategory, targetAudience),
@@ -208,8 +208,8 @@ async function _performComprehensiveValidation(
       },
       
       citations: perplexityData?.analysisReport?.citations || [],
-      researchSources: ['Gemini AI Analysis', 'Perplexity Market Research', 'Industry Reports', 'Competitive Intelligence'],
-      confidenceLevel: determineConfidenceLevel(geminiData, perplexityData, marketIntelligence),
+      researchSources: ['Amazon Bedrock Nova Analysis', 'Perplexity Market Research', 'Industry Reports', 'Competitive Intelligence'],
+      confidenceLevel: determineConfidenceLevel(bedrockData, perplexityData, marketIntelligence),
       lastUpdated: new Date()
     };
     
@@ -221,7 +221,7 @@ async function _performComprehensiveValidation(
     
     // Fallback to basic analysis if enhanced fails
     try {
-      const basicResult = await geminiValidate(title, marketCategory, problemDescription, solutionDescription, targetAudience);
+      const basicResult = await bedrockValidate(title, marketCategory, problemDescription, solutionDescription, targetAudience);
       return createFallbackResult(basicResult, title);
     } catch (fallbackError) {
       console.error('[Enhanced Validation] Fallback analysis also failed:', fallbackError);
@@ -407,14 +407,14 @@ export async function performComprehensiveValidation(
 }
 
 // Helper functions for data processing and analysis
-function calculateCombinedScore(geminiData: IdeaValidationResult | null, perplexityData: any) {
-  if (geminiData && perplexityData) {
-    return Math.round((geminiData.overallScore + perplexityData.score) / 2);
+function calculateCombinedScore(bedrockData: IdeaValidationResult | null, perplexityData: any) {
+  if (bedrockData && perplexityData) {
+    return Math.round((bedrockData.overallScore + perplexityData.score) / 2);
   }
-  return geminiData?.overallScore || perplexityData?.score || 500;
+  return bedrockData?.overallScore || perplexityData?.score || 500;
 }
 
-function generateExecutiveSummary(title: string, score: number, geminiData: any, perplexityData: any) {
+function generateExecutiveSummary(title: string, score: number, bedrockData: any, perplexityData: any) {
   const scoreLevel = score >= 750 ? 'Excellent' : score >= 600 ? 'Good' : score >= 400 ? 'Moderate' : 'Needs Improvement';
   const recommendation = score >= 600 ? 'strongly recommended for development' : score >= 400 ? 'shows potential with refinements needed' : 'requires significant validation and pivoting';
   
@@ -731,7 +731,7 @@ function createFallbackResult(basicResult: IdeaValidationResult, title: string):
       ]
     },
     citations: [],
-    researchSources: ['Basic AI Analysis'],
+    researchSources: ['Amazon Bedrock Nova Analysis'],
     confidenceLevel: 'low',
     lastUpdated: new Date()
   };

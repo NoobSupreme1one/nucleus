@@ -4,7 +4,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { localStorage } from "./localStorage";
 import { setupAuth, getAuthMiddleware } from "./auth/auth-factory";
-import { validateStartupIdea, generateMatchingInsights } from "./services/gemini";
+import { validateStartupIdea, generateMatchingInsights } from "./services/bedrock";
 import { performComprehensiveValidation } from "./services/enhanced-validation";
 import { ProReportGeneratorService } from "./services/pro-report-generator";
 import { PrivacyManagerService } from "./services/privacy-manager";
@@ -12,7 +12,7 @@ import { AnalyticsService, createPerformanceMiddleware } from "./services/analyt
 import { StripeService } from "./services/stripe";
 import { requireProSubscription, addSubscriptionInfo, rateLimitFreeUsers, requireFeature } from "./middleware/subscription";
 import { insertIdeaSchema, insertSubmissionSchema, insertMessageSchema } from "@shared/validation";
-import { upload, getFileUrl, CloudStorageService } from './services/cloud-storage';
+import { upload, getFileUrl, CloudStorageService } from './services/s3-storage';
 import { ErrorTracker, addUserContextMiddleware, isSentryConfigured } from './services/sentry';
 import { rateLimiters, slowDownLimiters, ddosProtection, conditionalRateLimit, createUserBasedRateLimit } from './services/rate-limit';
 import path from 'path';
@@ -21,10 +21,11 @@ import path from 'path';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup unified authentication system
-  const authService = await setupAuth(app);
+  await setupAuth(app);
 
-  // Helper function to get the appropriate authentication middleware
-  const getAuthMiddleware = () => authService.createAuthMiddleware();
+  // Helper function to get the appropriate authentication middleware  
+  const { getAuthMiddleware: getAuth } = await import('./auth/auth-factory.js');
+  const getAuthMiddleware = () => getAuth();
 
   // Helper function to get the appropriate storage
   const getStorage = () => process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY ? storage : localStorage;

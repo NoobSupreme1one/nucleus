@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import type { ProBusinessReport, MarketCategory } from '@shared/types';
 import { DomainCheckerService } from './domain-checker';
 import { FundingMatcherService } from './funding-matcher';
@@ -6,20 +6,56 @@ import { FounderMatcherService } from './founder-matcher';
 import { PrismaClient } from '@prisma/client';
 
 export class ProReportGeneratorService {
-  private genAI: GoogleGenerativeAI;
+  private bedrockClient: BedrockRuntimeClient;
   private domainChecker: DomainCheckerService;
   private fundingMatcher: FundingMatcherService;
   private founderMatcher: FounderMatcherService;
 
   constructor(prisma: PrismaClient) {
-    if (!process.env.GOOGLE_GEMINI_API_KEY) {
-      throw new Error('GOOGLE_GEMINI_API_KEY is required');
+    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+      throw new Error('AWS credentials are required');
     }
     
-    this.genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY);
+    this.bedrockClient = new BedrockRuntimeClient({
+      region: process.env.AWS_BEDROCK_REGION || process.env.AWS_REGION || 'us-west-1',
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+      }
+    });
     this.domainChecker = new DomainCheckerService();
     this.fundingMatcher = new FundingMatcherService();
     this.founderMatcher = new FounderMatcherService(prisma);
+  }
+
+  /**
+   * Helper method to invoke Bedrock Nova model
+   */
+  private async invokeBedrockModel(prompt: string): Promise<string> {
+    const requestBody = {
+      messages: [
+        {
+          role: "user",
+          content: [{ text: prompt }]
+        }
+      ],
+      inferenceConfig: {
+        maxTokens: 4000,
+        temperature: 0.7,
+        topP: 0.9
+      }
+    };
+
+    const command = new InvokeModelCommand({
+      modelId: "amazon.nova-pro-v1:0",
+      contentType: "application/json",
+      accept: "application/json",
+      body: JSON.stringify(requestBody)
+    });
+
+    const response = await this.bedrockClient.send(command);
+    const responseBody = JSON.parse(new TextDecoder().decode(response.body));
+    return responseBody.output?.message?.content?.[0]?.text || '';
   }
 
   /**
@@ -98,8 +134,6 @@ export class ProReportGeneratorService {
     solutionDescription: string,
     targetAudience: string
   ): Promise<ProBusinessReport['executiveSummary']> {
-    const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-
     const prompt = `
     Generate a comprehensive executive summary for the startup "${title}".
     
@@ -118,8 +152,7 @@ export class ProReportGeneratorService {
     `;
 
     try {
-      const result = await model.generateContent(prompt);
-      const response = result.response.text();
+      const response = await this.invokeBedrockModel(prompt);
       const cleanedResponse = response.replace(/```json\n?|\n?```/g, '').trim();
       return JSON.parse(cleanedResponse);
     } catch (error) {
@@ -136,7 +169,7 @@ export class ProReportGeneratorService {
     solutionDescription: string,
     marketCategory: MarketCategory
   ): Promise<ProBusinessReport['companyDescription']> {
-    const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    
 
     const prompt = `
     Generate a detailed company description for "${title}" in the ${marketCategory} market.
@@ -154,8 +187,7 @@ export class ProReportGeneratorService {
     `;
 
     try {
-      const result = await model.generateContent(prompt);
-      const response = result.response.text();
+      const response = await this.invokeBedrockModel(prompt);
       const cleanedResponse = response.replace(/```json\n?|\n?```/g, '').trim();
       return JSON.parse(cleanedResponse);
     } catch (error) {
@@ -173,7 +205,7 @@ export class ProReportGeneratorService {
     targetAudience: string,
     problemDescription: string
   ): Promise<ProBusinessReport['enhancedMarketAnalysis']> {
-    const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    
 
     const prompt = `
     Generate a comprehensive market analysis for "${title}" in the ${marketCategory} market.
@@ -193,8 +225,7 @@ export class ProReportGeneratorService {
     `;
 
     try {
-      const result = await model.generateContent(prompt);
-      const response = result.response.text();
+      const response = await this.invokeBedrockModel(prompt);
       const cleanedResponse = response.replace(/```json\n?|\n?```/g, '').trim();
       return JSON.parse(cleanedResponse);
     } catch (error) {
@@ -210,7 +241,7 @@ export class ProReportGeneratorService {
     marketCategory: MarketCategory,
     solutionDescription: string
   ): Promise<ProBusinessReport['organizationManagement']> {
-    const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    
 
     const prompt = `
     Generate an organization and management plan for a ${marketCategory} startup.
@@ -228,8 +259,7 @@ export class ProReportGeneratorService {
     `;
 
     try {
-      const result = await model.generateContent(prompt);
-      const response = result.response.text();
+      const response = await this.invokeBedrockModel(prompt);
       const cleanedResponse = response.replace(/```json\n?|\n?```/g, '').trim();
       return JSON.parse(cleanedResponse);
     } catch (error) {
@@ -391,7 +421,7 @@ export class ProReportGeneratorService {
     solutionDescription: string,
     marketCategory: MarketCategory
   ): Promise<ProBusinessReport['productServiceLine']> {
-    const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    
 
     const prompt = `
     Generate a detailed product/service line analysis for "${title}" in the ${marketCategory} market.
@@ -410,8 +440,7 @@ export class ProReportGeneratorService {
     `;
 
     try {
-      const result = await model.generateContent(prompt);
-      const response = result.response.text();
+      const response = await this.invokeBedrockModel(prompt);
       const cleanedResponse = response.replace(/```json\n?|\n?```/g, '').trim();
       return JSON.parse(cleanedResponse);
     } catch (error) {
@@ -429,7 +458,7 @@ export class ProReportGeneratorService {
     marketCategory: MarketCategory,
     solutionDescription: string
   ): Promise<ProBusinessReport['marketingSalesStrategy']> {
-    const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    
 
     const prompt = `
     Generate a comprehensive marketing and sales strategy for "${title}" targeting ${targetAudience} in the ${marketCategory} market.
@@ -450,8 +479,7 @@ export class ProReportGeneratorService {
     `;
 
     try {
-      const result = await model.generateContent(prompt);
-      const response = result.response.text();
+      const response = await this.invokeBedrockModel(prompt);
       const cleanedResponse = response.replace(/```json\n?|\n?```/g, '').trim();
       return JSON.parse(cleanedResponse);
     } catch (error) {
@@ -468,7 +496,7 @@ export class ProReportGeneratorService {
     targetAudience: string,
     solutionDescription: string
   ): Promise<ProBusinessReport['financialProjections']> {
-    const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    
 
     const prompt = `
     Generate realistic financial projections for a ${marketCategory} startup targeting ${targetAudience}.
@@ -487,8 +515,7 @@ export class ProReportGeneratorService {
     `;
 
     try {
-      const result = await model.generateContent(prompt);
-      const response = result.response.text();
+      const response = await this.invokeBedrockModel(prompt);
       const cleanedResponse = response.replace(/```json\n?|\n?```/g, '').trim();
       return JSON.parse(cleanedResponse);
     } catch (error) {

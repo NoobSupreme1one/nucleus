@@ -1,0 +1,342 @@
+<testsuites id="" name="" tests="75" failures="0" skipped="75" errors="0" time="0.09923999999999995">
+<testsuite name="demo-experience.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="chromium" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Interactive Demo Experience › Demo page loads and functions correctly" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Interactive Demo Experience › Demo accessible from landing page" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Interactive Demo Experience › Demo works with different idea types" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="mobile-experience.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="chromium" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Mobile Experience Tests › Mobile landing page experience" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Mobile Experience Tests › Mobile text readability" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Mobile Experience Tests › Mobile performance" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="pro-report.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="chromium" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Pro Report Generation E2E Tests › should display pro report generation button for pro users" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should generate and display pro report" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should show upgrade prompt for free users" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should handle pro report generation errors" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should allow printing and exporting pro report" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should navigate through report sections" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Privacy Settings E2E Tests › should open and update privacy settings" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="user-experience-review.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="chromium" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation" classname="user-experience-review.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Experience Review - Target Customer Journey › Test accessibility and performance" classname="user-experience-review.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="demo-experience.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="firefox" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Interactive Demo Experience › Demo page loads and functions correctly" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Interactive Demo Experience › Demo accessible from landing page" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Interactive Demo Experience › Demo works with different idea types" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="mobile-experience.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="firefox" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Mobile Experience Tests › Mobile landing page experience" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Mobile Experience Tests › Mobile text readability" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Mobile Experience Tests › Mobile performance" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="pro-report.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="firefox" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Pro Report Generation E2E Tests › should display pro report generation button for pro users" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should generate and display pro report" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should show upgrade prompt for free users" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should handle pro report generation errors" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should allow printing and exporting pro report" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should navigate through report sections" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Privacy Settings E2E Tests › should open and update privacy settings" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="user-experience-review.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="firefox" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation" classname="user-experience-review.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Experience Review - Target Customer Journey › Test accessibility and performance" classname="user-experience-review.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="demo-experience.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="webkit" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Interactive Demo Experience › Demo page loads and functions correctly" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Interactive Demo Experience › Demo accessible from landing page" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Interactive Demo Experience › Demo works with different idea types" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="mobile-experience.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="webkit" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Mobile Experience Tests › Mobile landing page experience" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Mobile Experience Tests › Mobile text readability" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Mobile Experience Tests › Mobile performance" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="pro-report.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="webkit" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Pro Report Generation E2E Tests › should display pro report generation button for pro users" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should generate and display pro report" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should show upgrade prompt for free users" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should handle pro report generation errors" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should allow printing and exporting pro report" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should navigate through report sections" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Privacy Settings E2E Tests › should open and update privacy settings" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="user-experience-review.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="webkit" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation" classname="user-experience-review.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Experience Review - Target Customer Journey › Test accessibility and performance" classname="user-experience-review.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="demo-experience.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Interactive Demo Experience › Demo page loads and functions correctly" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Interactive Demo Experience › Demo accessible from landing page" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Interactive Demo Experience › Demo works with different idea types" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="mobile-experience.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Mobile Experience Tests › Mobile landing page experience" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Mobile Experience Tests › Mobile text readability" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Mobile Experience Tests › Mobile performance" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="pro-report.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="Mobile Chrome" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Pro Report Generation E2E Tests › should display pro report generation button for pro users" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should generate and display pro report" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should show upgrade prompt for free users" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should handle pro report generation errors" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should allow printing and exporting pro report" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should navigate through report sections" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Privacy Settings E2E Tests › should open and update privacy settings" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="user-experience-review.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="Mobile Chrome" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation" classname="user-experience-review.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Experience Review - Target Customer Journey › Test accessibility and performance" classname="user-experience-review.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="demo-experience.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="Mobile Safari" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Interactive Demo Experience › Demo page loads and functions correctly" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Interactive Demo Experience › Demo accessible from landing page" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Interactive Demo Experience › Demo works with different idea types" classname="demo-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="mobile-experience.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="Mobile Safari" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Mobile Experience Tests › Mobile landing page experience" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Mobile Experience Tests › Mobile text readability" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Mobile Experience Tests › Mobile performance" classname="mobile-experience.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="pro-report.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="Mobile Safari" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Pro Report Generation E2E Tests › should display pro report generation button for pro users" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should generate and display pro report" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should show upgrade prompt for free users" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should handle pro report generation errors" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should allow printing and exporting pro report" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Pro Report Generation E2E Tests › should navigate through report sections" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Privacy Settings E2E Tests › should open and update privacy settings" classname="pro-report.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="user-experience-review.spec.ts" timestamp="2025-08-04T23:00:45.846Z" hostname="Mobile Safari" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation" classname="user-experience-review.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Experience Review - Target Customer Journey › Test accessibility and performance" classname="user-experience-review.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

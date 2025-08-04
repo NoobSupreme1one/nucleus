@@ -1,0 +1,44 @@
+version: 1.0
+runtime: nodejs18
+build:
+  commands:
+    build:
+      - echo "Installing dependencies..."
+      - npm ci --only=production
+      - echo "Building application..."
+      - npm run build
+      - echo "Generating Prisma client..."
+      - npx prisma generate
+run:
+  runtime-version: 18
+  command: npm start
+  network:
+    port: 8080
+    env: PORT
+  env:
+    - name: NODE_ENV
+      value: production
+    - name: PORT
+      value: 8080
+    - name: DATABASE_URL
+      value: ${DATABASE_URL}
+    - name: AWS_REGION
+      value: ${AWS_REGION}
+    - name: AWS_ACCESS_KEY_ID
+      value: ${AWS_ACCESS_KEY_ID}
+    - name: AWS_SECRET_ACCESS_KEY
+      value: ${AWS_SECRET_ACCESS_KEY}
+    - name: AWS_COGNITO_USER_POOL_ID
+      value: ${AWS_COGNITO_USER_POOL_ID}
+    - name: AWS_COGNITO_CLIENT_ID
+      value: ${AWS_COGNITO_CLIENT_ID}
+    - name: AWS_S3_BUCKET_NAME
+      value: ${AWS_S3_BUCKET_NAME}
+    - name: AWS_BEDROCK_REGION
+      value: ${AWS_BEDROCK_REGION}
+    - name: PERPLEXITY_API_KEY
+      value: ${PERPLEXITY_API_KEY}
+    - name: STRIPE_SECRET_KEY
+      value: ${STRIPE_SECRET_KEY}
+    - name: STRIPE_WEBHOOK_SECRET
+      value: ${STRIPE_WEBHOOK_SECRET}

@@ -1,14 +1,89 @@
 
 > rest-express@1.0.0 dev
-> NODE_ENV=development tsx server/index.ts 2
+> NODE_ENV=development tsx server/index.ts
 
-Using local development authentication provider
-Sentry error monitoring initialized
-Using local development authentication provider
-Local auth provider initialized with default users
-Available test accounts:
-- test@example.com / password123
-- admin@example.com / admin123
-3:59:39 AM [express] serving on port 5000
-Received SIGTERM. Starting graceful shutdown...
-HTTP server closed.
+Sentry DSN not configured - error monitoring disabled
+Using AWS Cognito authentication provider
+3:56:33 PM [express] serving on port 5000
+[SECURITY] POST /api/auth/login {
+  ip: '127.0.0.1',
+  userAgent: 'curl/8.5.0',
+  timestamp: '2025-08-04T22:56:36.605Z',
+  userId: undefined
+}
+Cognito login error: NotAuthorizedException: Incorrect username or password.
+    at de_NotAuthorizedExceptionRes (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/projects/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/projects/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async <anonymous> (/home/noob/projects/nucleus/server/cognitoAuth.ts:144:24) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: '5248cc01-e263-4bd8-a0db-200b417a4415',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+3:56:36 PM [express] POST /api/auth/login 500 in 263ms :: {"message":"Login failed"}
+[SECURITY] POST /api/auth/login {
+  ip: '127.0.0.1',
+  userAgent: 'curl/8.5.0',
+  timestamp: '2025-08-04T22:56:45.995Z',
+  userId: undefined
+}
+3:56:46 PM [express] POST /api/auth/login 200 in 519ms :: {"message":"Logged in successfully"}
+[SECURITY] POST /api/auth/login {
+  ip: '127.0.0.1',
+  userAgent: 'curl/8.5.0',
+  timestamp: '2025-08-04T22:56:57.934Z',
+  userId: undefined
+}
+3:56:58 PM [express] POST /api/auth/login 200 in 364ms :: {"message":"Logged in successfully"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'curl/8.5.0',
+  timestamp: '2025-08-04T22:57:02.084Z',
+  userId: undefined
+}
+3:57:02 PM [express] GET /api/auth/user 200 in 201ms
+[SECURITY] POST /api/auth/logout {
+  ip: '127.0.0.1',
+  userAgent: 'curl/8.5.0',
+  timestamp: '2025-08-04T22:57:10.921Z',
+  userId: undefined
+}
+3:57:11 PM [express] POST /api/auth/logout 200 in 187ms :: {"message":"Logged out successfully"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'curl/8.5.0',
+  timestamp: '2025-08-04T22:57:14.926Z',
+  userId: undefined
+}
+Cognito auth error: NotAuthorizedException: Access Token has been revoked
+    at de_NotAuthorizedExceptionRes (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/projects/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/projects/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async isAuthenticated (/home/noob/projects/nucleus/server/cognitoAuth.ts:64:22) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: 'd3c67ca0-1c74-489f-b588-a7bc9e810860',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+3:57:15 PM [express] GET /api/auth/user 401 in 84ms :: {"message":"Authentication failed"}

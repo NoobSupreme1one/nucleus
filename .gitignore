@@ -8,3 +8,4 @@ vite.config.ts.*
 .vercel
 .env
 .env.local
+CLAUDE.md
