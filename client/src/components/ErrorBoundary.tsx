@@ -80,16 +80,16 @@ export class ErrorBoundary extends Component<Props, State> {
 
       // Default error UI
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-background flex items-center justify-center p-4">
           <Card className="max-w-2xl w-full">
             <CardHeader className="text-center">
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i className="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
               </div>
-              <CardTitle className="text-2xl text-gray-900">
+              <CardTitle className="text-2xl text-foreground">
                 Oops! Something went wrong
               </CardTitle>
-              <p className="text-gray-600 mt-2">
+              <p className="text-muted-foreground mt-2">
                 We encountered an unexpected error. Our team has been notified and is working on a fix.
               </p>
             </CardHeader>

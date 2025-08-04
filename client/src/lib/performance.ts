@@ -92,8 +92,9 @@ export function optimizeWebVitals() {
   // Reduce CLS by setting image dimensions
   const images = document.querySelectorAll('img:not([width]):not([height])');
   images.forEach(img => {
-    if (!img.getAttribute('width') && !img.getAttribute('height')) {
-      img.style.aspectRatio = '16/9'; // Default aspect ratio
+    const imgElement = img as HTMLImageElement;
+    if (!imgElement.getAttribute('width') && !imgElement.getAttribute('height')) {
+      imgElement.style.aspectRatio = '16/9'; // Default aspect ratio
     }
   });
 

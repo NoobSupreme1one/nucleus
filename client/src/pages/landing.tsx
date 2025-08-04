@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import type { User } from "@shared/types";
 import LeaderboardCard from "@/components/LeaderboardCard";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useState } from "react";
 
 export default function Landing() {
@@ -16,7 +17,7 @@ export default function Landing() {
   const topUsers = leaderboard.slice(0, 10);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Skip to main content for screen readers */}
       <a
         href="#main-content"
@@ -26,21 +27,22 @@ export default function Landing() {
       </a>
 
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50" role="navigation" aria-label="Main navigation">
+      <nav className="bg-card shadow-sm border-b border-border sticky top-0 z-50" role="navigation" aria-label="Main navigation">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center" aria-hidden="true">
                 <i className="fas fa-handshake text-white text-sm" aria-hidden="true"></i>
               </div>
-              <span className="text-xl font-bold text-gray-900">Nucleus</span>
+              <span className="text-xl font-bold text-foreground">Nucleus</span>
             </div>
             
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-gray-600 hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1">Features</a>
-              <a href="#how-it-works" className="text-gray-600 hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1">How It Works</a>
-              <a href="#leaderboard" className="text-gray-600 hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1">Leaderboard</a>
-              <a href="/pricing" className="text-gray-600 hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1">Pricing</a>
+              <a href="#features" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1">Features</a>
+              <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1">How It Works</a>
+              <a href="#leaderboard" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1">Leaderboard</a>
+              <a href="/pricing" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1">Pricing</a>
+              <ThemeToggle />
               <Button
                 variant="outline"
                 onClick={() => window.location.href = '/login'}
@@ -64,44 +66,47 @@ export default function Landing() {
               aria-expanded={mobileMenuOpen}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              <i className={`fas ${mobileMenuOpen ? 'fa-times' : 'fa-bars'} text-gray-600 text-lg`} aria-hidden="true"></i>
+              <i className={`fas ${mobileMenuOpen ? 'fa-times' : 'fa-bars'} text-muted-foreground text-lg`} aria-hidden="true"></i>
             </Button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
+          <div className="md:hidden bg-card border-t border-border shadow-lg">
             <div className="px-4 py-4 space-y-1">
               <a
                 href="#features"
-                className="block py-3 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors min-h-[44px] flex items-center"
+                className="block py-3 px-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-md transition-colors min-h-[44px] flex items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Features
               </a>
               <a
                 href="#how-it-works"
-                className="block py-3 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors min-h-[44px] flex items-center"
+                className="block py-3 px-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-md transition-colors min-h-[44px] flex items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 How It Works
               </a>
               <a
                 href="#leaderboard"
-                className="block py-3 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors min-h-[44px] flex items-center"
+                className="block py-3 px-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-md transition-colors min-h-[44px] flex items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Leaderboard
               </a>
               <a
                 href="/pricing"
-                className="block py-3 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors min-h-[44px] flex items-center"
+                className="block py-3 px-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-md transition-colors min-h-[44px] flex items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Pricing
               </a>
               <div className="pt-4 space-y-3">
+                <div className="flex justify-center py-2">
+                  <ThemeToggle />
+                </div>
                 <Button
                   variant="outline"
                   className="w-full min-h-[44px] text-base"
@@ -123,17 +128,17 @@ export default function Landing() {
 
       {/* Hero Section */}
       <main id="main-content">
-        <section className="bg-white" aria-labelledby="hero-heading">
+        <section className="bg-background" aria-labelledby="hero-heading">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div className="text-center fade-in-up">
-              <h1 id="hero-heading" className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 id="hero-heading" className="text-3xl sm:text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
                 Validate Your Startup Idea{" "}
                 <span className="gradient-text">Before You Build</span>
               </h1>
-              <p className="text-lg sm:text-xl text-gray-600 mb-6 max-w-3xl mx-auto leading-relaxed px-4 sm:px-0">
+              <p className="text-lg sm:text-xl text-muted-foreground mb-6 max-w-3xl mx-auto leading-relaxed px-4 sm:px-0">
                 Get AI-powered analysis with a 1,000-point scoring system, then find the perfect co-founder to bring your validated idea to life.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-8 text-sm text-gray-500">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-8 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2 min-h-[24px]">
                   <i className="fas fa-check-circle text-green-500 text-base" aria-hidden="true"></i>
                   <span className="font-medium">Free idea validation</span>
@@ -174,22 +179,22 @@ export default function Landing() {
                 <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 float" style={{animationDelay: '0.5s'}} aria-hidden="true">
                   <i className="fas fa-lightbulb text-white text-2xl" aria-hidden="true"></i>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Validate Ideas</h3>
-                <p className="text-gray-600 leading-relaxed">AI-powered analysis with 1,000-point scoring system</p>
+                <h3 className="text-xl font-semibold text-foreground mb-3">Validate Ideas</h3>
+                <p className="text-muted-foreground leading-relaxed">AI-powered analysis with 1,000-point scoring system</p>
               </div>
               <div className="text-center py-6 hover-lift" role="listitem">
                 <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 float" style={{animationDelay: '1s'}} aria-hidden="true">
                   <i className="fas fa-users text-white text-2xl" aria-hidden="true"></i>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Match Co-Founders</h3>
-                <p className="text-gray-600 leading-relaxed">Swipe through complementary skill sets and personalities</p>
+                <h3 className="text-xl font-semibold text-foreground mb-3">Match Co-Founders</h3>
+                <p className="text-muted-foreground leading-relaxed">Swipe through complementary skill sets and personalities</p>
               </div>
               <div className="text-center py-6 hover-lift" role="listitem">
                 <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 float" style={{animationDelay: '1.5s'}} aria-hidden="true">
                   <i className="fas fa-rocket text-white text-2xl" aria-hidden="true"></i>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Build Startups</h3>
-                <p className="text-gray-600 leading-relaxed">Turn validated ideas into successful companies</p>
+                <h3 className="text-xl font-semibold text-foreground mb-3">Build Startups</h3>
+                <p className="text-muted-foreground leading-relaxed">Turn validated ideas into successful companies</p>
               </div>
             </div>
           </div>
@@ -197,20 +202,20 @@ export default function Landing() {
       </section>
 
         {/* Testimonials Section */}
-        <section className="py-20 bg-white" aria-labelledby="testimonials-heading">
+        <section className="py-20 bg-background" aria-labelledby="testimonials-heading">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 id="testimonials-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 id="testimonials-heading" className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                 Trusted by Entrepreneurs Worldwide
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
                 Join thousands of founders who have validated their ideas and found co-founders through Nucleus.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
               {/* Testimonial 1 */}
-              <div className="bg-gray-50 rounded-lg p-8 relative">
+              <div className="bg-muted rounded-lg p-8 relative">
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
                     S
@@ -235,7 +240,7 @@ export default function Landing() {
               </div>
 
               {/* Testimonial 2 */}
-              <div className="bg-gray-50 rounded-lg p-8 relative">
+              <div className="bg-muted rounded-lg p-8 relative">
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
                     M
@@ -260,7 +265,7 @@ export default function Landing() {
               </div>
 
               {/* Testimonial 3 */}
-              <div className="bg-gray-50 rounded-lg p-8 relative">
+              <div className="bg-muted rounded-lg p-8 relative">
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
                     A
@@ -308,11 +313,11 @@ export default function Landing() {
         </section>
 
         {/* Leaderboard Preview */}
-        <section id="leaderboard" className="py-20 bg-gray-50" aria-labelledby="leaderboard-heading">
+        <section id="leaderboard" className="py-20 bg-muted/50" aria-labelledby="leaderboard-heading">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 id="leaderboard-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Top Innovators</h2>
-              <p className="text-xl text-gray-600">See who's leading with the highest-scoring startup ideas</p>
+              <h2 id="leaderboard-heading" className="text-3xl md:text-4xl font-bold text-foreground mb-4">Top Innovators</h2>
+              <p className="text-xl text-muted-foreground">See who's leading with the highest-scoring startup ideas</p>
             </div>
           
           <Card className="max-w-4xl mx-auto">

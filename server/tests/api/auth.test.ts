@@ -35,7 +35,7 @@ describe('Authentication API', () => {
     app.use(express.json());
     
     // Set up authentication routes
-    await setupAuth(app);
+    await setupAuth(app as any);
     
     prisma = new PrismaClient();
   });

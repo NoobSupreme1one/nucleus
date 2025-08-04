@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals
 import request from 'supertest';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import { setupAuth as setupLocalAuth, isAuthenticated } from '../localAuth';
+import { setupAuth, isAuthenticated } from '../localAuth';
 import { prisma } from './setup';
 
 describe('Authentication API', () => {
@@ -14,7 +14,7 @@ describe('Authentication API', () => {
     app.use(cookieParser());
     
     // Setup local auth for testing
-    await setupLocalAuth(app);
+    await setupAuth(app);
     
     // Add test route that requires authentication
     app.get('/api/test/protected', isAuthenticated, (req, res) => {
@@ -150,9 +150,9 @@ describe('Authentication API', () => {
       expect(response.body.user.email).toBe('test@example.com');
       
       // Check that access token cookie is set
-      const cookies = response.headers['set-cookie'];
+      const cookies = response.headers['set-cookie'] as string[] | undefined;
       expect(cookies).toBeDefined();
-      expect(cookies.some((cookie: string) => cookie.includes('access_token'))).toBe(true);
+      expect(cookies?.some((cookie: string) => cookie.includes('access_token'))).toBe(true);
     });
 
     it('should reject login with incorrect password', async () => {
@@ -211,8 +211,8 @@ describe('Authentication API', () => {
         });
 
       // Extract token from cookie
-      const cookies = loginResponse.headers['set-cookie'];
-      const tokenCookie = cookies.find((cookie: string) => cookie.includes('access_token'));
+      const cookies = loginResponse.headers['set-cookie'] as string[] | undefined;
+      const tokenCookie = cookies?.find((cookie: string) => cookie.includes('access_token'));
       authToken = tokenCookie?.split('=')[1]?.split(';')[0] || '';
     });
 
@@ -225,9 +225,9 @@ describe('Authentication API', () => {
       expect(response.body.message).toBe('Logged out successfully');
       
       // Check that cookies are cleared
-      const cookies = response.headers['set-cookie'];
+      const cookies = response.headers['set-cookie'] as string[] | undefined;
       expect(cookies).toBeDefined();
-      expect(cookies.some((cookie: string) => cookie.includes('access_token=;'))).toBe(true);
+      expect(cookies?.some((cookie: string) => cookie.includes('access_token=;'))).toBe(true);
     });
   });
 

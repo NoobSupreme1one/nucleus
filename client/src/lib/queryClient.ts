@@ -1,9 +1,24 @@
-import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import { QueryClient, QueryFunction, isServer } from "@tanstack/react-query";
 
-async function throwIfResNotOk(res: Response) {
+interface ApiError extends Error {
+  status?: number;
+  statusText?: string;
+}
+
+async function throwIfResNotOk(res: Response): Promise<void> {
   if (!res.ok) {
-    const text = (await res.text()) || res.statusText;
-    throw new Error(`${res.status}: ${text}`);
+    let errorMessage: string;
+    try {
+      const text = await res.text();
+      errorMessage = text || res.statusText || `HTTP ${res.status}`;
+    } catch {
+      errorMessage = res.statusText || `HTTP ${res.status}`;
+    }
+    
+    const error = new Error(errorMessage) as ApiError;
+    error.status = res.status;
+    error.statusText = res.statusText;
+    throw error;
   }
 }
 
@@ -12,11 +27,17 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  const headers: Record<string, string> = {
+    ...(data && { "Content-Type": "application/json" }),
+  };
+
   const res = await fetch(url, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers,
     body: data ? JSON.stringify(data) : undefined,
     credentials: "include",
+    // Add timeout for better UX
+    signal: AbortSignal.timeout(30000), // 30 seconds
   });
 
   await throwIfResNotOk(res);
@@ -24,34 +45,67 @@ export async function apiRequest(
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
-export const getQueryFn: <T>(options: {
+
+export const getQueryFn = <T>(options: {
   on401: UnauthorizedBehavior;
-}) => QueryFunction<T> =
-  ({ on401: unauthorizedBehavior }) =>
-  async ({ queryKey }) => {
-    const res = await fetch(queryKey.join("/") as string, {
+}): QueryFunction<T> =>
+  async ({ queryKey, signal }) => {
+    const url = queryKey.join("/") as string;
+    
+    const res = await fetch(url, {
       credentials: "include",
+      signal,
     });
 
-    if (unauthorizedBehavior === "returnNull" && res.status === 401) {
-      return null;
+    if (options.on401 === "returnNull" && res.status === 401) {
+      return null as T;
     }
 
     await throwIfResNotOk(res);
-    return await res.json();
+    
+    const contentType = res.headers.get("content-type");
+    if (contentType?.includes("application/json")) {
+      return await res.json();
+    }
+    
+    return await res.text() as T;
   };
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       queryFn: getQueryFn({ on401: "throw" }),
-      refetchInterval: false,
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
-      retry: false,
+      // Better defaults for performance and UX
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+      retry: (failureCount, error) => {
+        // Don't retry on auth errors or client errors (4xx)
+        if (error instanceof Error) {
+          const apiError = error as ApiError;
+          if (apiError.status && apiError.status >= 400 && apiError.status < 500) {
+            return false;
+          }
+        }
+        return failureCount < 3;
+      },
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      refetchOnWindowFocus: "always",
+      refetchOnReconnect: "always",
+      // Only refetch on window focus if data is stale
+      refetchOnMount: "always",
     },
     mutations: {
-      retry: false,
+      retry: (failureCount, error) => {
+        // Don't retry mutations on client errors
+        if (error instanceof Error) {
+          const apiError = error as ApiError;
+          if (apiError.status && apiError.status >= 400 && apiError.status < 500) {
+            return false;
+          }
+        }
+        return failureCount < 2;
+      },
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
     },
   },
 });

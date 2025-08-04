@@ -309,7 +309,7 @@ export function adminIPWhitelist() {
   return (req: Request, res: Response, next: NextFunction) => {
     const clientIP = req.ip || req.connection.remoteAddress;
     
-    if (!adminWhitelist.includes(clientIP)) {
+    if (!clientIP || !adminWhitelist.includes(clientIP)) {
       return res.status(403).json({
         success: false,
         error: {
