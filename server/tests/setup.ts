@@ -53,22 +53,6 @@ afterEach(async () => {
 export { prisma };
 
 // Mock external services
-jest.mock('../services/gemini', () => ({
-  validateStartupIdea: jest.fn().mockResolvedValue({
-    validationScore: 85,
-    analysisReport: {
-      marketSize: 'Large',
-      competitionLevel: 'Medium',
-      feasibilityScore: 8,
-      marketDemand: 'High',
-      recommendations: ['Test recommendation'],
-    },
-  }),
-  generateMatchingInsights: jest.fn().mockResolvedValue({
-    insights: ['Test insight'],
-    score: 85,
-  }),
-}));
 
 jest.mock('../services/stripe', () => ({
   StripeService: jest.fn().mockImplementation(() => ({
@@ -87,27 +71,6 @@ jest.mock('../services/stripe', () => ({
   })),
 }));
 
-jest.mock('../services/cloud-storage', () => ({
-  CloudStorageService: jest.fn().mockImplementation(() => ({
-    uploadFile: jest.fn().mockResolvedValue({
-      url: 'https://test.cloudinary.com/test.jpg',
-      publicId: 'test-public-id',
-    }),
-    deleteFile: jest.fn().mockResolvedValue(true),
-  })),
-  upload: {
-    array: jest.fn().mockImplementation(() => (req: any, res: any, next: any) => {
-      req.files = [
-        {
-          filename: 'test.jpg',
-          path: 'https://test.cloudinary.com/test.jpg',
-          mimetype: 'image/jpeg',
-        },
-      ];
-      next();
-    }),
-  },
-}));
 
 // Mock Sentry
 jest.mock('../services/sentry', () => ({

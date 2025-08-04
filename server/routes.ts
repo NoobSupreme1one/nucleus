@@ -17,7 +17,7 @@ import { ErrorTracker, addUserContextMiddleware, isSentryConfigured } from './se
 import { rateLimiters, slowDownLimiters, ddosProtection, conditionalRateLimit, createUserBasedRateLimit } from './services/rate-limit';
 import path from 'path';
 
-// File upload is now handled by cloud-storage service
+// File upload is now handled by S3 storage service
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup unified authentication system

@@ -67,7 +67,7 @@ export function addResourceHints() {
   const hints = [
     { rel: 'dns-prefetch', href: '//fonts.googleapis.com' },
     { rel: 'dns-prefetch', href: '//fonts.gstatic.com' },
-    { rel: 'dns-prefetch', href: '//api.gemini.google.com' },
+    { rel: 'dns-prefetch', href: '//bedrock.us-west-1.amazonaws.com' },
     { rel: 'preconnect', href: 'https://fonts.googleapis.com', crossorigin: true },
     { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true }
   ];

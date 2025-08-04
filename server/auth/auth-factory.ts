@@ -1,5 +1,4 @@
 import type { Express } from 'express';
-// import { setupAuth as setupSupabaseAuth, isAuthenticated as supabaseAuth } from '../supabaseAuth';
 import { setupAuth as setupCognitoAuth, isAuthenticated as cognitoAuth } from '../cognitoAuth';
 import { setupAuth as setupLocalAuth, isAuthenticated as localAuth } from '../localAuth';
 import { accountLockoutProtection } from '../middleware/security';
@@ -11,8 +10,6 @@ export async function setupAuth(app: Express): Promise<void> {
   // Determine which auth provider to use based on environment
   const useCognito = process.env.AWS_COGNITO_USER_POOL_ID && 
                     process.env.AWS_COGNITO_CLIENT_ID;
-  const useSupabase = process.env.NEXT_PUBLIC_SUPABASE_URL && 
-                     process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (useCognito) {
     console.log('Using AWS Cognito authentication provider');
@@ -29,8 +26,6 @@ export async function setupAuth(app: Express): Promise<void> {
 export function getAuthMiddleware(): any {
   const useCognito = process.env.AWS_COGNITO_USER_POOL_ID && 
                     process.env.AWS_COGNITO_CLIENT_ID;
-  const useSupabase = process.env.NEXT_PUBLIC_SUPABASE_URL && 
-                     process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (useCognito) {
     return cognitoAuth;

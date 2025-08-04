@@ -586,8 +586,8 @@ function defineSuccessMetrics(targetAudience: string, marketCategory: string): s
   ];
 }
 
-function determineConfidenceLevel(geminiData: any, perplexityData: any, marketIntelligence: any): 'low' | 'medium' | 'high' {
-  const dataQuality = [geminiData, perplexityData, marketIntelligence].filter(Boolean).length;
+function determineConfidenceLevel(bedrockData: any, perplexityData: any, marketIntelligence: any): 'low' | 'medium' | 'high' {
+  const dataQuality = [bedrockData, perplexityData, marketIntelligence].filter(Boolean).length;
   return dataQuality >= 3 ? 'high' : dataQuality >= 2 ? 'medium' : 'low';
 }
 

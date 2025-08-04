@@ -118,7 +118,7 @@ export class ErrorTracker {
   /**
    * Track AI service errors
    */
-  static trackAiError(error: Error, service: 'gemini' | 'perplexity', context?: any) {
+  static trackAiError(error: Error, service: 'bedrock' | 'perplexity', context?: any) {
     Sentry.withScope((scope) => {
       scope.setTag('error_type', 'ai_service_error');
       scope.setTag('ai_service', service);
@@ -226,7 +226,7 @@ function getErrorComponent(error: Error): string {
   if (stack.includes('/middleware/')) return 'middleware';
   if (stack.includes('prisma')) return 'database';
   if (stack.includes('stripe')) return 'payment';
-  if (stack.includes('gemini') || stack.includes('perplexity')) return 'ai';
+  if (stack.includes('bedrock') || stack.includes('perplexity')) return 'ai';
   
   return 'unknown';
 }
