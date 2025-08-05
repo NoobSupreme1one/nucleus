@@ -1,36 +1,31 @@
-const path = require('path');
-const nodeExternals = require('webpack-node-externals');
+import path from 'path';
+import nodeExternals from 'webpack-node-externals';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-module.exports = {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default {
   entry: './server/lambda.ts',
   target: 'node',
   mode: 'production',
-  externals: [nodeExternals({
-    allowlist: [
-      '@aws-sdk/client-bedrock-runtime',
-      '@aws-sdk/client-cognito-identity-provider',
-      '@aws-sdk/client-s3',
-      '@aws-sdk/s3-request-presigner'
-    ]
-  })],
+  externals: [nodeExternals()],
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.ts$/,
         use: 'ts-loader',
         exclude: /node_modules/,
       },
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
-    alias: {
-      '@shared': path.resolve(__dirname, 'shared'),
-    },
+    extensions: ['.ts', '.js'],
   },
   output: {
+    path: path.resolve(__dirname, 'infrastructure', 'dist'),
     filename: 'lambda.js',
-    path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'commonjs2',
   },
   optimization: {

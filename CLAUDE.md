@@ -77,7 +77,7 @@ cd infrastructure && npx cdk deploy  # Deploy full AWS stack
 
 ### **Active Resources**
 1. **AWS Cognito User Pool**
-   - ID: `us-west-1_1b0v3u`
+   - ID: `us-west-1_OFUJ1nGHS`
    - Client ID: `65rt4elpftmbse0nv1bloofp39`
    - Client Secret: `1u49r28nup8og0jbtm781hqilacqdkho3ns3c6heul3gcs8kdhte`
 

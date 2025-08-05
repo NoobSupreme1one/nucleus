@@ -1,0 +1,56 @@
+{
+  "ServiceName": "nucleus-app",
+  "SourceConfiguration": {
+    "AutoDeploymentsEnabled": true,
+    "AuthenticationConfiguration": {
+      "AccessRoleArn": "arn:aws:iam::ACCOUNT_ID:role/NucleusAppRunnerExecutionRole"
+    },
+    "CodeRepository": {
+      "CodeConfiguration": {
+        "ConfigurationSource": "API",
+        "ConfigurationValues": {
+          "Runtime": "NODEJS_18",
+          "BuildCommand": "npm ci && npm run build",
+          "StartCommand": "npm start",
+          "Port": "8080",
+          "RuntimeEnvironmentVariables": [
+            {
+              "Name": "NODE_ENV",
+              "Value": "production"
+            },
+            {
+              "Name": "PORT",
+              "Value": "8080"
+            }
+          ]
+        }
+      },
+      "SourceCodeVersion": {
+        "Type": "BRANCH",
+        "Value": "main"
+      },
+      "RepositoryUrl": "https://github.com/YOUR_USERNAME/nucleus.git"
+    }
+  },
+  "InstanceConfiguration": {
+    "Cpu": "1 vCPU",
+    "Memory": "2 GB",
+    "InstanceRoleArn": "arn:aws:iam::ACCOUNT_ID:role/NucleusAppRunnerServiceRole"
+  },
+  "NetworkConfiguration": {
+    "EgressConfiguration": {
+      "EgressType": "VPC",
+      "VpcConnectorArn": "arn:aws:apprunner:REGION:ACCOUNT_ID:vpcconnector/nucleus-vpc-connector"
+    }
+  },
+  "Tags": [
+    {
+      "Key": "Environment",
+      "Value": "production"
+    },
+    {
+      "Key": "Project",
+      "Value": "nucleus"
+    }
+  ]
+} 

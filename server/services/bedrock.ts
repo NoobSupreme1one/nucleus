@@ -1,13 +1,23 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 
-// Initialize Amazon Bedrock client
-const bedrockClient = new BedrockRuntimeClient({
-  region: process.env.AWS_BEDROCK_REGION || process.env.AWS_REGION || 'us-east-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+// Function to initialize Amazon Bedrock client with credential validation
+function createBedrockClient() {
+  const awsAccessKeyId = process.env.AWS_ACCESS_KEY_ID;
+  const awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+  const awsRegion = process.env.AWS_BEDROCK_REGION || process.env.AWS_REGION || 'us-east-2';
+
+  if (!awsAccessKeyId || !awsSecretAccessKey) {
+    throw new Error('AWS credentials are missing from environment variables');
   }
-});
+
+  return new BedrockRuntimeClient({
+    region: awsRegion,
+    credentials: {
+      accessKeyId: awsAccessKeyId,
+      secretAccessKey: awsSecretAccessKey,
+    }
+  });
+}
 
 export interface IdeaValidationResult {
   overallScore: number;
@@ -110,12 +120,13 @@ export async function validateStartupIdea(
     };
 
     const command = new InvokeModelCommand({
-      modelId: "amazon.nova-pro-v1:0", // Using Nova Pro for complex analysis
+      modelId: "us.amazon.nova-pro-v1:0", // Using Nova Pro inference profile for complex analysis
       contentType: "application/json",
       accept: "application/json",
       body: JSON.stringify(requestBody)
     });
 
+    const bedrockClient = createBedrockClient();
     const response = await bedrockClient.send(command);
     
     if (!response.body) {
@@ -207,12 +218,13 @@ export async function generateMatchingInsights(user1: any, user2: any): Promise<
     };
 
     const command = new InvokeModelCommand({
-      modelId: "amazon.nova-lite-v1:0", // Using Nova Lite for simpler analysis
+      modelId: "us.amazon.nova-lite-v1:0", // Using Nova Lite inference profile for simpler analysis
       contentType: "application/json",
       accept: "application/json",
       body: JSON.stringify(requestBody)
     });
 
+    const bedrockClient = createBedrockClient();
     const response = await bedrockClient.send(command);
     
     if (!response.body) {
@@ -273,12 +285,13 @@ export async function generateText(prompt: string): Promise<string> {
     };
 
     const command = new InvokeModelCommand({
-      modelId: "amazon.nova-lite-v1:0",
+      modelId: "us.amazon.nova-lite-v1:0", // Using Nova Lite inference profile
       contentType: "application/json",
       accept: "application/json",
       body: JSON.stringify(requestBody)
     });
 
+    const bedrockClient = createBedrockClient();
     const response = await bedrockClient.send(command);
     
     if (!response.body) {

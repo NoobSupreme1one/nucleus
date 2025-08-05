@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { validatePassword, formatAuthError } from "@/lib/authUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
@@ -14,8 +15,12 @@ import { apiRequest } from "@/lib/queryClient";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  firstName: z.string().optional(),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters")
+    .refine((val) => validatePassword(val).isValid, {
+      message: "Must include uppercase, lowercase, number, and special character"
+    }),
+  firstName: z.string().min(1, "First name is required").optional(),
   lastName: z.string().optional(),
 });
 
@@ -53,7 +58,7 @@ export default function Login() {
     onError: (error: any) => {
       toast({
         title: isSignUp ? "Registration Failed" : "Login Failed",
-        description: error.message || "Please check your credentials and try again.",
+        description: formatAuthError(error.message) || "Please check your credentials and try again.",
         variant: "destructive",
       });
     },
@@ -143,19 +148,40 @@ export default function Login() {
               <FormField
                 control={form.control}
                 name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="password"
-                        placeholder={isSignUp ? "Create a password (min 6 characters)" : "Enter your password"} 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const validation = validatePassword(field.value);
+                  return (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder={isSignUp ? "Create a secure password" : "Enter your password"}
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            const validation = validatePassword(e.target.value);
+                            form.setError('password', {
+                              type: 'manual',
+                              message: validation.isValid ? '' : 'Password requirements not met'
+                            });
+                          }}
+                        />
+                      </FormControl>
+                      {isSignUp && (
+                        <div className="text-sm text-muted-foreground">
+                          {validation.messages.map((msg, i) => (
+                            <div key={i} className={`flex items-center ${validation.isValid ? 'text-green-600' : 'text-destructive'}`}>
+                              <span className="mr-2">•</span>
+                              {msg}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
 
               <Button 

@@ -210,9 +210,10 @@ export async function setupAuth(app: Express) {
         message: 'Logged in successfully',
         user: await storage.getUser(userResponse.Username)
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Cognito login error:', error);
-      res.status(500).json({ message: 'Login failed' });
+      const message = error.name === 'NotAuthorizedException' ? 'Invalid credentials' : 'Login failed';
+      res.status(401).json({ message });
     }
   });
 
@@ -225,13 +226,12 @@ export async function setupAuth(app: Express) {
         return res.status(400).json({ message: 'Email and password are required' });
       }
 
-      // Generate a unique username (not using email as username due to alias configuration)
-      const username = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      // Use email as username since user pool is configured with email alias
       
       // Sign up with AWS Cognito
       const signUpParams: any = {
         ClientId: clientId,
-        Username: username,
+        Username: email,
         Password: password,
         UserAttributes: [
           {
@@ -253,7 +253,7 @@ export async function setupAuth(app: Express) {
         ],
       };
       
-      const secretHash = calculateSecretHash(username);
+      const secretHash = calculateSecretHash(email);
       if (secretHash) {
         signUpParams.SecretHash = secretHash;
       }
@@ -266,8 +266,8 @@ export async function setupAuth(app: Express) {
         return res.status(400).json({ message: 'Registration failed' });
       }
 
-      // Check if user is auto-confirmed (like in development mode)
-      const needsConfirmation = !response.UserSub;
+      // Check if user needs email confirmation based on user pool settings
+      const needsConfirmation = !response.UserConfirmed;
 
       if (!needsConfirmation) {
         // Create user in our database
@@ -304,9 +304,15 @@ export async function setupAuth(app: Express) {
           needsConfirmation: true
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Cognito registration error:', error);
-      res.status(500).json({ message: 'Registration failed' });
+      let message = 'Registration failed';
+      if (error.name === 'UsernameExistsException') {
+        message = 'User already exists';
+      } else if (error.name === 'InvalidPasswordException') {
+        message = 'Password does not meet requirements';
+      }
+      res.status(400).json({ message });
     }
   });
 
@@ -335,9 +341,15 @@ export async function setupAuth(app: Express) {
       await cognitoClient.send(command);
 
       res.json({ message: 'Account confirmed successfully' });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Cognito confirmation error:', error);
-      res.status(400).json({ message: 'Confirmation failed' });
+      let message = 'Confirmation failed';
+      if (error.name === 'CodeMismatchException') {
+        message = 'Invalid confirmation code';
+      } else if (error.name === 'ExpiredCodeException') {
+        message = 'Confirmation code expired';
+      }
+      res.status(400).json({ message });
     }
   });
 
@@ -388,7 +400,6 @@ export async function setupAuth(app: Express) {
   // Update user profile endpoint
   app.put('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.id;
       const { role, location, bio } = req.body;
       
       const updatedUser = await storage.upsertUser({

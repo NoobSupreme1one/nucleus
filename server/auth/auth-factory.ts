@@ -1,7 +1,6 @@
 import type { Express } from 'express';
 import { setupAuth as setupCognitoAuth, isAuthenticated as cognitoAuth } from '../cognitoAuth';
 import { setupAuth as setupLocalAuth, isAuthenticated as localAuth } from '../localAuth';
-import { accountLockoutProtection } from '../middleware/security';
 
 /**
  * Setup authentication based on environment configuration
