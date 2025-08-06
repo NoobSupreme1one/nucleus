@@ -24,7 +24,7 @@ export type {
 };
 
 // Insert types (for creating new records)
-export type InsertUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
+export type InsertUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'> & { id?: string };
 export type InsertIdea = Omit<Idea, 'id' | 'createdAt' | 'validationScore' | 'analysisReport'>;
 export type InsertSubmission = Omit<Submission, 'id' | 'createdAt' | 'qualityScore'>;
 export type InsertMatch = Omit<Match, 'id' | 'createdAt' | 'updatedAt'>;

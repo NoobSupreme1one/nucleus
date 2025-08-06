@@ -1,4 +1,4 @@
-import type { AuthProvider, AuthUser, AuthResult, RegisterData } from './auth-interface';
+import type { AuthProvider, AuthUser, LoginCredentials, RegisterCredentials } from './auth-interface';
 import type { User } from '@shared/types';
 import { localStorage } from '../localStorage';
 import { trackLoginAttempt } from '../middleware/security';
@@ -39,6 +39,7 @@ export class LocalAuthProvider implements AuthProvider {
       
       // Also store in localStorage for persistence
       await localStorage.upsertUser({
+        id: user.id,
         email: user.email || null,
         firstName: user.firstName || null,
         lastName: user.lastName || null,
@@ -67,7 +68,7 @@ export class LocalAuthProvider implements AuthProvider {
     console.log('- admin@example.com / admin123');
   }
 
-  async verifyToken(token: string): Promise<AuthUser | null> {
+  async getUser(token: string): Promise<AuthUser | null> {
     try {
       const session = this.sessions.get(token);
 
@@ -88,7 +89,7 @@ export class LocalAuthProvider implements AuthProvider {
     }
   }
 
-  async authenticate(email: string, password: string): Promise<AuthResult> {
+  async login(credentials: LoginCredentials): Promise<{ user: AuthUser; accessToken: string; refreshToken?: string }> {
     try {
       // Simple password validation for development
       const validCredentials = [
@@ -97,27 +98,21 @@ export class LocalAuthProvider implements AuthProvider {
       ];
 
       const isValid = validCredentials.some(
-        cred => cred.email === email && cred.password === password
+        cred => cred.email === credentials.email && cred.password === credentials.password
       );
 
       if (!isValid) {
         // Track failed login attempt
-        trackLoginAttempt(false, email);
-        return {
-          success: false,
-          error: 'Invalid email or password'
-        };
+        trackLoginAttempt(false, credentials.email);
+        throw new Error('Invalid email or password');
       }
 
       // Track successful login
-      trackLoginAttempt(true, email);
+      trackLoginAttempt(true, credentials.email);
 
-      const user = this.users.get(email);
+      const user = this.users.get(credentials.email);
       if (!user) {
-        return {
-          success: false,
-          error: 'User not found'
-        };
+        throw new Error('User not found');
       }
 
       // Generate tokens
@@ -135,38 +130,31 @@ export class LocalAuthProvider implements AuthProvider {
       this.refreshTokens.set(refreshToken, accessToken);
 
       return {
-        success: true,
         user,
         accessToken,
-        refreshToken,
-        expiresIn
+        refreshToken
       };
     } catch (error) {
       console.error('Authentication error:', error);
-      return {
-        success: false,
-        error: 'Authentication failed'
-      };
+      throw error;
     }
   }
 
-  async register(userData: RegisterData): Promise<AuthResult> {
+  async register(userData: RegisterCredentials): Promise<{ user: AuthUser; needsConfirmation: boolean; accessToken?: string; refreshToken?: string }> {
     try {
       // Check if user already exists
       if (this.users.has(userData.email)) {
-        return {
-          success: false,
-          error: 'User already exists'
-        };
+        throw new Error('User already exists');
       }
 
       // Create new user
       const user: AuthUser = {
         id: `dev-user-${Date.now()}`,
         email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        metadata: userData.metadata
+        user_metadata: {
+          first_name: userData.firstName,
+          last_name: userData.lastName
+        }
       };
 
       // Store user
@@ -174,9 +162,10 @@ export class LocalAuthProvider implements AuthProvider {
 
       // Store in localStorage for persistence
       await localStorage.upsertUser({
+        id: user.id,
         email: user.email || null,
-        firstName: user.firstName || null,
-        lastName: user.lastName || null,
+        firstName: user.user_metadata?.first_name || null,
+        lastName: user.user_metadata?.last_name || null,
         profileImageUrl: null,
         role: null,
         location: null,
@@ -210,18 +199,14 @@ export class LocalAuthProvider implements AuthProvider {
       this.refreshTokens.set(refreshToken, accessToken);
 
       return {
-        success: true,
         user,
+        needsConfirmation: false,
         accessToken,
-        refreshToken,
-        expiresIn
+        refreshToken
       };
     } catch (error) {
       console.error('Registration error:', error);
-      return {
-        success: false,
-        error: 'Registration failed'
-      };
+      throw error;
     }
   }
 
@@ -243,25 +228,19 @@ export class LocalAuthProvider implements AuthProvider {
     }
   }
 
-  async refreshToken(refreshToken: string): Promise<AuthResult> {
+  async refreshToken(refreshToken: string): Promise<{ user: AuthUser; accessToken: string; refreshToken: string }> {
     try {
       const oldAccessToken = this.refreshTokens.get(refreshToken);
       
       if (!oldAccessToken) {
-        return {
-          success: false,
-          error: 'Invalid refresh token'
-        };
+        throw new Error('Invalid refresh token');
       }
 
       const session = this.sessions.get(oldAccessToken);
       
       if (!session) {
         this.refreshTokens.delete(refreshToken);
-        return {
-          success: false,
-          error: 'Session not found'
-        };
+        throw new Error('Session not found');
       }
 
       // Generate new tokens
@@ -283,18 +262,13 @@ export class LocalAuthProvider implements AuthProvider {
       this.refreshTokens.set(newRefreshToken, newAccessToken);
 
       return {
-        success: true,
         user: session.user,
         accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
-        expiresIn
+        refreshToken: newRefreshToken
       };
     } catch (error) {
       console.error('Token refresh error:', error);
-      return {
-        success: false,
-        error: 'Token refresh failed'
-      };
+      throw error;
     }
   }
 
@@ -313,10 +287,11 @@ export class LocalAuthProvider implements AuthProvider {
         return {
           id: dbUser.id,
           email: dbUser.email || undefined,
-          firstName: dbUser.firstName || undefined,
-          lastName: dbUser.lastName || undefined,
-          profileImageUrl: dbUser.profileImageUrl || undefined,
-          metadata: {}
+          user_metadata: {
+            first_name: dbUser.firstName || undefined,
+            last_name: dbUser.lastName || undefined,
+            avatar_url: dbUser.profileImageUrl || undefined
+          }
         };
       }
 

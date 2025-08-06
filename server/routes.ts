@@ -279,21 +279,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Track failed generation
       const duration = Date.now() - (req as any).startTime || 0;
-      analytics.trackProReportGeneration(userId, ideaId, false, duration);
-      analytics.trackError(
-        req.path,
-        req.method,
-        errorCode,
-        errorMessage,
-        userId
-      );
+      const userId = req.user?.id;
+      const ideaId = req.params.id;
+      if (userId) {
+        analytics.trackProReportGeneration(userId, ideaId, false, duration);
+        analytics.trackError(
+          req.path,
+          req.method,
+          errorCode,
+          errorMessage,
+          userId
+        );
+      }
 
       res.status(500).json({
         success: false,
         error: {
           code: errorCode,
           message: errorMessage,
-          details: process.env.NODE_ENV === 'development' ? error.message : undefined
+          details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
         }
       });
     }
@@ -396,18 +400,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     getAuthMiddleware(), 
     conditionalRateLimit(rateLimiters.fileUpload),
     upload.array('files', 5)
-  ], async (req: any, res) => {
+  ], async (req: any, res: any) => {
     try {
       const userId = req.user.id;
       
       // Handle file URLs from cloud storage or local storage
       const fileUrls = req.files ? req.files.map((file: any) => getFileUrl(file)) : [];
       
-      const validatedData = insertSubmissionSchema.parse({
+      const submissionData = {
         ...req.body,
         userId,
-        fileUrls
-      });
+        fileUrls,
+        portfolioUrl: req.body.portfolioUrl || null,
+        githubUrl: req.body.githubUrl || null,
+        liveUrl: req.body.liveUrl || null
+      };
+      const validatedData = insertSubmissionSchema.parse(submissionData);
       
       const submission = await getStorage().createSubmission(validatedData);
       
@@ -432,7 +440,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/submissions/:id', [getAuthMiddleware(), upload.array('files', 5)], async (req: any, res) => {
+  app.put('/api/submissions/:id', [getAuthMiddleware(), upload.array('files', 5)], async (req: any, res: any) => {
     try {
       const submission = await getStorage().getSubmission(req.params.id);
       if (!submission) {
@@ -467,7 +475,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/matches/potential', [
     getAuthMiddleware(),
     conditionalRateLimit(rateLimiters.search)
-  ], async (req: any, res) => {
+  ], async (req: any, res: any) => {
     try {
       const userId = req.user.id;
       const limit = parseInt(req.query.limit as string) || 10;
@@ -515,6 +523,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const match = await getStorage().createMatch({
         user1Id: userId,
         user2Id: targetUserId,
+        status: 'pending',
         compatibilityScore: insights.compatibilityScore,
         user1Interested: interested,
         user2Interested: false,
@@ -654,7 +663,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       services: {
         database: 'connected',
         cloudStorage: CloudStorageService.isConfigured() ? 'configured' : 'local_fallback',
-        auth: isProduction ? 'supabase' : 'local',
+        auth: process.env.NODE_ENV === 'production' ? 'cognito' : 'local',
       }
     };
     

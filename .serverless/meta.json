@@ -1,0 +1,353 @@
+{
+  "/home/noob/test/nucleus/serverless.yml": {
+    "versionFramework": "4.18.0",
+    "servicePath": "/home/noob/test/nucleus/serverless.yml",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "nucleus-app",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs18.x",
+        "region": "us-west-1",
+        "stage": "${opt:stage, 'dev'}",
+        "memorySize": 1024,
+        "timeout": 30,
+        "environment": {
+          "NODE_ENV": "production",
+          "DATABASE_URL": "${env:DATABASE_URL}",
+          "AWS_REGION": "${aws:region}",
+          "AWS_COGNITO_USER_POOL_ID": "${env:AWS_COGNITO_USER_POOL_ID}",
+          "AWS_COGNITO_CLIENT_ID": "${env:AWS_COGNITO_CLIENT_ID}",
+          "AWS_S3_BUCKET_NAME": "${env:AWS_S3_BUCKET_NAME}",
+          "AWS_BEDROCK_REGION": "${env:AWS_BEDROCK_REGION, aws:region}",
+          "PERPLEXITY_API_KEY": "<REDACTED>",
+          "STRIPE_SECRET_KEY": "<REDACTED>",
+          "STRIPE_WEBHOOK_SECRET": "<REDACTED>"
+        },
+        "iam": {
+          "role": {
+            "statements": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "cognito-idp:*"
+                ],
+                "Resource": {
+                  "Fn::Sub": "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${env:AWS_COGNITO_USER_POOL_ID}"
+                }
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "s3:GetObject",
+                  "s3:PutObject",
+                  "s3:DeleteObject"
+                ],
+                "Resource": {
+                  "Fn::Sub": "arn:aws:s3:::${env:AWS_S3_BUCKET_NAME}/*"
+                }
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "bedrock:InvokeModel",
+                  "bedrock:InvokeModelWithResponseStream"
+                ],
+                "Resource": [
+                  {
+                    "Fn::Sub": "arn:aws:bedrock:${AWS::Region}::foundation-model/amazon.nova-pro-v1:0"
+                  },
+                  {
+                    "Fn::Sub": "arn:aws:bedrock:${AWS::Region}::foundation-model/amazon.nova-lite-v1:0"
+                  }
+                ]
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "rds:DescribeDBInstances",
+                  "rds:Connect"
+                ],
+                "Resource": "*"
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "logs:CreateLogGroup",
+                  "logs:CreateLogStream",
+                  "logs:PutLogEvents"
+                ],
+                "Resource": {
+                  "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "functions": {
+        "app": {
+          "handler": "dist/lambda.handler",
+          "events": [
+            {
+              "http": {
+                "path": "/",
+                "method": "ANY",
+                "cors": true
+              }
+            },
+            {
+              "http": {
+                "path": "/{proxy+}",
+                "method": "ANY",
+                "cors": true
+              }
+            }
+          ],
+          "vpc": {
+            "securityGroupIds": [
+              "${env:VPC_SECURITY_GROUP_ID}"
+            ],
+            "subnetIds": [
+              "${env:VPC_SUBNET_ID_1}",
+              "${env:VPC_SUBNET_ID_2}"
+            ]
+          }
+        }
+      },
+      "resources": {
+        "Resources": {
+          "S3Bucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketName": "${env:AWS_S3_BUCKET_NAME}",
+              "CorsConfiguration": {
+                "CorsRules": [
+                  {
+                    "AllowedHeaders": [
+                      "*"
+                    ],
+                    "AllowedMethods": [
+                      "GET",
+                      "PUT",
+                      "POST",
+                      "DELETE"
+                    ],
+                    "AllowedOrigins": [
+                      "*"
+                    ],
+                    "MaxAge": 3000
+                  }
+                ]
+              },
+              "PublicAccessBlockConfiguration": {
+                "BlockPublicAcls": false,
+                "BlockPublicPolicy": false,
+                "IgnorePublicAcls": false,
+                "RestrictPublicBuckets": false
+              }
+            }
+          },
+          "CloudFrontDistribution": {
+            "Type": "AWS::CloudFront::Distribution",
+            "Properties": {
+              "DistributionConfig": {
+                "Enabled": true,
+                "DefaultCacheBehavior": {
+                  "TargetOriginId": "ApiGateway",
+                  "ViewerProtocolPolicy": "redirect-to-https",
+                  "AllowedMethods": [
+                    "DELETE",
+                    "GET",
+                    "HEAD",
+                    "OPTIONS",
+                    "PATCH",
+                    "POST",
+                    "PUT"
+                  ],
+                  "CachedMethods": [
+                    "GET",
+                    "HEAD",
+                    "OPTIONS"
+                  ],
+                  "ForwardedValues": {
+                    "QueryString": true,
+                    "Headers": [
+                      "*"
+                    ]
+                  }
+                },
+                "CacheBehaviors": [
+                  {
+                    "PathPattern": "/uploads/*",
+                    "TargetOriginId": "S3Origin",
+                    "ViewerProtocolPolicy": "redirect-to-https",
+                    "AllowedMethods": [
+                      "GET",
+                      "HEAD"
+                    ],
+                    "CachedMethods": [
+                      "GET",
+                      "HEAD"
+                    ],
+                    "ForwardedValues": {
+                      "QueryString": false
+                    }
+                  }
+                ],
+                "Origins": [
+                  {
+                    "Id": "ApiGateway",
+                    "DomainName": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          {
+                            "Ref": "ApiGatewayRestApi"
+                          },
+                          ".execute-api.",
+                          "${aws:region}",
+                          ".amazonaws.com"
+                        ]
+                      ]
+                    },
+                    "CustomOriginConfig": {
+                      "HTTPPort": 443,
+                      "OriginProtocolPolicy": "https-only"
+                    },
+                    "OriginPath": "/${self:provider.stage}"
+                  },
+                  {
+                    "Id": "S3Origin",
+                    "DomainName": "${env:AWS_S3_BUCKET_NAME}.s3.amazonaws.com",
+                    "S3OriginConfig": {
+                      "OriginAccessIdentity": ""
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "plugins": [
+        "serverless-webpack",
+        "serverless-offline",
+        "serverless-domain-manager"
+      ],
+      "custom": {
+        "webpack": {
+          "webpackConfig": "webpack.lambda.js",
+          "includeModules": true,
+          "packager": "npm"
+        },
+        "serverless-offline": {
+          "httpPort": 3000,
+          "lambdaPort": 3002
+        },
+        "customDomain": {
+          "domainName": "${env:CUSTOM_DOMAIN, ''}",
+          "stage": "${self:provider.stage}",
+          "createRoute53Record": true
+        }
+      }
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "nodejs18.x",
+      "region": "us-west-1",
+      "stage": "${opt:stage, 'dev'}",
+      "memorySize": 1024,
+      "timeout": 30,
+      "environment": {
+        "NODE_ENV": "production",
+        "DATABASE_URL": "${env:DATABASE_URL}",
+        "AWS_REGION": "${aws:region}",
+        "AWS_COGNITO_USER_POOL_ID": "${env:AWS_COGNITO_USER_POOL_ID}",
+        "AWS_COGNITO_CLIENT_ID": "${env:AWS_COGNITO_CLIENT_ID}",
+        "AWS_S3_BUCKET_NAME": "${env:AWS_S3_BUCKET_NAME}",
+        "AWS_BEDROCK_REGION": "${env:AWS_BEDROCK_REGION, aws:region}",
+        "PERPLEXITY_API_KEY": "<REDACTED>",
+        "STRIPE_SECRET_KEY": "<REDACTED>",
+        "STRIPE_WEBHOOK_SECRET": "<REDACTED>"
+      },
+      "iam": {
+        "role": {
+          "statements": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cognito-idp:*"
+              ],
+              "Resource": {
+                "Fn::Sub": "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${env:AWS_COGNITO_USER_POOL_ID}"
+              }
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:DeleteObject"
+              ],
+              "Resource": {
+                "Fn::Sub": "arn:aws:s3:::${env:AWS_S3_BUCKET_NAME}/*"
+              }
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "bedrock:InvokeModel",
+                "bedrock:InvokeModelWithResponseStream"
+              ],
+              "Resource": [
+                {
+                  "Fn::Sub": "arn:aws:bedrock:${AWS::Region}::foundation-model/amazon.nova-pro-v1:0"
+                },
+                {
+                  "Fn::Sub": "arn:aws:bedrock:${AWS::Region}::foundation-model/amazon.nova-lite-v1:0"
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "rds:DescribeDBInstances",
+                "rds:Connect"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Resource": {
+                "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "error": {
+      "message": "You must sign in or use a license key with Serverless Framework V.4 and later versions. Please use \"serverless login\".",
+      "stack": "Error: You must sign in or use a license key with Serverless Framework V.4 and later versions. Please use \"serverless login\".\n    at Authentication.getAuthenticatedData (file:///home/noob/.serverless/releases/4.18.0/package/dist/sf-core.js:806:10899)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Authentication.authenticate (file:///home/noob/.serverless/releases/4.18.0/package/dist/sf-core.js:808:22245)\n    at async TraditionalRunner.resolveVariablesAndAuthenticate (file:///home/noob/.serverless/releases/4.18.0/package/dist/sf-core.js:812:2379)\n    at async TraditionalRunner.run (file:///home/noob/.serverless/releases/4.18.0/package/dist/sf-core.js:1428:27914)\n    at async route (file:///home/noob/.serverless/releases/4.18.0/package/dist/sf-core.js:1603:2878)\n    at async Object.run (file:///home/noob/.serverless/releases/4.18.0/package/dist/sf-core.js:1604:3661)\n    at async run2 (file:///home/noob/.serverless/releases/4.18.0/package/dist/sf-core.js:1604:4815)"
+    },
+    "serviceRawFile": "service: nucleus-app\n\nprovider:\n  name: aws\n  runtime: nodejs18.x\n  region: ${opt:region, 'us-east-1'}\n  stage: ${opt:stage, 'dev'}\n  memorySize: 1024\n  timeout: 30\n  \n  environment:\n    NODE_ENV: production\n    DATABASE_URL: ${env:DATABASE_URL}\n    AWS_REGION: ${aws:region}\n    AWS_COGNITO_USER_POOL_ID: ${env:AWS_COGNITO_USER_POOL_ID}\n    AWS_COGNITO_CLIENT_ID: ${env:AWS_COGNITO_CLIENT_ID}\n    AWS_S3_BUCKET_NAME: ${env:AWS_S3_BUCKET_NAME}\n    AWS_BEDROCK_REGION: ${env:AWS_BEDROCK_REGION, aws:region}\n    PERPLEXITY_API_KEY: ${env:PERPLEXITY_API_KEY}\n    STRIPE_SECRET_KEY: ${env:STRIPE_SECRET_KEY}\n    STRIPE_WEBHOOK_SECRET: ${env:STRIPE_WEBHOOK_SECRET}\n    \n  iam:\n    role:\n      statements:\n        - Effect: Allow\n          Action:\n            - cognito-idp:*\n          Resource: !Sub 'arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${env:AWS_COGNITO_USER_POOL_ID}'\n        - Effect: Allow\n          Action:\n            - s3:GetObject\n            - s3:PutObject\n            - s3:DeleteObject\n          Resource: !Sub 'arn:aws:s3:::${env:AWS_S3_BUCKET_NAME}/*'\n        - Effect: Allow\n          Action:\n            - bedrock:InvokeModel\n            - bedrock:InvokeModelWithResponseStream\n          Resource: \n            - !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/amazon.nova-pro-v1:0'\n            - !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/amazon.nova-lite-v1:0'\n        - Effect: Allow\n          Action:\n            - rds:DescribeDBInstances\n            - rds:Connect\n          Resource: '*'\n        - Effect: Allow\n          Action:\n            - logs:CreateLogGroup\n            - logs:CreateLogStream\n            - logs:PutLogEvents\n          Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*'\n\nfunctions:\n  app:\n    handler: dist/lambda.handler\n    events:\n      - http:\n          path: /\n          method: ANY\n          cors: true\n      - http:\n          path: /{proxy+}\n          method: ANY\n          cors: true\n    vpc:\n      securityGroupIds:\n        - ${env:VPC_SECURITY_GROUP_ID}\n      subnetIds:\n        - ${env:VPC_SUBNET_ID_1}\n        - ${env:VPC_SUBNET_ID_2}\n\nresources:\n  Resources:\n    # S3 Bucket for file uploads\n    S3Bucket:\n      Type: AWS::S3::Bucket\n      Properties:\n        BucketName: ${env:AWS_S3_BUCKET_NAME}\n        CorsConfiguration:\n          CorsRules:\n            - AllowedHeaders: ['*']\n              AllowedMethods: [GET, PUT, POST, DELETE]\n              AllowedOrigins: ['*']\n              MaxAge: 3000\n        PublicAccessBlockConfiguration:\n          BlockPublicAcls: false\n          BlockPublicPolicy: false\n          IgnorePublicAcls: false\n          RestrictPublicBuckets: false\n\n    # CloudFront Distribution for static assets\n    CloudFrontDistribution:\n      Type: AWS::CloudFront::Distribution\n      Properties:\n        DistributionConfig:\n          Enabled: true\n          DefaultCacheBehavior:\n            TargetOriginId: ApiGateway\n            ViewerProtocolPolicy: redirect-to-https\n            AllowedMethods: [DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT]\n            CachedMethods: [GET, HEAD, OPTIONS]\n            ForwardedValues:\n              QueryString: true\n              Headers: ['*']\n          CacheBehaviors:\n            - PathPattern: '/uploads/*'\n              TargetOriginId: S3Origin\n              ViewerProtocolPolicy: redirect-to-https\n              AllowedMethods: [GET, HEAD]\n              CachedMethods: [GET, HEAD]\n              ForwardedValues:\n                QueryString: false\n          Origins:\n            - Id: ApiGateway\n              DomainName:\n                Fn::Join:\n                  - ''\n                  - - Ref: ApiGatewayRestApi\n                    - '.execute-api.'\n                    - ${aws:region}\n                    - '.amazonaws.com'\n              CustomOriginConfig:\n                HTTPPort: 443\n                OriginProtocolPolicy: https-only\n              OriginPath: '/${self:provider.stage}'\n            - Id: S3Origin\n              DomainName: ${env:AWS_S3_BUCKET_NAME}.s3.amazonaws.com\n              S3OriginConfig:\n                OriginAccessIdentity: ''\n\nplugins:\n  - serverless-webpack\n  - serverless-offline\n  - serverless-domain-manager\n\ncustom:\n  webpack:\n    webpackConfig: webpack.lambda.js\n    includeModules: true\n    packager: npm\n  serverless-offline:\n    httpPort: 3000\n    lambdaPort: 3002\n  customDomain:\n    domainName: ${env:CUSTOM_DOMAIN, ''}\n    stage: ${self:provider.stage}\n    createRoute53Record: true",
+    "command": [
+      "deploy"
+    ],
+    "options": {
+      "stage": "production",
+      "region": "us-west-1"
+    },
+    "serviceProviderAwsCfStackId": null,
+    "serviceProviderAwsCfStackCreated": null,
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": null,
+    "serviceProviderAwsCfStackOutputs": null
+  }
+}

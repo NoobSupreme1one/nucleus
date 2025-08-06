@@ -57,10 +57,20 @@ export class DatabaseStorage implements IStorage {
   }
 
   async upsertUser(userData: InsertUser): Promise<User> {
-    // Find existing user by email since InsertUser doesn't have id
-    const existingUser = await prisma.user.findUnique({
-      where: { email: userData.email! }
-    });
+    // If an ID is provided, try to find by ID first, otherwise by email
+    let existingUser = null;
+    
+    if (userData.id) {
+      existingUser = await prisma.user.findUnique({
+        where: { id: userData.id }
+      });
+    }
+    
+    if (!existingUser && userData.email) {
+      existingUser = await prisma.user.findUnique({
+        where: { email: userData.email }
+      });
+    }
     
     if (existingUser) {
       return await prisma.user.update({
@@ -72,7 +82,10 @@ export class DatabaseStorage implements IStorage {
       });
     } else {
       return await prisma.user.create({
-        data: userData,
+        data: {
+          ...userData,
+          id: userData.id, // Use provided ID or let Prisma generate one
+        },
       });
     }
   }

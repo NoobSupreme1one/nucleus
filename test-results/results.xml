@@ -1,1242 +1,298 @@
-<testsuites id="" name="" tests="75" failures="75" skipped="0" errors="0" time="2.470697">
-<testsuite name="demo-experience.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="chromium" tests="3" failures="3" skipped="0" time="0.009" errors="0">
-<testcase name="Interactive Demo Experience › Demo page loads and functions correctly" classname="demo-experience.spec.ts" time="0.003">
-<failure message="demo-experience.spec.ts:4:3 Demo page loads and functions correctly" type="FAILURE">
-<![CDATA[  [chromium] › demo-experience.spec.ts:4:3 › Interactive Demo Experience › Demo page loads and functions correctly 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Interactive Demo Experience › Demo accessible from landing page" classname="demo-experience.spec.ts" time="0.001">
-<failure message="demo-experience.spec.ts:76:3 Demo accessible from landing page" type="FAILURE">
-<![CDATA[  [chromium] › demo-experience.spec.ts:76:3 › Interactive Demo Experience › Demo accessible from landing page 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Interactive Demo Experience › Demo works with different idea types" classname="demo-experience.spec.ts" time="0.005">
-<failure message="demo-experience.spec.ts:94:3 Demo works with different idea types" type="FAILURE">
-<![CDATA[  [chromium] › demo-experience.spec.ts:94:3 › Interactive Demo Experience › Demo works with different idea types 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="mobile-experience.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="chromium" tests="3" failures="3" skipped="0" time="0.008" errors="0">
-<testcase name="Mobile Experience Tests › Mobile landing page experience" classname="mobile-experience.spec.ts" time="0.002">
-<failure message="mobile-experience.spec.ts:4:3 Mobile landing page experience" type="FAILURE">
-<![CDATA[  [chromium] › mobile-experience.spec.ts:4:3 › Mobile Experience Tests › Mobile landing page experience 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Mobile Experience Tests › Mobile text readability" classname="mobile-experience.spec.ts" time="0.003">
-<failure message="mobile-experience.spec.ts:67:3 Mobile text readability" type="FAILURE">
-<![CDATA[  [chromium] › mobile-experience.spec.ts:67:3 › Mobile Experience Tests › Mobile text readability ──
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Mobile Experience Tests › Mobile performance" classname="mobile-experience.spec.ts" time="0.003">
-<failure message="mobile-experience.spec.ts:87:3 Mobile performance" type="FAILURE">
-<![CDATA[  [chromium] › mobile-experience.spec.ts:87:3 › Mobile Experience Tests › Mobile performance ───────
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="pro-report.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="chromium" tests="7" failures="7" skipped="0" time="0.016" errors="0">
-<testcase name="Pro Report Generation E2E Tests › should display pro report generation button for pro users" classname="pro-report.spec.ts" time="0.001">
-<failure message="pro-report.spec.ts:49:3 should display pro report generation button for pro users" type="FAILURE">
-<![CDATA[  [chromium] › pro-report.spec.ts:49:3 › Pro Report Generation E2E Tests › should display pro report generation button for pro users 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should generate and display pro report" classname="pro-report.spec.ts" time="0.005">
-<failure message="pro-report.spec.ts:61:3 should generate and display pro report" type="FAILURE">
-<![CDATA[  [chromium] › pro-report.spec.ts:61:3 › Pro Report Generation E2E Tests › should generate and display pro report 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should show upgrade prompt for free users" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:291:3 should show upgrade prompt for free users" type="FAILURE">
-<![CDATA[  [chromium] › pro-report.spec.ts:291:3 › Pro Report Generation E2E Tests › should show upgrade prompt for free users 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should handle pro report generation errors" classname="pro-report.spec.ts" time="0.002">
-<failure message="pro-report.spec.ts:317:3 should handle pro report generation errors" type="FAILURE">
-<![CDATA[  [chromium] › pro-report.spec.ts:317:3 › Pro Report Generation E2E Tests › should handle pro report generation errors 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should allow printing and exporting pro report" classname="pro-report.spec.ts" time="0.001">
-<failure message="pro-report.spec.ts:346:3 should allow printing and exporting pro report" type="FAILURE">
-<![CDATA[  [chromium] › pro-report.spec.ts:346:3 › Pro Report Generation E2E Tests › should allow printing and exporting pro report 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should navigate through report sections" classname="pro-report.spec.ts" time="0.002">
-<failure message="pro-report.spec.ts:378:3 should navigate through report sections" type="FAILURE">
-<![CDATA[  [chromium] › pro-report.spec.ts:378:3 › Pro Report Generation E2E Tests › should navigate through report sections 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Privacy Settings E2E Tests › should open and update privacy settings" classname="pro-report.spec.ts" time="0.002">
-<failure message="pro-report.spec.ts:415:3 should open and update privacy settings" type="FAILURE">
-<![CDATA[  [chromium] › pro-report.spec.ts:415:3 › Privacy Settings E2E Tests › should open and update privacy settings 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="user-experience-review.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="chromium" tests="2" failures="2" skipped="0" time="0.004" errors="0">
-<testcase name="User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation" classname="user-experience-review.spec.ts" time="0.002">
-<failure message="user-experience-review.spec.ts:4:3 Complete user journey from landing to idea validation" type="FAILURE">
-<![CDATA[  [chromium] › user-experience-review.spec.ts:4:3 › User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="User Experience Review - Target Customer Journey › Test accessibility and performance" classname="user-experience-review.spec.ts" time="0.002">
-<failure message="user-experience-review.spec.ts:182:3 Test accessibility and performance" type="FAILURE">
-<![CDATA[  [chromium] › user-experience-review.spec.ts:182:3 › User Experience Review - Target Customer Journey › Test accessibility and performance 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="demo-experience.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="firefox" tests="3" failures="3" skipped="0" time="0.006" errors="0">
-<testcase name="Interactive Demo Experience › Demo page loads and functions correctly" classname="demo-experience.spec.ts" time="0.002">
-<failure message="demo-experience.spec.ts:4:3 Demo page loads and functions correctly" type="FAILURE">
-<![CDATA[  [firefox] › demo-experience.spec.ts:4:3 › Interactive Demo Experience › Demo page loads and functions correctly 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Interactive Demo Experience › Demo accessible from landing page" classname="demo-experience.spec.ts" time="0.002">
-<failure message="demo-experience.spec.ts:76:3 Demo accessible from landing page" type="FAILURE">
-<![CDATA[  [firefox] › demo-experience.spec.ts:76:3 › Interactive Demo Experience › Demo accessible from landing page 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Interactive Demo Experience › Demo works with different idea types" classname="demo-experience.spec.ts" time="0.002">
-<failure message="demo-experience.spec.ts:94:3 Demo works with different idea types" type="FAILURE">
-<![CDATA[  [firefox] › demo-experience.spec.ts:94:3 › Interactive Demo Experience › Demo works with different idea types 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="mobile-experience.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="firefox" tests="3" failures="3" skipped="0" time="0.005" errors="0">
-<testcase name="Mobile Experience Tests › Mobile landing page experience" classname="mobile-experience.spec.ts" time="0.001">
-<failure message="mobile-experience.spec.ts:4:3 Mobile landing page experience" type="FAILURE">
-<![CDATA[  [firefox] › mobile-experience.spec.ts:4:3 › Mobile Experience Tests › Mobile landing page experience 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Mobile Experience Tests › Mobile text readability" classname="mobile-experience.spec.ts" time="0.002">
-<failure message="mobile-experience.spec.ts:67:3 Mobile text readability" type="FAILURE">
-<![CDATA[  [firefox] › mobile-experience.spec.ts:67:3 › Mobile Experience Tests › Mobile text readability ───
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Mobile Experience Tests › Mobile performance" classname="mobile-experience.spec.ts" time="0.002">
-<failure message="mobile-experience.spec.ts:87:3 Mobile performance" type="FAILURE">
-<![CDATA[  [firefox] › mobile-experience.spec.ts:87:3 › Mobile Experience Tests › Mobile performance ────────
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="pro-report.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="firefox" tests="7" failures="7" skipped="0" time="0.017" errors="0">
-<testcase name="Pro Report Generation E2E Tests › should display pro report generation button for pro users" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:49:3 should display pro report generation button for pro users" type="FAILURE">
-<![CDATA[  [firefox] › pro-report.spec.ts:49:3 › Pro Report Generation E2E Tests › should display pro report generation button for pro users 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should generate and display pro report" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:61:3 should generate and display pro report" type="FAILURE">
-<![CDATA[  [firefox] › pro-report.spec.ts:61:3 › Pro Report Generation E2E Tests › should generate and display pro report 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should show upgrade prompt for free users" classname="pro-report.spec.ts" time="0.002">
-<failure message="pro-report.spec.ts:291:3 should show upgrade prompt for free users" type="FAILURE">
-<![CDATA[  [firefox] › pro-report.spec.ts:291:3 › Pro Report Generation E2E Tests › should show upgrade prompt for free users 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should handle pro report generation errors" classname="pro-report.spec.ts" time="0.002">
-<failure message="pro-report.spec.ts:317:3 should handle pro report generation errors" type="FAILURE">
-<![CDATA[  [firefox] › pro-report.spec.ts:317:3 › Pro Report Generation E2E Tests › should handle pro report generation errors 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should allow printing and exporting pro report" classname="pro-report.spec.ts" time="0.001">
-<failure message="pro-report.spec.ts:346:3 should allow printing and exporting pro report" type="FAILURE">
-<![CDATA[  [firefox] › pro-report.spec.ts:346:3 › Pro Report Generation E2E Tests › should allow printing and exporting pro report 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should navigate through report sections" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:378:3 should navigate through report sections" type="FAILURE">
-<![CDATA[  [firefox] › pro-report.spec.ts:378:3 › Pro Report Generation E2E Tests › should navigate through report sections 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Privacy Settings E2E Tests › should open and update privacy settings" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:415:3 should open and update privacy settings" type="FAILURE">
-<![CDATA[  [firefox] › pro-report.spec.ts:415:3 › Privacy Settings E2E Tests › should open and update privacy settings 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="user-experience-review.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="firefox" tests="2" failures="2" skipped="0" time="0.005" errors="0">
-<testcase name="User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation" classname="user-experience-review.spec.ts" time="0.002">
-<failure message="user-experience-review.spec.ts:4:3 Complete user journey from landing to idea validation" type="FAILURE">
-<![CDATA[  [firefox] › user-experience-review.spec.ts:4:3 › User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="User Experience Review - Target Customer Journey › Test accessibility and performance" classname="user-experience-review.spec.ts" time="0.003">
-<failure message="user-experience-review.spec.ts:182:3 Test accessibility and performance" type="FAILURE">
-<![CDATA[  [firefox] › user-experience-review.spec.ts:182:3 › User Experience Review - Target Customer Journey › Test accessibility and performance 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/firefox-1489/firefox/firefox
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="demo-experience.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="webkit" tests="3" failures="3" skipped="0" time="0.006" errors="0">
-<testcase name="Interactive Demo Experience › Demo page loads and functions correctly" classname="demo-experience.spec.ts" time="0.002">
-<failure message="demo-experience.spec.ts:4:3 Demo page loads and functions correctly" type="FAILURE">
-<![CDATA[  [webkit] › demo-experience.spec.ts:4:3 › Interactive Demo Experience › Demo page loads and functions correctly 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Interactive Demo Experience › Demo accessible from landing page" classname="demo-experience.spec.ts" time="0.002">
-<failure message="demo-experience.spec.ts:76:3 Demo accessible from landing page" type="FAILURE">
-<![CDATA[  [webkit] › demo-experience.spec.ts:76:3 › Interactive Demo Experience › Demo accessible from landing page 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Interactive Demo Experience › Demo works with different idea types" classname="demo-experience.spec.ts" time="0.002">
-<failure message="demo-experience.spec.ts:94:3 Demo works with different idea types" type="FAILURE">
-<![CDATA[  [webkit] › demo-experience.spec.ts:94:3 › Interactive Demo Experience › Demo works with different idea types 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="mobile-experience.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="webkit" tests="3" failures="3" skipped="0" time="0.003" errors="0">
-<testcase name="Mobile Experience Tests › Mobile landing page experience" classname="mobile-experience.spec.ts" time="0.001">
-<failure message="mobile-experience.spec.ts:4:3 Mobile landing page experience" type="FAILURE">
-<![CDATA[  [webkit] › mobile-experience.spec.ts:4:3 › Mobile Experience Tests › Mobile landing page experience 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Mobile Experience Tests › Mobile text readability" classname="mobile-experience.spec.ts" time="0.001">
-<failure message="mobile-experience.spec.ts:67:3 Mobile text readability" type="FAILURE">
-<![CDATA[  [webkit] › mobile-experience.spec.ts:67:3 › Mobile Experience Tests › Mobile text readability ────
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Mobile Experience Tests › Mobile performance" classname="mobile-experience.spec.ts" time="0.001">
-<failure message="mobile-experience.spec.ts:87:3 Mobile performance" type="FAILURE">
-<![CDATA[  [webkit] › mobile-experience.spec.ts:87:3 › Mobile Experience Tests › Mobile performance ─────────
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="pro-report.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="webkit" tests="7" failures="7" skipped="0" time="0.021" errors="0">
-<testcase name="Pro Report Generation E2E Tests › should display pro report generation button for pro users" classname="pro-report.spec.ts" time="0.001">
-<failure message="pro-report.spec.ts:49:3 should display pro report generation button for pro users" type="FAILURE">
-<![CDATA[  [webkit] › pro-report.spec.ts:49:3 › Pro Report Generation E2E Tests › should display pro report generation button for pro users 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should generate and display pro report" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:61:3 should generate and display pro report" type="FAILURE">
-<![CDATA[  [webkit] › pro-report.spec.ts:61:3 › Pro Report Generation E2E Tests › should generate and display pro report 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should show upgrade prompt for free users" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:291:3 should show upgrade prompt for free users" type="FAILURE">
-<![CDATA[  [webkit] › pro-report.spec.ts:291:3 › Pro Report Generation E2E Tests › should show upgrade prompt for free users 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should handle pro report generation errors" classname="pro-report.spec.ts" time="0.005">
-<failure message="pro-report.spec.ts:317:3 should handle pro report generation errors" type="FAILURE">
-<![CDATA[  [webkit] › pro-report.spec.ts:317:3 › Pro Report Generation E2E Tests › should handle pro report generation errors 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should allow printing and exporting pro report" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:346:3 should allow printing and exporting pro report" type="FAILURE">
-<![CDATA[  [webkit] › pro-report.spec.ts:346:3 › Pro Report Generation E2E Tests › should allow printing and exporting pro report 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should navigate through report sections" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:378:3 should navigate through report sections" type="FAILURE">
-<![CDATA[  [webkit] › pro-report.spec.ts:378:3 › Pro Report Generation E2E Tests › should navigate through report sections 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Privacy Settings E2E Tests › should open and update privacy settings" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:415:3 should open and update privacy settings" type="FAILURE">
-<![CDATA[  [webkit] › pro-report.spec.ts:415:3 › Privacy Settings E2E Tests › should open and update privacy settings 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="user-experience-review.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="webkit" tests="2" failures="2" skipped="0" time="0.004" errors="0">
-<testcase name="User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation" classname="user-experience-review.spec.ts" time="0.003">
-<failure message="user-experience-review.spec.ts:4:3 Complete user journey from landing to idea validation" type="FAILURE">
-<![CDATA[  [webkit] › user-experience-review.spec.ts:4:3 › User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="User Experience Review - Target Customer Journey › Test accessibility and performance" classname="user-experience-review.spec.ts" time="0.001">
-<failure message="user-experience-review.spec.ts:182:3 Test accessibility and performance" type="FAILURE">
-<![CDATA[  [webkit] › user-experience-review.spec.ts:182:3 › User Experience Review - Target Customer Journey › Test accessibility and performance 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="demo-experience.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="Mobile Chrome" tests="3" failures="3" skipped="0" time="0.007" errors="0">
-<testcase name="Interactive Demo Experience › Demo page loads and functions correctly" classname="demo-experience.spec.ts" time="0.001">
-<failure message="demo-experience.spec.ts:4:3 Demo page loads and functions correctly" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › demo-experience.spec.ts:4:3 › Interactive Demo Experience › Demo page loads and functions correctly 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Interactive Demo Experience › Demo accessible from landing page" classname="demo-experience.spec.ts" time="0.003">
-<failure message="demo-experience.spec.ts:76:3 Demo accessible from landing page" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › demo-experience.spec.ts:76:3 › Interactive Demo Experience › Demo accessible from landing page 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Interactive Demo Experience › Demo works with different idea types" classname="demo-experience.spec.ts" time="0.003">
-<failure message="demo-experience.spec.ts:94:3 Demo works with different idea types" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › demo-experience.spec.ts:94:3 › Interactive Demo Experience › Demo works with different idea types 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="mobile-experience.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="Mobile Chrome" tests="3" failures="3" skipped="0" time="0.008" errors="0">
-<testcase name="Mobile Experience Tests › Mobile landing page experience" classname="mobile-experience.spec.ts" time="0.003">
-<failure message="mobile-experience.spec.ts:4:3 Mobile landing page experience" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › mobile-experience.spec.ts:4:3 › Mobile Experience Tests › Mobile landing page experience 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Mobile Experience Tests › Mobile text readability" classname="mobile-experience.spec.ts" time="0.002">
-<failure message="mobile-experience.spec.ts:67:3 Mobile text readability" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › mobile-experience.spec.ts:67:3 › Mobile Experience Tests › Mobile text readability 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Mobile Experience Tests › Mobile performance" classname="mobile-experience.spec.ts" time="0.003">
-<failure message="mobile-experience.spec.ts:87:3 Mobile performance" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › mobile-experience.spec.ts:87:3 › Mobile Experience Tests › Mobile performance ──
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="pro-report.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="Mobile Chrome" tests="7" failures="7" skipped="0" time="0.016" errors="0">
-<testcase name="Pro Report Generation E2E Tests › should display pro report generation button for pro users" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:49:3 should display pro report generation button for pro users" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › pro-report.spec.ts:49:3 › Pro Report Generation E2E Tests › should display pro report generation button for pro users 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should generate and display pro report" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:61:3 should generate and display pro report" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › pro-report.spec.ts:61:3 › Pro Report Generation E2E Tests › should generate and display pro report 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should show upgrade prompt for free users" classname="pro-report.spec.ts" time="0.001">
-<failure message="pro-report.spec.ts:291:3 should show upgrade prompt for free users" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › pro-report.spec.ts:291:3 › Pro Report Generation E2E Tests › should show upgrade prompt for free users 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should handle pro report generation errors" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:317:3 should handle pro report generation errors" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › pro-report.spec.ts:317:3 › Pro Report Generation E2E Tests › should handle pro report generation errors 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should allow printing and exporting pro report" classname="pro-report.spec.ts" time="0.001">
-<failure message="pro-report.spec.ts:346:3 should allow printing and exporting pro report" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › pro-report.spec.ts:346:3 › Pro Report Generation E2E Tests › should allow printing and exporting pro report 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should navigate through report sections" classname="pro-report.spec.ts" time="0.003">
-<failure message="pro-report.spec.ts:378:3 should navigate through report sections" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › pro-report.spec.ts:378:3 › Pro Report Generation E2E Tests › should navigate through report sections 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Privacy Settings E2E Tests › should open and update privacy settings" classname="pro-report.spec.ts" time="0.002">
-<failure message="pro-report.spec.ts:415:3 should open and update privacy settings" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › pro-report.spec.ts:415:3 › Privacy Settings E2E Tests › should open and update privacy settings 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="user-experience-review.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="Mobile Chrome" tests="2" failures="2" skipped="0" time="0.007" errors="0">
-<testcase name="User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation" classname="user-experience-review.spec.ts" time="0.004">
-<failure message="user-experience-review.spec.ts:4:3 Complete user journey from landing to idea validation" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › user-experience-review.spec.ts:4:3 › User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="User Experience Review - Target Customer Journey › Test accessibility and performance" classname="user-experience-review.spec.ts" time="0.003">
-<failure message="user-experience-review.spec.ts:182:3 Test accessibility and performance" type="FAILURE">
-<![CDATA[  [Mobile Chrome] › user-experience-review.spec.ts:182:3 › User Experience Review - Target Customer Journey › Test accessibility and performance 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-</testsuite>
-<testsuite name="demo-experience.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="Mobile Safari" tests="3" failures="3" skipped="0" time="0.007" errors="0">
-<testcase name="Interactive Demo Experience › Demo page loads and functions correctly" classname="demo-experience.spec.ts" time="0.003">
-<failure message="demo-experience.spec.ts:4:3 Demo page loads and functions correctly" type="FAILURE">
-<![CDATA[  [Mobile Safari] › demo-experience.spec.ts:4:3 › Interactive Demo Experience › Demo page loads and functions correctly 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
-]]>
-</failure>
-</testcase>
-<testcase name="Interactive Demo Experience › Demo accessible from landing page" classname="demo-experience.spec.ts" time="0.002">
-<failure message="demo-experience.spec.ts:76:3 Demo accessible from landing page" type="FAILURE">
-<![CDATA[  [Mobile Safari] › demo-experience.spec.ts:76:3 › Interactive Demo Experience › Demo accessible from landing page 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<testsuites id="" name="" tests="7" failures="7" skipped="0" errors="0" time="32.109604000000004">
+<testsuite name="auth-workflow.spec.ts" timestamp="2025-08-06T21:26:05.955Z" hostname="chromium" tests="7" failures="7" skipped="0" time="139.591" errors="0">
+<testcase name="Authentication Workflow › Complete registration flow" classname="auth-workflow.spec.ts" time="8.564">
+<failure message="auth-workflow.spec.ts:9:3 Complete registration flow" type="FAILURE">
+<![CDATA[  [chromium] › auth-workflow.spec.ts:9:3 › Authentication Workflow › Complete registration flow ────
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('h1, h2, .title').filter({ hasText: /welcome back|sign in|login/i }).first()
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('h1, h2, .title').filter({ hasText: /welcome back|sign in|login/i }).first()
+
+
+      15 |     
+      16 |     // Verify we're on the login page
+    > 17 |     await expect(page.locator('h1, h2, .title').filter({ hasText: /welcome back|sign in|login/i }).first()).toBeVisible();
+         |                                                                                                             ^
+      18 |     
+      19 |     // Take screenshot of login page
+      20 |     await page.screenshot({ 
+        at /home/noob/test/nucleus/tests/e2e/auth-workflow.spec.ts:17:109
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authenticati-88fa2--Complete-registration-flow-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authenticati-88fa2--Complete-registration-flow-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/auth-workflow-Authenticati-88fa2--Complete-registration-flow-chromium/error-context.md
 ]]>
 </failure>
-</testcase>
-<testcase name="Interactive Demo Experience › Demo works with different idea types" classname="demo-experience.spec.ts" time="0.002">
-<failure message="demo-experience.spec.ts:94:3 Demo works with different idea types" type="FAILURE">
-<![CDATA[  [Mobile Safari] › demo-experience.spec.ts:94:3 › Interactive Demo Experience › Demo works with different idea types 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<system-out>
+<![CDATA[🔍 Starting registration flow test
+
+[[ATTACHMENT|auth-workflow-Authenticati-88fa2--Complete-registration-flow-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|auth-workflow-Authenticati-88fa2--Complete-registration-flow-chromium/video.webm]]
+
+[[ATTACHMENT|auth-workflow-Authenticati-88fa2--Complete-registration-flow-chromium/error-context.md]]
 ]]>
-</failure>
+</system-out>
 </testcase>
-</testsuite>
-<testsuite name="mobile-experience.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="Mobile Safari" tests="3" failures="3" skipped="0" time="0.009" errors="0">
-<testcase name="Mobile Experience Tests › Mobile landing page experience" classname="mobile-experience.spec.ts" time="0.003">
-<failure message="mobile-experience.spec.ts:4:3 Mobile landing page experience" type="FAILURE">
-<![CDATA[  [Mobile Safari] › mobile-experience.spec.ts:4:3 › Mobile Experience Tests › Mobile landing page experience 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<testcase name="Authentication Workflow › Login with existing account" classname="auth-workflow.spec.ts" time="30.908">
+<failure message="auth-workflow.spec.ts:97:3 Login with existing account" type="FAILURE">
+<![CDATA[  [chromium] › auth-workflow.spec.ts:97:3 › Authentication Workflow › Login with existing account ──
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('text="Sign In", text="Already have an account"')
+
+
+      112 |     } else {
+      113 |       // Switch from registration to login mode
+    > 114 |       await page.click('text="Sign In", text="Already have an account"');
+          |                  ^
+      115 |       await page.waitForTimeout(500);
+      116 |     }
+      117 |     
+        at /home/noob/test/nucleus/tests/e2e/auth-workflow.spec.ts:114:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authenticati-a74f3-Login-with-existing-account-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authenticati-a74f3-Login-with-existing-account-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/auth-workflow-Authenticati-a74f3-Login-with-existing-account-chromium/error-context.md
 ]]>
 </failure>
-</testcase>
-<testcase name="Mobile Experience Tests › Mobile text readability" classname="mobile-experience.spec.ts" time="0.003">
-<failure message="mobile-experience.spec.ts:67:3 Mobile text readability" type="FAILURE">
-<![CDATA[  [Mobile Safari] › mobile-experience.spec.ts:67:3 › Mobile Experience Tests › Mobile text readability 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<system-out>
+<![CDATA[🔍 Starting login flow test
+
+[[ATTACHMENT|auth-workflow-Authenticati-a74f3-Login-with-existing-account-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|auth-workflow-Authenticati-a74f3-Login-with-existing-account-chromium/video.webm]]
+
+[[ATTACHMENT|auth-workflow-Authenticati-a74f3-Login-with-existing-account-chromium/error-context.md]]
 ]]>
-</failure>
+</system-out>
 </testcase>
-<testcase name="Mobile Experience Tests › Mobile performance" classname="mobile-experience.spec.ts" time="0.003">
-<failure message="mobile-experience.spec.ts:87:3 Mobile performance" type="FAILURE">
-<![CDATA[  [Mobile Safari] › mobile-experience.spec.ts:87:3 › Mobile Experience Tests › Mobile performance ──
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<testcase name="Authentication Workflow › Logout workflow" classname="auth-workflow.spec.ts" time="30.889">
+<failure message="auth-workflow.spec.ts:160:3 Logout workflow" type="FAILURE">
+<![CDATA[  [chromium] › auth-workflow.spec.ts:160:3 › Authentication Workflow › Logout workflow ─────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('text="Sign In", text="Already have an account"')
+
+
+      171 |     const signInButton = page.locator('button:has-text("Sign In"), button:has-text("Login")').first();
+      172 |     if (!(await signInButton.isVisible())) {
+    > 173 |       await page.click('text="Sign In", text="Already have an account"');
+          |                  ^
+      174 |       await page.waitForTimeout(500);
+      175 |     }
+      176 |     
+        at /home/noob/test/nucleus/tests/e2e/auth-workflow.spec.ts:173:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authentication-Workflow-Logout-workflow-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authentication-Workflow-Logout-workflow-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/auth-workflow-Authentication-Workflow-Logout-workflow-chromium/error-context.md
 ]]>
 </failure>
-</testcase>
-</testsuite>
-<testsuite name="pro-report.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="Mobile Safari" tests="7" failures="7" skipped="0" time="0.011" errors="0">
-<testcase name="Pro Report Generation E2E Tests › should display pro report generation button for pro users" classname="pro-report.spec.ts" time="0.002">
-<failure message="pro-report.spec.ts:49:3 should display pro report generation button for pro users" type="FAILURE">
-<![CDATA[  [Mobile Safari] › pro-report.spec.ts:49:3 › Pro Report Generation E2E Tests › should display pro report generation button for pro users 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<system-out>
+<![CDATA[🔍 Starting logout flow test
+
+[[ATTACHMENT|auth-workflow-Authentication-Workflow-Logout-workflow-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|auth-workflow-Authentication-Workflow-Logout-workflow-chromium/video.webm]]
+
+[[ATTACHMENT|auth-workflow-Authentication-Workflow-Logout-workflow-chromium/error-context.md]]
 ]]>
-</failure>
+</system-out>
 </testcase>
-<testcase name="Pro Report Generation E2E Tests › should generate and display pro report" classname="pro-report.spec.ts" time="0.002">
-<failure message="pro-report.spec.ts:61:3 should generate and display pro report" type="FAILURE">
-<![CDATA[  [Mobile Safari] › pro-report.spec.ts:61:3 › Pro Report Generation E2E Tests › should generate and display pro report 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<testcase name="Authentication Workflow › Password validation on registration" classname="auth-workflow.spec.ts" time="3.699">
+<failure message="auth-workflow.spec.ts:233:3 Password validation on registration" type="FAILURE">
+<![CDATA[  [chromium] › auth-workflow.spec.ts:233:3 › Authentication Workflow › Password validation on registration 
+
+    Error: page.click: Unexpected token "=" while parsing css selector "button:has-text("Sign Up"), text="Sign Up", text="Create Account"". Did you mean to CSS.escape it?
+    Call log:
+      - waiting for button:has-text("Sign Up"), text="Sign Up", text="Create Account"
+
+
+      238 |     
+      239 |     // Switch to registration mode
+    > 240 |     await page.click('button:has-text("Sign Up"), text="Sign Up", text="Create Account"');
+          |                ^
+      241 |     await page.waitForTimeout(500);
+      242 |     
+      243 |     // Test weak password
+        at /home/noob/test/nucleus/tests/e2e/auth-workflow.spec.ts:240:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authenticati-1dec1--validation-on-registration-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authenticati-1dec1--validation-on-registration-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/auth-workflow-Authenticati-1dec1--validation-on-registration-chromium/error-context.md
 ]]>
 </failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should show upgrade prompt for free users" classname="pro-report.spec.ts" time="0.001">
-<failure message="pro-report.spec.ts:291:3 should show upgrade prompt for free users" type="FAILURE">
-<![CDATA[  [Mobile Safari] › pro-report.spec.ts:291:3 › Pro Report Generation E2E Tests › should show upgrade prompt for free users 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<system-out>
+<![CDATA[🔍 Testing password validation
+
+[[ATTACHMENT|auth-workflow-Authenticati-1dec1--validation-on-registration-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|auth-workflow-Authenticati-1dec1--validation-on-registration-chromium/video.webm]]
+
+[[ATTACHMENT|auth-workflow-Authenticati-1dec1--validation-on-registration-chromium/error-context.md]]
 ]]>
-</failure>
+</system-out>
 </testcase>
-<testcase name="Pro Report Generation E2E Tests › should handle pro report generation errors" classname="pro-report.spec.ts" time="0.001">
-<failure message="pro-report.spec.ts:317:3 should handle pro report generation errors" type="FAILURE">
-<![CDATA[  [Mobile Safari] › pro-report.spec.ts:317:3 › Pro Report Generation E2E Tests › should handle pro report generation errors 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<testcase name="Authentication Workflow › Invalid login credentials" classname="auth-workflow.spec.ts" time="30.907">
+<failure message="auth-workflow.spec.ts:265:3 Invalid login credentials" type="FAILURE">
+<![CDATA[  [chromium] › auth-workflow.spec.ts:265:3 › Authentication Workflow › Invalid login credentials ───
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('text="Sign In", text="Already have an account"')
+
+
+      272 |     const signInButton = page.locator('button:has-text("Sign In"), button:has-text("Login")').first();
+      273 |     if (!(await signInButton.isVisible())) {
+    > 274 |       await page.click('text="Sign In", text="Already have an account"');
+          |                  ^
+      275 |       await page.waitForTimeout(500);
+      276 |     }
+      277 |     
+        at /home/noob/test/nucleus/tests/e2e/auth-workflow.spec.ts:274:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authenticati-f7448-w-Invalid-login-credentials-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authenticati-f7448-w-Invalid-login-credentials-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/auth-workflow-Authenticati-f7448-w-Invalid-login-credentials-chromium/error-context.md
 ]]>
 </failure>
-</testcase>
-<testcase name="Pro Report Generation E2E Tests › should allow printing and exporting pro report" classname="pro-report.spec.ts" time="0.002">
-<failure message="pro-report.spec.ts:346:3 should allow printing and exporting pro report" type="FAILURE">
-<![CDATA[  [Mobile Safari] › pro-report.spec.ts:346:3 › Pro Report Generation E2E Tests › should allow printing and exporting pro report 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<system-out>
+<![CDATA[🔍 Testing invalid login credentials
+
+[[ATTACHMENT|auth-workflow-Authenticati-f7448-w-Invalid-login-credentials-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|auth-workflow-Authenticati-f7448-w-Invalid-login-credentials-chromium/video.webm]]
+
+[[ATTACHMENT|auth-workflow-Authenticati-f7448-w-Invalid-login-credentials-chromium/error-context.md]]
 ]]>
-</failure>
+</system-out>
 </testcase>
-<testcase name="Pro Report Generation E2E Tests › should navigate through report sections" classname="pro-report.spec.ts" time="0.001">
-<failure message="pro-report.spec.ts:378:3 should navigate through report sections" type="FAILURE">
-<![CDATA[  [Mobile Safari] › pro-report.spec.ts:378:3 › Pro Report Generation E2E Tests › should navigate through report sections 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<testcase name="Authentication Workflow › Authentication state persistence" classname="auth-workflow.spec.ts" time="30.9">
+<failure message="auth-workflow.spec.ts:300:3 Authentication state persistence" type="FAILURE">
+<![CDATA[  [chromium] › auth-workflow.spec.ts:300:3 › Authentication Workflow › Authentication state persistence 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('text="Sign In", text="Already have an account"')
+
+
+      311 |     const signInButton = page.locator('button:has-text("Sign In"), button:has-text("Login")').first();
+      312 |     if (!(await signInButton.isVisible())) {
+    > 313 |       await page.click('text="Sign In", text="Already have an account"');
+          |                  ^
+      314 |       await page.waitForTimeout(500);
+      315 |     }
+      316 |     
+        at /home/noob/test/nucleus/tests/e2e/auth-workflow.spec.ts:313:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authenticati-1687f-ntication-state-persistence-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authenticati-1687f-ntication-state-persistence-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/auth-workflow-Authenticati-1687f-ntication-state-persistence-chromium/error-context.md
 ]]>
 </failure>
-</testcase>
-<testcase name="Privacy Settings E2E Tests › should open and update privacy settings" classname="pro-report.spec.ts" time="0.002">
-<failure message="pro-report.spec.ts:415:3 should open and update privacy settings" type="FAILURE">
-<![CDATA[  [Mobile Safari] › pro-report.spec.ts:415:3 › Privacy Settings E2E Tests › should open and update privacy settings 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<system-out>
+<![CDATA[🔍 Testing authentication state persistence
+
+[[ATTACHMENT|auth-workflow-Authenticati-1687f-ntication-state-persistence-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|auth-workflow-Authenticati-1687f-ntication-state-persistence-chromium/video.webm]]
+
+[[ATTACHMENT|auth-workflow-Authenticati-1687f-ntication-state-persistence-chromium/error-context.md]]
 ]]>
-</failure>
+</system-out>
 </testcase>
-</testsuite>
-<testsuite name="user-experience-review.spec.ts" timestamp="2025-08-05T04:21:58.900Z" hostname="Mobile Safari" tests="2" failures="2" skipped="0" time="0.003" errors="0">
-<testcase name="User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation" classname="user-experience-review.spec.ts" time="0.001">
-<failure message="user-experience-review.spec.ts:4:3 Complete user journey from landing to idea validation" type="FAILURE">
-<![CDATA[  [Mobile Safari] › user-experience-review.spec.ts:4:3 › User Experience Review - Target Customer Journey › Complete user journey from landing to idea validation 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<testcase name="Authentication Workflow › Protected route access without authentication" classname="auth-workflow.spec.ts" time="3.724">
+<failure message="auth-workflow.spec.ts:355:3 Protected route access without authentication" type="FAILURE">
+<![CDATA[  [chromium] › auth-workflow.spec.ts:355:3 › Authentication Workflow › Protected route access without authentication 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: false
+
+      371 |       
+      372 |       // Should either redirect to login or show authentication prompt
+    > 373 |       expect(redirectedToLogin || showsAuthPrompt).toBeTruthy();
+          |                                                    ^
+      374 |     }
+      375 |     
+      376 |     // Take screenshot of protected route redirect
+        at /home/noob/test/nucleus/tests/e2e/auth-workflow.spec.ts:373:52
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authenticati-17243-cess-without-authentication-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/auth-workflow-Authenticati-17243-cess-without-authentication-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/auth-workflow-Authenticati-17243-cess-without-authentication-chromium/error-context.md
 ]]>
 </failure>
-</testcase>
-<testcase name="User Experience Review - Target Customer Journey › Test accessibility and performance" classname="user-experience-review.spec.ts" time="0.002">
-<failure message="user-experience-review.spec.ts:182:3 Test accessibility and performance" type="FAILURE">
-<![CDATA[  [Mobile Safari] › user-experience-review.spec.ts:182:3 › User Experience Review - Target Customer Journey › Test accessibility and performance 
-
-    Error: browserType.launch: Executable doesn't exist at /home/noob/.cache/ms-playwright/webkit-2191/pw_run.sh
-    ╔═════════════════════════════════════════════════════════════════════════╗
-    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
-    ║ Please run the following command to download new browsers:              ║
-    ║                                                                         ║
-    ║     npx playwright install                                              ║
-    ║                                                                         ║
-    ║ <3 Playwright Team                                                      ║
-    ╚═════════════════════════════════════════════════════════════════════════╝
+<system-out>
+<![CDATA[🔍 Testing protected route access without authentication
+Testing access to /dashboard
+Route /dashboard - Redirected to login: false, Shows auth prompt: false
+
+[[ATTACHMENT|auth-workflow-Authenticati-17243-cess-without-authentication-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|auth-workflow-Authenticati-17243-cess-without-authentication-chromium/video.webm]]
+
+[[ATTACHMENT|auth-workflow-Authenticati-17243-cess-without-authentication-chromium/error-context.md]]
 ]]>
-</failure>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

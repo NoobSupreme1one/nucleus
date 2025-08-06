@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as React from "react";
 import { useForm } from "react-hook-form";
 import { validatePassword, formatAuthError } from "@/lib/authUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,18 +14,23 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
-const loginSchema = z.object({
+const baseLoginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(1, "Password is required"),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+});
+
+const registrationSchema = baseLoginSchema.extend({
   password: z.string()
     .min(8, "Password must be at least 8 characters")
     .refine((val) => validatePassword(val).isValid, {
       message: "Must include uppercase, lowercase, number, and special character"
     }),
-  firstName: z.string().min(1, "First name is required").optional(),
-  lastName: z.string().optional(),
+  firstName: z.string().min(1, "First name is required"),
 });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginFormData = z.infer<typeof baseLoginSchema>;
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -32,7 +38,7 @@ export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
 
   const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(isSignUp ? registrationSchema : baseLoginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -40,6 +46,13 @@ export default function Login() {
       lastName: "",
     },
   });
+
+  // Update form resolver when switching between login/signup modes
+  React.useEffect(() => {
+    form.clearErrors();
+    const newResolver = zodResolver(isSignUp ? registrationSchema : baseLoginSchema);
+    form.resolver = newResolver;
+  }, [isSignUp, form]);
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
@@ -160,11 +173,18 @@ export default function Login() {
                           {...field}
                           onChange={(e) => {
                             field.onChange(e);
-                            const validation = validatePassword(e.target.value);
-                            form.setError('password', {
-                              type: 'manual',
-                              message: validation.isValid ? '' : 'Password requirements not met'
-                            });
+                            // Only validate password complexity during signup
+                            if (isSignUp) {
+                              const validation = validatePassword(e.target.value);
+                              if (!validation.isValid && e.target.value.length > 0) {
+                                form.setError('password', {
+                                  type: 'manual',
+                                  message: 'Password requirements not met'
+                                });
+                              } else {
+                                form.clearErrors('password');
+                              }
+                            }
                           }}
                         />
                       </FormControl>
@@ -203,7 +223,7 @@ export default function Login() {
                 <span className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-2 bg-background text-muted-foreground">Or continue with</span>
               </div>
             </div>
             
@@ -212,9 +232,17 @@ export default function Login() {
               variant="outline"
               className="w-full mt-4"
               onClick={() => {
-                const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-                const redirectTo = window.location.origin;
-                window.location.href = `${supabaseUrl}/auth/v1/authorize?provider=google&redirect_to=${redirectTo}`;
+                const cognitoDomain = `https://${import.meta.env.VITE_AWS_COGNITO_DOMAIN || 'us-west-1ofuj1nghs.auth.us-west-1.amazoncognito.com'}`;
+                const clientId = import.meta.env.VITE_AWS_COGNITO_CLIENT_ID || '65rt4elpftmbse0nv1bloofp39';
+                const redirectUri = `${window.location.origin}/auth/callback`;
+                const oauthUrl = `${cognitoDomain}/oauth2/authorize?` + new URLSearchParams({
+                  response_type: 'code',
+                  client_id: clientId,
+                  redirect_uri: redirectUri,
+                  scope: 'openid email profile',
+                  identity_provider: 'Google'
+                }).toString();
+                window.location.href = oauthUrl;
               }}
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">

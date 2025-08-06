@@ -69,7 +69,7 @@ export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
 
     // Create user object matching existing format
     const user = {
-      id: response.Username,
+      id: getUserAttribute(response.UserAttributes, 'sub') || response.Username,
       email: getUserAttribute(response.UserAttributes, 'email') || '',
       user_metadata: {
         first_name: getUserAttribute(response.UserAttributes, 'given_name'),
@@ -83,6 +83,7 @@ export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
     if (!dbUser) {
       // Create user if they don't exist
       await storage.upsertUser({
+        id: user.id,
         email: user.email || null,
         firstName: user.user_metadata?.first_name || null,
         lastName: user.user_metadata?.last_name || null,
@@ -118,6 +119,7 @@ export async function setupAuth(app: Express) {
   // Login endpoint - handle email/password authentication
   app.post('/api/auth/login', accountLockoutProtection(), async (req, res) => {
     try {
+      console.log('Login attempt:', { email: req.body.email });
       const { email, password } = req.body;
       
       if (!email || !password) {
@@ -141,7 +143,9 @@ export async function setupAuth(app: Express) {
         AuthParameters: authParameters,
       });
 
+      console.log('Attempting Cognito login for email:', email);
       const response = await cognitoClient.send(command);
+      console.log('Cognito login response received');
 
       if (!response.AuthenticationResult?.AccessToken) {
         // Track failed login attempt
@@ -184,7 +188,9 @@ export async function setupAuth(app: Express) {
       const userEmail = getUserAttribute(userResponse.UserAttributes, 'email') || email;
 
       // Get or create user in our database
+      const userId = getUserAttribute(userResponse.UserAttributes, 'sub') || userResponse.Username;
       await storage.upsertUser({
+        id: userId,
         email: userEmail || null,
         firstName: getUserAttribute(userResponse.UserAttributes, 'given_name') || null,
         lastName: getUserAttribute(userResponse.UserAttributes, 'family_name') || null,
@@ -208,7 +214,7 @@ export async function setupAuth(app: Express) {
 
       res.json({ 
         message: 'Logged in successfully',
-        user: await storage.getUser(userResponse.Username)
+        user: await storage.getUser(userId)
       });
     } catch (error: any) {
       console.error('Cognito login error:', error);
@@ -220,18 +226,20 @@ export async function setupAuth(app: Express) {
   // Register endpoint
   app.post('/api/auth/register', async (req, res) => {
     try {
+      console.log('Registration attempt:', req.body);
       const { email, password, firstName, lastName } = req.body;
       
       if (!email || !password) {
         return res.status(400).json({ message: 'Email and password are required' });
       }
 
-      // Use email as username since user pool is configured with email alias
+      // Generate a unique username since user pool is configured with email alias
+      const username = email.split('@')[0] + '_' + Date.now().toString();
       
       // Sign up with AWS Cognito
       const signUpParams: any = {
         ClientId: clientId,
-        Username: email,
+        Username: username,
         Password: password,
         UserAttributes: [
           {
@@ -253,14 +261,16 @@ export async function setupAuth(app: Express) {
         ],
       };
       
-      const secretHash = calculateSecretHash(email);
+      const secretHash = calculateSecretHash(username);
       if (secretHash) {
         signUpParams.SecretHash = secretHash;
       }
       
       const command = new SignUpCommand(signUpParams);
 
+      console.log('Attempting Cognito signup...');
       const response = await cognitoClient.send(command);
+      console.log('Cognito signup successful:', { UserSub: response.UserSub, UserConfirmed: response.UserConfirmed });
 
       if (!response.UserSub) {
         return res.status(400).json({ message: 'Registration failed' });
@@ -271,7 +281,9 @@ export async function setupAuth(app: Express) {
 
       if (!needsConfirmation) {
         // Create user in our database
+        console.log('Creating user in database with ID:', response.UserSub);
         await storage.upsertUser({
+          id: response.UserSub,
           email: email || null,
           firstName: firstName || null,
           lastName: lastName || null,
@@ -428,6 +440,125 @@ export async function setupAuth(app: Express) {
     } catch (error) {
       console.error("Error updating user:", error);
       res.status(500).json({ message: "Failed to update user profile" });
+    }
+  });
+
+  // OAuth callback endpoint
+  app.get('/auth/callback', async (req, res) => {
+    try {
+      const { code, error, state } = req.query;
+      
+      if (error) {
+        console.error('OAuth error:', error);
+        return res.redirect('/login?error=oauth_failed');
+      }
+      
+      if (!code) {
+        console.error('No authorization code received');
+        return res.redirect('/login?error=no_code');
+      }
+      
+      // Exchange authorization code for tokens using Cognito
+      const cognitoDomain = `https://${process.env.AWS_COGNITO_DOMAIN || 'us-west-1ofuj1nghs.auth.us-west-1.amazoncognito.com'}`;
+      const tokenUrl = `${cognitoDomain}/oauth2/token`;
+      
+      const tokenParams = new URLSearchParams({
+        grant_type: 'authorization_code',
+        client_id: clientId,
+        code: code as string,
+        redirect_uri: `${req.protocol}://${req.get('host')}/auth/callback`
+      });
+      
+      // Add client secret if available
+      if (clientSecret) {
+        const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+        var tokenHeaders = {
+          'Authorization': `Basic ${credentials}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        };
+      } else {
+        var tokenHeaders = {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        };
+      }
+      
+      const response = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: tokenHeaders,
+        body: tokenParams.toString()
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Token exchange failed:', errorText);
+        return res.redirect('/login?error=token_exchange_failed');
+      }
+      
+      const tokens = await response.json();
+      
+      if (!tokens.access_token) {
+        console.error('No access token received');
+        return res.redirect('/login?error=no_access_token');
+      }
+      
+      // Get user info from the access token
+      const userCommand = new GetUserCommand({
+        AccessToken: tokens.access_token,
+      });
+      
+      const userResponse = await cognitoClient.send(userCommand);
+      
+      if (!userResponse.Username) {
+        return res.redirect('/login?error=user_fetch_failed');
+      }
+      
+      // Set cookies with tokens
+      res.cookie('access_token', tokens.access_token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: (tokens.expires_in || 3600) * 1000
+      });
+
+      if (tokens.refresh_token) {
+        res.cookie('refresh_token', tokens.refresh_token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+      }
+
+      // Create/update user in database
+      const userId = getUserAttribute(userResponse.UserAttributes, 'sub') || userResponse.Username;
+      const userEmail = getUserAttribute(userResponse.UserAttributes, 'email');
+      
+      await storage.upsertUser({
+        id: userId,
+        email: userEmail || null,
+        firstName: getUserAttribute(userResponse.UserAttributes, 'given_name') || null,
+        lastName: getUserAttribute(userResponse.UserAttributes, 'family_name') || null,
+        profileImageUrl: getUserAttribute(userResponse.UserAttributes, 'picture') || null,
+        role: null,
+        location: null,
+        bio: null,
+        subscriptionTier: 'free',
+        totalIdeaScore: 0,
+        profileViews: 0,
+        profilePublic: true,
+        ideasPublic: true,
+        allowFounderMatching: true,
+        allowDirectContact: true,
+        stripeCustomerId: null,
+        stripeSubscriptionId: null,
+        subscriptionStatus: null,
+        subscriptionPeriodEnd: null,
+        subscriptionCancelAtPeriodEnd: false,
+      });
+      
+      // Redirect to dashboard
+      res.redirect('/dashboard?auth=success');
+    } catch (error) {
+      console.error('OAuth callback error:', error);
+      res.redirect('/login?error=callback_failed');
     }
   });
 }
