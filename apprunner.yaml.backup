@@ -1,0 +1,40 @@
+version: 1.0
+runtime: nodejs18
+build:
+  commands:
+    build:
+      - echo "Installing dependencies..."
+      - npm ci
+      - echo "Building application..."
+      - npm run build
+      - echo "Generating Prisma client..."
+      - npx prisma generate
+run:
+  runtime-version: 18.x
+  command: npm start
+  network:
+    port: 8080
+    env: PORT
+  env:
+    - name: NODE_ENV
+      value: production
+    - name: PORT
+      value: 8080
+    - name: DATABASE_URL
+      value: postgresql://nucleus:NucleusDB2024!@nucleus-db.cnugkau8sbzn.us-west-1.rds.amazonaws.com:5432/nucleus
+    - name: AWS_REGION
+      value: us-west-1
+    - name: AWS_COGNITO_USER_POOL_ID
+      value: us-west-1_OFUJ1nGHS
+    - name: AWS_COGNITO_CLIENT_ID
+      value: 65rt4elpftmbse0nv1bloofp39
+    - name: AWS_COGNITO_CLIENT_SECRET
+      value: 1u49r28nup8og0jbtm781hqilacqdkho3ns3c6heul3gcs8kdhte
+    - name: AWS_S3_BUCKET_NAME
+      value: nucleus-uploads-1754338091
+    - name: AWS_BEDROCK_REGION
+      value: us-west-1
+    - name: AWS_ACCESS_KEY_ID
+      value: AKIAWBUTHNIRVBOXIPXK
+    - name: AWS_SECRET_ACCESS_KEY
+      value: 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

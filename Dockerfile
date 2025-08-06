@@ -39,9 +39,6 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/prisma ./prisma
 
-# Copy client build
-COPY --from=builder /app/client/dist ./client/dist
-
 USER nextjs
 
 EXPOSE 8080
