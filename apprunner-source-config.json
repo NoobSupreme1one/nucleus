@@ -24,7 +24,7 @@
             "AWS_COGNITO_CLIENT_SECRET": "1u49r28nup8og0jbtm781hqilacqdkho3ns3c6heul3gcs8kdhte",
             "VITE_AWS_COGNITO_CLIENT_ID": "65rt4elpftmbse0nv1bloofp39",
             "AWS_S3_BUCKET_NAME": "nucleus-uploads-1754338091",
-            "AWS_BEDROCK_REGION": "us-west-1",
+            "AWS_BEDROCK_REGION": "us-west-2",
             "CUSTOM_DOMAIN": "foundrcheck.com",
             "STRIPE_SECRET_KEY": "sk_test_your_stripe_secret_key_here",
             "AWS_ACCESS_KEY_ID": "AKIAWBUTHNIRVBOXIPXK",

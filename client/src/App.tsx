@@ -47,6 +47,7 @@ function Router() {
       ) : (
         <>
           <Route path="/" component={Dashboard} />
+          <Route path="/dashboard" component={Dashboard} />
           <Route path="/validate-idea" component={IdeaValidation} />
           <Route path="/validation-results/:ideaId" component={ValidationResults} />
           <Route path="/matching" component={Matching} />

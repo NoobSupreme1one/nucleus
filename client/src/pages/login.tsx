@@ -235,7 +235,7 @@ export default function Login() {
                 const cognitoDomain = `https://${import.meta.env.VITE_AWS_COGNITO_DOMAIN || 'us-west-1ofuj1nghs.auth.us-west-1.amazoncognito.com'}`;
                 const clientId = import.meta.env.VITE_AWS_COGNITO_CLIENT_ID || '65rt4elpftmbse0nv1bloofp39';
                 const redirectUri = `${window.location.origin}/auth/callback`;
-                const oauthUrl = `${cognitoDomain}/oauth2/authorize?` + new URLSearchParams({
+                const oauthUrl = `${cognitoDomain}/login?` + new URLSearchParams({
                   response_type: 'code',
                   client_id: clientId,
                   redirect_uri: redirectUri,

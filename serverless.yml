@@ -3,22 +3,25 @@ service: nucleus-app
 provider:
   name: aws
   runtime: nodejs18.x
-  region: ${opt:region, 'us-east-1'}
-  stage: ${opt:stage, 'dev'}
+  region: us-west-1
+  stage: ${opt:stage, 'prod'}
   memorySize: 1024
   timeout: 30
   
   environment:
     NODE_ENV: production
-    DATABASE_URL: ${env:DATABASE_URL}
-    AWS_REGION: ${aws:region}
-    AWS_COGNITO_USER_POOL_ID: ${env:AWS_COGNITO_USER_POOL_ID}
-    AWS_COGNITO_CLIENT_ID: ${env:AWS_COGNITO_CLIENT_ID}
-    AWS_S3_BUCKET_NAME: ${env:AWS_S3_BUCKET_NAME}
-    AWS_BEDROCK_REGION: ${env:AWS_BEDROCK_REGION, aws:region}
-    PERPLEXITY_API_KEY: ${env:PERPLEXITY_API_KEY}
-    STRIPE_SECRET_KEY: ${env:STRIPE_SECRET_KEY}
-    STRIPE_WEBHOOK_SECRET: ${env:STRIPE_WEBHOOK_SECRET}
+    DATABASE_URL: postgresql://nucleus:NucleusDB2024!@nucleus-db.cnugkau8sbzn.us-west-1.rds.amazonaws.com:5432/nucleus
+    AWS_COGNITO_USER_POOL_ID: us-west-1_OFUJ1nGHS
+    AWS_COGNITO_CLIENT_ID: 65rt4elpftmbse0nv1bloofp39
+    AWS_COGNITO_CLIENT_SECRET: 1u49r28nup8og0jbtm781hqilacqdkho3ns3c6heul3gcs8kdhte
+    AWS_COGNITO_DOMAIN: us-west-1ofuj1nghs.auth.us-west-1.amazoncognito.com
+    AWS_S3_BUCKET_NAME: nucleus-uploads-1754338091
+    AWS_BEDROCK_REGION: us-west-2
+    PERPLEXITY_API_KEY: ${env:PERPLEXITY_API_KEY, 'your-perplexity-key'}
+    STRIPE_SECRET_KEY: sk_test_your_stripe_secret_key_here
+    STRIPE_WEBHOOK_SECRET: ${env:STRIPE_WEBHOOK_SECRET, 'your-webhook-secret'}
+    VITE_AWS_COGNITO_DOMAIN: us-west-1ofuj1nghs.auth.us-west-1.amazoncognito.com
+    VITE_AWS_COGNITO_CLIENT_ID: 65rt4elpftmbse0nv1bloofp39
     
   iam:
     role:
@@ -26,20 +29,20 @@ provider:
         - Effect: Allow
           Action:
             - cognito-idp:*
-          Resource: !Sub 'arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${env:AWS_COGNITO_USER_POOL_ID}'
+          Resource: 'arn:aws:cognito-idp:us-west-1:415846853155:userpool/us-west-1_OFUJ1nGHS'
         - Effect: Allow
           Action:
             - s3:GetObject
             - s3:PutObject
             - s3:DeleteObject
-          Resource: !Sub 'arn:aws:s3:::${env:AWS_S3_BUCKET_NAME}/*'
+          Resource: 'arn:aws:s3:::nucleus-uploads-1754338091/*'
         - Effect: Allow
           Action:
             - bedrock:InvokeModel
             - bedrock:InvokeModelWithResponseStream
           Resource: 
-            - !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/amazon.nova-pro-v1:0'
-            - !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/amazon.nova-lite-v1:0'
+            - 'arn:aws:bedrock:us-west-2::foundation-model/amazon.nova-pro-v1:0'
+            - 'arn:aws:bedrock:us-west-2::foundation-model/amazon.nova-lite-v1:0'
         - Effect: Allow
           Action:
             - rds:DescribeDBInstances
@@ -50,7 +53,7 @@ provider:
             - logs:CreateLogGroup
             - logs:CreateLogStream
             - logs:PutLogEvents
-          Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*'
+          Resource: 'arn:aws:logs:us-west-1:415846853155:*'
 
 functions:
   app:
@@ -64,86 +67,35 @@ functions:
           path: /{proxy+}
           method: ANY
           cors: true
-    vpc:
-      securityGroupIds:
-        - ${env:VPC_SECURITY_GROUP_ID}
-      subnetIds:
-        - ${env:VPC_SUBNET_ID_1}
-        - ${env:VPC_SUBNET_ID_2}
-
-resources:
-  Resources:
-    # S3 Bucket for file uploads
-    S3Bucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${env:AWS_S3_BUCKET_NAME}
-        CorsConfiguration:
-          CorsRules:
-            - AllowedHeaders: ['*']
-              AllowedMethods: [GET, PUT, POST, DELETE]
-              AllowedOrigins: ['*']
-              MaxAge: 3000
-        PublicAccessBlockConfiguration:
-          BlockPublicAcls: false
-          BlockPublicPolicy: false
-          IgnorePublicAcls: false
-          RestrictPublicBuckets: false
-
-    # CloudFront Distribution for static assets
-    CloudFrontDistribution:
-      Type: AWS::CloudFront::Distribution
-      Properties:
-        DistributionConfig:
-          Enabled: true
-          DefaultCacheBehavior:
-            TargetOriginId: ApiGateway
-            ViewerProtocolPolicy: redirect-to-https
-            AllowedMethods: [DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT]
-            CachedMethods: [GET, HEAD, OPTIONS]
-            ForwardedValues:
-              QueryString: true
-              Headers: ['*']
-          CacheBehaviors:
-            - PathPattern: '/uploads/*'
-              TargetOriginId: S3Origin
-              ViewerProtocolPolicy: redirect-to-https
-              AllowedMethods: [GET, HEAD]
-              CachedMethods: [GET, HEAD]
-              ForwardedValues:
-                QueryString: false
-          Origins:
-            - Id: ApiGateway
-              DomainName:
-                Fn::Join:
-                  - ''
-                  - - Ref: ApiGatewayRestApi
-                    - '.execute-api.'
-                    - ${aws:region}
-                    - '.amazonaws.com'
-              CustomOriginConfig:
-                HTTPPort: 443
-                OriginProtocolPolicy: https-only
-              OriginPath: '/${self:provider.stage}'
-            - Id: S3Origin
-              DomainName: ${env:AWS_S3_BUCKET_NAME}.s3.amazonaws.com
-              S3OriginConfig:
-                OriginAccessIdentity: ''
 
 plugins:
-  - serverless-webpack
   - serverless-offline
   - serverless-domain-manager
 
 custom:
-  webpack:
-    webpackConfig: webpack.lambda.js
-    includeModules: true
-    packager: npm
   serverless-offline:
     httpPort: 3000
     lambdaPort: 3002
+  
   customDomain:
-    domainName: ${env:CUSTOM_DOMAIN, ''}
-    stage: ${self:provider.stage}
+    domainName: api.foundrcheck.com
+    stage: prod
+    basePath: ''
+    certificateArn: 'arn:aws:acm:us-west-1:415846853155:certificate/cf489104-5d2c-42fe-bd9e-1855a8e16b5e'
     createRoute53Record: true
+    endpointType: 'regional'
+    securityPolicy: tls_1_2
+    apiType: rest
+
+package:
+  patterns:
+    - 'dist/lambda.js'
+    - 'dist/public/**'
+    - '!node_modules/**'
+    - 'node_modules/.prisma/client/libquery_engine-rhel-openssl-1.0.x.so.node'
+    - 'node_modules/.prisma/client/schema.prisma'
+    - '!client/**'
+    - '!.git/**'
+    - '!*.md'
+    - '!*.log'
+    - '!package.json'

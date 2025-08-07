@@ -4,420 +4,725 @@
 
 Sentry DSN not configured - error monitoring disabled
 Using AWS Cognito authentication provider
-3:56:33 PM [express] serving on port 5000
-[SECURITY] POST /api/auth/login {
+11:27:39 PM [express] serving on port 5000
+[SECURITY] GET /login {
   ip: '127.0.0.1',
-  userAgent: 'curl/8.5.0',
-  timestamp: '2025-08-04T22:56:36.605Z',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T06:27:40.125Z',
   userId: undefined
 }
-Cognito login error: NotAuthorizedException: Incorrect username or password.
-    at de_NotAuthorizedExceptionRes (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
-    at de_CommandError (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
-    at async /home/noob/projects/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
-    at async /home/noob/projects/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
-    at async <anonymous> (/home/noob/projects/nucleus/server/cognitoAuth.ts:144:24) {
-  '$fault': 'client',
-  '$metadata': {
-    httpStatusCode: 400,
-    requestId: '5248cc01-e263-4bd8-a0db-200b417a4415',
-    extendedRequestId: undefined,
-    cfId: undefined,
-    attempts: 1,
-    totalRetryDelay: 0
-  },
-  __type: 'NotAuthorizedException'
-}
-3:56:36 PM [express] POST /api/auth/login 500 in 263ms :: {"message":"Login failed"}
-[SECURITY] POST /api/auth/login {
-  ip: '127.0.0.1',
-  userAgent: 'curl/8.5.0',
-  timestamp: '2025-08-04T22:56:45.995Z',
-  userId: undefined
-}
-3:56:46 PM [express] POST /api/auth/login 200 in 519ms :: {"message":"Logged in successfully"}
-[SECURITY] POST /api/auth/login {
-  ip: '127.0.0.1',
-  userAgent: 'curl/8.5.0',
-  timestamp: '2025-08-04T22:56:57.934Z',
-  userId: undefined
-}
-3:56:58 PM [express] POST /api/auth/login 200 in 364ms :: {"message":"Logged in successfully"}
-[SECURITY] GET /api/auth/user {
-  ip: '127.0.0.1',
-  userAgent: 'curl/8.5.0',
-  timestamp: '2025-08-04T22:57:02.084Z',
-  userId: undefined
-}
-3:57:02 PM [express] GET /api/auth/user 200 in 201ms
-[SECURITY] POST /api/auth/logout {
-  ip: '127.0.0.1',
-  userAgent: 'curl/8.5.0',
-  timestamp: '2025-08-04T22:57:10.921Z',
-  userId: undefined
-}
-3:57:11 PM [express] POST /api/auth/logout 200 in 187ms :: {"message":"Logged out successfully"}
-[SECURITY] GET /api/auth/user {
-  ip: '127.0.0.1',
-  userAgent: 'curl/8.5.0',
-  timestamp: '2025-08-04T22:57:14.926Z',
-  userId: undefined
-}
-Cognito auth error: NotAuthorizedException: Access Token has been revoked
-    at de_NotAuthorizedExceptionRes (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
-    at de_CommandError (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
-    at async /home/noob/projects/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
-    at async /home/noob/projects/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
-    at async isAuthenticated (/home/noob/projects/nucleus/server/cognitoAuth.ts:64:22) {
-  '$fault': 'client',
-  '$metadata': {
-    httpStatusCode: 400,
-    requestId: 'd3c67ca0-1c74-489f-b588-a7bc9e810860',
-    extendedRequestId: undefined,
-    cfId: undefined,
-    attempts: 1,
-    totalRetryDelay: 0
-  },
-  __type: 'NotAuthorizedException'
-}
-3:57:15 PM [express] GET /api/auth/user 401 in 84ms :: {"message":"Authentication failed"}
 Browserslist: browsers data (caniuse-lite) is 10 months old. Please run:
   npx update-browserslist-db@latest
   Why you should do it regularly: https://github.com/browserslist/update-db#readme
 [SECURITY] GET /src/lib/oauthCallback.ts {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:34.395Z',
+  timestamp: '2025-08-07T06:27:40.735Z',
   userId: undefined
 }
 [SECURITY] GET /src/pages/login.tsx {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:34.625Z',
+  timestamp: '2025-08-07T06:27:40.960Z',
   userId: undefined
 }
 [SECURITY] GET /src/lib/authUtils.ts {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:34.719Z',
-  userId: undefined
-}
-[SECURITY] GET /@fs/home/noob/projects/nucleus/node_modules/.vite/deps/class-variance-authority.js {
-  ip: '127.0.0.1',
-  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:34.724Z',
+  timestamp: '2025-08-07T06:27:41.032Z',
   userId: undefined
 }
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:34.795Z',
+  timestamp: '2025-08-07T06:27:41.131Z',
   userId: undefined
 }
-4:24:34 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
-4:24:34 PM [express] GET /api/leaderboard 200 in 1ms :: []
+11:27:41 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"No token provided"}
+11:27:41 PM [express] GET /api/leaderboard 304 in 1ms :: []
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:34.797Z',
+  timestamp: '2025-08-07T06:27:41.135Z',
   userId: undefined
 }
-4:24:34 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
+11:27:41 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:35.917Z',
+  timestamp: '2025-08-07T06:27:42.139Z',
   userId: undefined
 }
-4:24:35 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
+11:27:42 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:37.920Z',
+  timestamp: '2025-08-07T06:27:44.142Z',
   userId: undefined
 }
-4:24:37 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
-4:24:37 PM [express] GET /api/leaderboard 304 in 1ms :: []
+11:27:44 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
 [SECURITY] GET /login {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:55.788Z',
+  timestamp: '2025-08-07T06:27:51.247Z',
   userId: undefined
 }
 [SECURITY] GET /src/lib/oauthCallback.ts {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:55.813Z',
+  timestamp: '2025-08-07T06:27:51.269Z',
   userId: undefined
 }
 [SECURITY] GET /src/pages/login.tsx {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:55.816Z',
+  timestamp: '2025-08-07T06:27:51.271Z',
   userId: undefined
 }
 [SECURITY] GET /src/lib/authUtils.ts {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:55.828Z',
+  timestamp: '2025-08-07T06:27:51.279Z',
   userId: undefined
 }
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:55.874Z',
+  timestamp: '2025-08-07T06:27:51.309Z',
   userId: undefined
 }
-4:24:55 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
-4:24:55 PM [express] GET /api/leaderboard 304 in 1ms :: []
+11:27:51 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
+11:27:51 PM [express] GET /api/leaderboard 304 in 0ms :: []
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:55.876Z',
+  timestamp: '2025-08-07T06:27:51.311Z',
   userId: undefined
 }
-4:24:55 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+11:27:51 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:56.929Z',
+  timestamp: '2025-08-07T06:27:52.316Z',
   userId: undefined
 }
-4:24:56 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+11:27:52 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:24:58.931Z',
+  timestamp: '2025-08-07T06:27:54.318Z',
   userId: undefined
 }
-4:24:58 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
-[SECURITY] POST /api/auth/register {
+11:27:54 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+[SECURITY] POST /api/auth/login {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:03.943Z',
+  timestamp: '2025-08-07T06:28:00.563Z',
   userId: undefined
 }
-Cognito registration error: InvalidPasswordException: Password did not conform with policy: Password must have uppercase characters
-    at de_InvalidPasswordExceptionRes (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4729:21)
-    at de_CommandError (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4452:19)
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
-    at async /home/noob/projects/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
-    at async /home/noob/projects/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
-    at async <anonymous> (/home/noob/projects/nucleus/server/cognitoAuth.ts:263:24) {
+Login attempt: { email: 'zer0.phawks@gmail.com' }
+Attempting Cognito login for email: zer0.phawks@gmail.com
+Cognito login error: NotAuthorizedException: Incorrect username or password.
+    at de_NotAuthorizedExceptionRes (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/test/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/test/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async <anonymous> (/home/noob/test/nucleus/server/cognitoAuth.ts:147:24) {
   '$fault': 'client',
   '$metadata': {
     httpStatusCode: 400,
-    requestId: '4dd1d7b6-9eb2-4dc0-b4b6-5ae9ae1af5bb',
+    requestId: 'b8033313-eb9f-4cf1-affc-3d3b71d1f2d4',
     extendedRequestId: undefined,
     cfId: undefined,
     attempts: 1,
     totalRetryDelay: 0
   },
-  __type: 'InvalidPasswordException'
+  __type: 'NotAuthorizedException'
 }
-4:25:04 PM [express] POST /api/auth/register 500 in 342ms :: {"message":"Registration failed"}
+11:28:00 PM [express] POST /api/auth/login 401 in 346ms :: {"message":"Invalid credentials"}
 [SECURITY] POST /api/auth/register {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:05.294Z',
+  timestamp: '2025-08-07T06:28:20.009Z',
   userId: undefined
 }
-Cognito registration error: InvalidPasswordException: Password did not conform with policy: Password must have uppercase characters
-    at de_InvalidPasswordExceptionRes (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4729:21)
-    at de_CommandError (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4452:19)
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
-    at async /home/noob/projects/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
-    at async /home/noob/projects/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
-    at async <anonymous> (/home/noob/projects/nucleus/server/cognitoAuth.ts:263:24) {
-  '$fault': 'client',
-  '$metadata': {
-    httpStatusCode: 400,
-    requestId: '90e17379-f332-4418-90c2-4da46d3ba5f8',
-    extendedRequestId: undefined,
-    cfId: undefined,
-    attempts: 1,
-    totalRetryDelay: 0
-  },
-  __type: 'InvalidPasswordException'
+Registration attempt: {
+  email: 'zer0.phawks@gmail.com',
+  password: 'Oaktown88**',
+  firstName: 'Test',
+  lastName: 'User'
 }
-4:25:05 PM [express] POST /api/auth/register 500 in 128ms :: {"message":"Registration failed"}
-[SECURITY] POST /api/auth/register {
+Attempting Cognito signup...
+Cognito signup successful: {
+  UserSub: '1919b94e-00e1-70f7-81e7-0b8a7f711852',
+  UserConfirmed: false
+}
+11:28:20 PM [express] POST /api/auth/register 200 in 456ms :: {"message":"Registration successful. Pl…
+[SECURITY] GET /src/lib/oauthCallback.ts {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:07.427Z',
+  timestamp: '2025-08-07T06:28:20.486Z',
   userId: undefined
 }
-Cognito registration error: InvalidPasswordException: Password did not conform with policy: Password must have uppercase characters
-    at de_InvalidPasswordExceptionRes (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4729:21)
-    at de_CommandError (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4452:19)
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
-    at async /home/noob/projects/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
-    at async /home/noob/projects/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
-    at async <anonymous> (/home/noob/projects/nucleus/server/cognitoAuth.ts:263:24) {
-  '$fault': 'client',
-  '$metadata': {
-    httpStatusCode: 400,
-    requestId: '1f626bf7-593c-4088-a28e-3a7b30c06454',
-    extendedRequestId: undefined,
-    cfId: undefined,
-    attempts: 1,
-    totalRetryDelay: 0
-  },
-  __type: 'InvalidPasswordException'
-}
-4:25:07 PM [express] POST /api/auth/register 500 in 95ms :: {"message":"Registration failed"}
-[SECURITY] POST /api/auth/register {
+[SECURITY] GET /src/pages/login.tsx {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:10.199Z',
+  timestamp: '2025-08-07T06:28:20.491Z',
   userId: undefined
 }
-Cognito registration error: InvalidPasswordException: Password did not conform with policy: Password must have uppercase characters
-    at de_InvalidPasswordExceptionRes (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4729:21)
-    at de_CommandError (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4452:19)
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
-    at async /home/noob/projects/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
-    at async /home/noob/projects/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
-    at async <anonymous> (/home/noob/projects/nucleus/server/cognitoAuth.ts:263:24) {
-  '$fault': 'client',
-  '$metadata': {
-    httpStatusCode: 400,
-    requestId: '7a1ad6fc-79b7-4c62-8653-aa3bf562c8a0',
-    extendedRequestId: undefined,
-    cfId: undefined,
-    attempts: 1,
-    totalRetryDelay: 0
-  },
-  __type: 'InvalidPasswordException'
-}
-4:25:10 PM [express] POST /api/auth/register 500 in 106ms :: {"message":"Registration failed"}
-[SECURITY] POST /api/auth/register {
+[SECURITY] GET /src/lib/authUtils.ts {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:11.307Z',
+  timestamp: '2025-08-07T06:28:20.501Z',
   userId: undefined
 }
-Cognito registration error: InvalidPasswordException: Password did not conform with policy: Password must have uppercase characters
-    at de_InvalidPasswordExceptionRes (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4729:21)
-    at de_CommandError (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4452:19)
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
-    at async /home/noob/projects/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
-    at async /home/noob/projects/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
-    at async <anonymous> (/home/noob/projects/nucleus/server/cognitoAuth.ts:263:24) {
-  '$fault': 'client',
-  '$metadata': {
-    httpStatusCode: 400,
-    requestId: '0123b5df-9b89-40fb-9131-acbeb99b9189',
-    extendedRequestId: undefined,
-    cfId: undefined,
-    attempts: 1,
-    totalRetryDelay: 0
-  },
-  __type: 'InvalidPasswordException'
-}
-4:25:11 PM [express] POST /api/auth/register 500 in 129ms :: {"message":"Registration failed"}
-[SECURITY] POST /api/auth/register {
+[SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:13.440Z',
+  timestamp: '2025-08-07T06:28:20.535Z',
   userId: undefined
 }
-Cognito registration error: InvalidPasswordException: Password did not conform with policy: Password must have uppercase characters
-    at de_InvalidPasswordExceptionRes (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4729:21)
-    at de_CommandError (/home/noob/projects/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4452:19)
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
-    at async /home/noob/projects/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
-    at async /home/noob/projects/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
-    at async /home/noob/projects/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
-    at async <anonymous> (/home/noob/projects/nucleus/server/cognitoAuth.ts:263:24) {
-  '$fault': 'client',
-  '$metadata': {
-    httpStatusCode: 400,
-    requestId: 'b13f6ee5-4521-4ca5-86bf-216086ed2699',
-    extendedRequestId: undefined,
-    cfId: undefined,
-    attempts: 1,
-    totalRetryDelay: 0
-  },
-  __type: 'InvalidPasswordException'
-}
-4:25:13 PM [express] POST /api/auth/register 500 in 103ms :: {"message":"Registration failed"}
-[SECURITY] GET /undefined/auth/v1/authorize {
+11:28:20 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
+11:28:20 PM [express] GET /api/leaderboard 304 in 0ms :: []
+[SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:16.583Z',
+  timestamp: '2025-08-07T06:28:20.536Z',
+  userId: undefined
+}
+11:28:20 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T06:28:21.545Z',
+  userId: undefined
+}
+11:28:21 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T06:28:25.084Z',
+  userId: undefined
+}
+11:28:25 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+11:28:25 PM [express] GET /api/leaderboard 304 in 0ms :: []
+[SECURITY] GET /login {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T06:28:48.297Z',
   userId: undefined
 }
 [SECURITY] GET /src/lib/oauthCallback.ts {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:16.605Z',
+  timestamp: '2025-08-07T06:28:48.312Z',
   userId: undefined
 }
 [SECURITY] GET /src/pages/login.tsx {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:16.609Z',
+  timestamp: '2025-08-07T06:28:48.315Z',
   userId: undefined
 }
 [SECURITY] GET /src/lib/authUtils.ts {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:16.625Z',
+  timestamp: '2025-08-07T06:28:48.325Z',
   userId: undefined
 }
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:16.658Z',
+  timestamp: '2025-08-07T06:28:48.354Z',
   userId: undefined
 }
-4:25:16 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
-4:25:16 PM [express] GET /api/leaderboard 304 in 0ms :: []
+11:28:48 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+11:28:48 PM [express] GET /api/leaderboard 304 in 1ms :: []
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:16.659Z',
+  timestamp: '2025-08-07T06:28:48.355Z',
   userId: undefined
 }
-4:25:16 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
+11:28:48 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:17.698Z',
+  timestamp: '2025-08-07T06:28:49.367Z',
   userId: undefined
 }
-4:25:17 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+11:28:49 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
   userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-  timestamp: '2025-08-04T23:25:19.701Z',
+  timestamp: '2025-08-07T06:28:51.370Z',
   userId: undefined
 }
-4:25:19 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+11:28:51 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+[SECURITY] POST /api/auth/login {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T06:29:08.307Z',
+  userId: undefined
+}
+Login attempt: { email: 'zer0.phawks@gmail.com' }
+Attempting Cognito login for email: zer0.phawks@gmail.com
+Cognito login error: NotAuthorizedException: Incorrect username or password.
+    at de_NotAuthorizedExceptionRes (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/test/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/test/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async <anonymous> (/home/noob/test/nucleus/server/cognitoAuth.ts:147:24) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: '0c3efdac-3764-472b-a345-9c82c890a490',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+11:29:08 PM [express] POST /api/auth/login 401 in 196ms :: {"message":"Invalid credentials"}
+[SECURITY] POST /api/auth/login {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T06:29:41.005Z',
+  userId: undefined
+}
+Login attempt: { email: 'testlogin@example.com' }
+Attempting Cognito login for email: testlogin@example.com
+Cognito login error: NotAuthorizedException: Incorrect username or password.
+    at de_NotAuthorizedExceptionRes (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/test/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/test/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async <anonymous> (/home/noob/test/nucleus/server/cognitoAuth.ts:147:24) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: '410a8ad6-faf7-41d4-b53a-e46a42a425e0',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+11:29:41 PM [express] POST /api/auth/login 401 in 264ms :: {"message":"Invalid credentials"}
+[SECURITY] POST /api/auth/login {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T06:30:07.009Z',
+  userId: undefined
+}
+Login attempt: { email: 'testplaywright@example.com' }
+Attempting Cognito login for email: testplaywright@example.com
+Cognito login error: NotAuthorizedException: Incorrect username or password.
+    at de_NotAuthorizedExceptionRes (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/test/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/test/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async <anonymous> (/home/noob/test/nucleus/server/cognitoAuth.ts:147:24) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: 'ba3562b1-0bd4-4eed-b23d-6e6efe2db7ca',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+11:30:07 PM [express] POST /api/auth/login 401 in 259ms :: {"message":"Invalid credentials"}
+[SECURITY] GET /auth/callback {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:28:56.942Z',
+  userId: undefined
+}
+[SECURITY] GET /src/lib/oauthCallback.ts {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:28:57.343Z',
+  userId: undefined
+}
+[SECURITY] GET /src/pages/login.tsx {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:28:57.345Z',
+  userId: undefined
+}
+[SECURITY] GET /src/lib/authUtils.ts {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:28:57.355Z',
+  userId: undefined
+}
 [SECURITY] GET /api/auth/user {
   ip: '127.0.0.1',
-  userAgent: 'curl/8.5.0',
-  timestamp: '2025-08-04T23:53:05.072Z',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:28:57.457Z',
   userId: undefined
 }
-4:53:05 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+9:28:57 AM [express] GET /api/leaderboard 304 in 0ms :: []
+Cognito auth error: NotAuthorizedException: Access Token does not have required scopes
+    at de_NotAuthorizedExceptionRes (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/test/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/test/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async isAuthenticated (/home/noob/test/nucleus/server/cognitoAuth.ts:64:22) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: 'd57d05d8-056a-4582-ab4e-15dd4345269b',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+9:28:57 AM [express] GET /api/auth/user 401 in 84ms :: {"message":"Authentication failed"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:28:57.542Z',
+  userId: undefined
+}
+Cognito auth error: NotAuthorizedException: Access Token does not have required scopes
+    at de_NotAuthorizedExceptionRes (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/test/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/test/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async isAuthenticated (/home/noob/test/nucleus/server/cognitoAuth.ts:64:22) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: '2c7d28ed-474f-4627-9594-1af29be7ea41',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+9:28:57 AM [express] GET /api/auth/user 401 in 15ms :: {"message":"Authentication failed"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:28:58.543Z',
+  userId: undefined
+}
+Cognito auth error: NotAuthorizedException: Access Token does not have required scopes
+    at de_NotAuthorizedExceptionRes (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/test/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/test/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async isAuthenticated (/home/noob/test/nucleus/server/cognitoAuth.ts:64:22) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: '1deb0d41-803a-4733-b4e7-68cedb92f517',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+9:28:58 AM [express] GET /api/auth/user 401 in 17ms :: {"message":"Authentication failed"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:00.563Z',
+  userId: undefined
+}
+Cognito auth error: NotAuthorizedException: Access Token does not have required scopes
+    at de_NotAuthorizedExceptionRes (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/test/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/test/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async isAuthenticated (/home/noob/test/nucleus/server/cognitoAuth.ts:64:22) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: 'e776af3d-4946-443f-a4a4-dfe8dcbd82a4',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+9:29:00 AM [express] GET /api/auth/user 401 in 21ms :: {"message":"Authentication failed"}
+[SECURITY] GET /src/lib/oauthCallback.ts {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:13.361Z',
+  userId: undefined
+}
+[SECURITY] GET /src/pages/login.tsx {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:13.368Z',
+  userId: undefined
+}
+[SECURITY] GET /src/lib/authUtils.ts {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:13.435Z',
+  userId: undefined
+}
+[SECURITY] GET /@fs/home/noob/test/nucleus/node_modules/.vite/deps/class-variance-authority.js {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:13.443Z',
+  userId: undefined
+}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:13.526Z',
+  userId: undefined
+}
+9:29:13 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
+9:29:13 AM [express] GET /api/leaderboard 304 in 0ms :: []
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:13.529Z',
+  userId: undefined
+}
+9:29:13 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:14.480Z',
+  userId: undefined
+}
+9:29:14 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"No token provided"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:16.608Z',
+  userId: undefined
+}
+9:29:16 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+9:29:16 AM [express] GET /api/leaderboard 304 in 0ms :: []
+[SECURITY] GET /login {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:18.251Z',
+  userId: undefined
+}
+[SECURITY] GET /src/lib/oauthCallback.ts {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:18.279Z',
+  userId: undefined
+}
+[SECURITY] GET /src/pages/login.tsx {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:18.281Z',
+  userId: undefined
+}
+[SECURITY] GET /src/lib/authUtils.ts {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:18.287Z',
+  userId: undefined
+}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:18.311Z',
+  userId: undefined
+}
+9:29:18 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:18.312Z',
+  userId: undefined
+}
+9:29:18 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+9:29:18 AM [express] GET /api/leaderboard 304 in 0ms :: []
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:19.249Z',
+  userId: undefined
+}
+9:29:19 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:21.092Z',
+  userId: undefined
+}
+9:29:21 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"No token provided"}
+[SECURITY] GET /auth/callback {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:25.626Z',
+  userId: undefined
+}
+[SECURITY] GET /src/lib/oauthCallback.ts {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:25.873Z',
+  userId: undefined
+}
+[SECURITY] GET /src/pages/login.tsx {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:25.876Z',
+  userId: undefined
+}
+[SECURITY] GET /src/lib/authUtils.ts {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:25.888Z',
+  userId: undefined
+}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:25.937Z',
+  userId: undefined
+}
+9:29:25 AM [express] GET /api/leaderboard 304 in 0ms :: []
+Cognito auth error: NotAuthorizedException: Access Token does not have required scopes
+    at de_NotAuthorizedExceptionRes (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/test/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/test/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async isAuthenticated (/home/noob/test/nucleus/server/cognitoAuth.ts:64:22) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: '7be39949-687b-440d-90f4-d9ea0f813701',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+9:29:25 AM [express] GET /api/auth/user 401 in 14ms :: {"message":"Authentication failed"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:25.953Z',
+  userId: undefined
+}
+Cognito auth error: NotAuthorizedException: Access Token does not have required scopes
+    at de_NotAuthorizedExceptionRes (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/test/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/test/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async isAuthenticated (/home/noob/test/nucleus/server/cognitoAuth.ts:64:22) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: '2eebf3ae-8d32-4c1f-a3e2-53b322dbf314',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+9:29:25 AM [express] GET /api/auth/user 401 in 14ms :: {"message":"Authentication failed"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:26.866Z',
+  userId: undefined
+}
+Cognito auth error: NotAuthorizedException: Access Token does not have required scopes
+    at de_NotAuthorizedExceptionRes (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/test/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/test/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async isAuthenticated (/home/noob/test/nucleus/server/cognitoAuth.ts:64:22) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: '09d93732-48a7-4c82-914b-4cfe9efc78bc',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+9:29:26 AM [express] GET /api/auth/user 401 in 20ms :: {"message":"Authentication failed"}
+[SECURITY] GET /api/auth/user {
+  ip: '127.0.0.1',
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  timestamp: '2025-08-07T16:29:28.710Z',
+  userId: undefined
+}
+Cognito auth error: NotAuthorizedException: Access Token does not have required scopes
+    at de_NotAuthorizedExceptionRes (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4792:21)
+    at de_CommandError (/home/noob/test/nucleus/node_modules/@aws-sdk/client-cognito-identity-provider/dist-cjs/index.js:4419:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-serde/dist-cjs/index.js:36:20
+    at async /home/noob/test/nucleus/node_modules/@smithy/core/dist-cjs/index.js:193:18
+    at async /home/noob/test/nucleus/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /home/noob/test/nucleus/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:33:22
+    at async isAuthenticated (/home/noob/test/nucleus/server/cognitoAuth.ts:64:22) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 400,
+    requestId: '3605a42a-31ff-4af1-8d30-71e1f0674cad',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  __type: 'NotAuthorizedException'
+}
+9:29:28 AM [express] GET /api/auth/user 401 in 20ms :: {"message":"Authentication failed"}
+9:43:53 AM [express] GET /api/health 200 in 0ms :: {"status":"ok","timestamp":"2025-08-07T16:43:53.1…
+9:43:56 AM [express] GET /api 200 in 0ms :: {"name":"Nucleus API","version":"1.0.0","status":"active…
 Received SIGTERM. Starting graceful shutdown...
-HTTP server closed.
+Could not close connections in time, forcefully shutting down

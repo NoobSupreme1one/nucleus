@@ -17,7 +17,13 @@ import * as path from 'path';
 
 export class NucleusInfrastructureStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    super(scope, id, {
+      ...props,
+      env: {
+        account: process.env.CDK_DEFAULT_ACCOUNT,
+        region: 'us-west-1', // Force us-west-1 region
+      },
+    });
 
     // VPC for RDS and Lambda (if needed)
     const vpc = new ec2.Vpc(this, 'NucleusVPC', {
@@ -129,165 +135,7 @@ export class NucleusInfrastructureStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-    // IAM Role for App Runner
-    const appRunnerExecutionRole = new iam.Role(this, 'NucleusAppRunnerExecutionRole', {
-      assumedBy: new iam.ServicePrincipal('build.apprunner.amazonaws.com'),
-      managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSAppRunnerServicePolicyForECRAccess'),
-      ],
-    });
-
-    const appRunnerServiceRole = new iam.Role(this, 'NucleusAppRunnerServiceRole', {
-      assumedBy: new iam.ServicePrincipal('tasks.apprunner.amazonaws.com'),
-      managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSAppRunnerServicePolicyForECRAccess'),
-      ],
-      inlinePolicies: {
-        NucleusServicePolicy: new iam.PolicyDocument({
-          statements: [
-            new iam.PolicyStatement({
-              effect: iam.Effect.ALLOW,
-              actions: [
-                'cognito-idp:*',
-              ],
-              resources: [userPool.userPoolArn],
-            }),
-            new iam.PolicyStatement({
-              effect: iam.Effect.ALLOW,
-              actions: [
-                's3:GetObject',
-                's3:PutObject',
-                's3:DeleteObject',
-              ],
-              resources: [`${uploadsBucket.bucketArn}/*`],
-            }),
-            new iam.PolicyStatement({
-              effect: iam.Effect.ALLOW,
-              actions: [
-                'bedrock:InvokeModel',
-                'bedrock:InvokeModelWithResponseStream',
-              ],
-              resources: [
-                `arn:aws:bedrock:${this.region}::foundation-model/amazon.nova-pro-v1:0`,
-                `arn:aws:bedrock:${this.region}::foundation-model/amazon.nova-lite-v1:0`,
-              ],
-            }),
-            new iam.PolicyStatement({
-              effect: iam.Effect.ALLOW,
-              actions: [
-                'rds:DescribeDBInstances',
-                'rds:Connect',
-              ],
-              resources: ['*'],
-            }),
-            new iam.PolicyStatement({
-              effect: iam.Effect.ALLOW,
-              actions: [
-                'secretsmanager:GetSecretValue',
-              ],
-              resources: [database.secret?.secretArn || '*'],
-            }),
-          ],
-        }),
-      },
-    });
-
-    // App Runner Service
-    const appRunnerService = new apprunner.CfnService(this, 'NucleusAppRunnerService', {
-      serviceName: 'nucleus-app',
-      sourceConfiguration: {
-        autoDeploymentsEnabled: true,
-        authenticationConfiguration: {
-          accessRoleArn: appRunnerExecutionRole.roleArn,
-        },
-        imageRepository: {
-          imageIdentifier: 'public.ecr.aws/docker/library/node:18-alpine',
-          imageRepositoryType: 'ECR_PUBLIC',
-          imageConfiguration: {
-            port: '8080',
-            runtimeEnvironmentVariables: [
-              {
-                name: 'NODE_ENV',
-                value: 'production',
-              },
-              {
-                name: 'PORT',
-                value: '8080',
-              },
-              {
-                name: 'AWS_COGNITO_USER_POOL_ID',
-                value: userPool.userPoolId,
-              },
-              {
-                name: 'AWS_COGNITO_CLIENT_ID',
-                value: userPoolClient.userPoolClientId,
-              },
-              {
-                name: 'AWS_S3_BUCKET_NAME',
-                value: uploadsBucket.bucketName,
-              },
-              {
-                name: 'AWS_BEDROCK_REGION',
-                value: this.region,
-              },
-            ],
-            runtimeEnvironmentSecrets: [
-              {
-                name: 'DATABASE_URL',
-                value: database.secret?.secretArn || '',
-              },
-              {
-                name: 'PERPLEXITY_API_KEY',
-                value: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:perplexity-api-key', // Update with actual secret ARN
-              },
-              {
-                name: 'STRIPE_SECRET_KEY',
-                value: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:stripe-secret-key', // Update with actual secret ARN
-              },
-              {
-                name: 'STRIPE_WEBHOOK_SECRET',
-                value: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:stripe-webhook-secret', // Update with actual secret ARN
-              },
-            ],
-          },
-        },
-      },
-      instanceConfiguration: {
-        cpu: '1 vCPU',
-        memory: '2 GB',
-        instanceRoleArn: appRunnerServiceRole.roleArn,
-      },
-      networkConfiguration: {
-        egressConfiguration: {
-          egressType: 'VPC',
-          vpcConnectorArn: `arn:aws:apprunner:${this.region}:${this.account}:vpcconnector/nucleus-vpc-connector`, // You'll need to create this
-        },
-      },
-    });
-
-    // Custom Domain for App Runner
-    const customDomain = new apprunner.CfnCustomDomainAssociation(this, 'NucleusCustomDomain', {
-      serviceArn: appRunnerService.attrServiceArn,
-      domainName: 'foundrcheck.com',
-      certificateValidationRecords: [
-        {
-          name: 'foundrcheck.com',
-          type: 'CNAME',
-          value: appRunnerService.attrServiceUrl,
-        },
-      ],
-    });
-
-    // Route53 A Record pointing to App Runner
-    new route53.ARecord(this, 'NucleusAppRunnerAliasRecord', {
-      zone: hostedZone,
-      recordName: 'foundrcheck.com',
-      target: route53.RecordTarget.fromAlias(
-        new targets.AppRunnerCustomDomainTarget(customDomain)
-      ),
-    });
-
-    // Option 1: Lambda + API Gateway (keeping for reference)
+    // IAM Role for Lambda
     const executionRole = new iam.Role(this, 'NucleusExecutionRole', {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
       managedPolicies: [
@@ -320,8 +168,8 @@ export class NucleusInfrastructureStack extends cdk.Stack {
                 'bedrock:InvokeModelWithResponseStream',
               ],
               resources: [
-                `arn:aws:bedrock:${this.region}::foundation-model/amazon.nova-pro-v1:0`,
-                `arn:aws:bedrock:${this.region}::foundation-model/amazon.nova-lite-v1:0`,
+                'arn:aws:bedrock:us-west-2::foundation-model/amazon.nova-pro-v1:0',
+                'arn:aws:bedrock:us-west-2::foundation-model/amazon.nova-lite-v1:0',
               ],
             }),
             new iam.PolicyStatement({
@@ -332,15 +180,23 @@ export class NucleusInfrastructureStack extends cdk.Stack {
               ],
               resources: ['*'],
             }),
+            new iam.PolicyStatement({
+              effect: iam.Effect.ALLOW,
+              actions: [
+                'secretsmanager:GetSecretValue',
+              ],
+              resources: [database.secret?.secretArn || '*'],
+            }),
           ],
         }),
       },
     });
 
+    // Lambda Function
     const lambdaFunction = new lambda.Function(this, 'NucleusLambda', {
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: 'lambda.handler',
-      code: lambda.Code.fromAsset(path.join(__dirname, 'dist')),
+      code: lambda.Code.fromAsset(path.join(__dirname, '..', 'dist')),
       timeout: cdk.Duration.seconds(30),
       memorySize: 1024,
       role: executionRole,
@@ -350,11 +206,17 @@ export class NucleusInfrastructureStack extends cdk.Stack {
         AWS_COGNITO_USER_POOL_ID: userPool.userPoolId,
         AWS_COGNITO_CLIENT_ID: userPoolClient.userPoolClientId,
         AWS_S3_BUCKET_NAME: uploadsBucket.bucketName,
-        AWS_BEDROCK_REGION: this.region,
+        AWS_BEDROCK_REGION: 'us-west-2',
         DATABASE_URL: `postgresql://nucleus:${database.secret?.secretValueFromJson('password')}@${database.instanceEndpoint.hostname}:5432/nucleus`,
+        PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY || 'your-perplexity-key',
+        STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || 'sk_test_your_stripe_secret_key_here',
+        STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || 'your-webhook-secret',
+        AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID || 'AKIAWBUTHNIRVBOXIPXK',
+        AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || 'b2COz/BxhoTHPBW5lUdSrpiHcUNWFrOlU8eA9F6D',
       },
     });
 
+    // API Gateway
     const api = new apigateway.LambdaRestApi(this, 'NucleusApi', {
       handler: lambdaFunction,
       proxy: true,
@@ -416,16 +278,6 @@ export class NucleusInfrastructureStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'DatabaseEndpoint', {
       value: database.instanceEndpoint.hostname,
       description: 'RDS Database endpoint',
-    });
-
-    new cdk.CfnOutput(this, 'AppRunnerServiceUrl', {
-      value: appRunnerService.attrServiceUrl,
-      description: 'App Runner Service URL',
-    });
-
-    new cdk.CfnOutput(this, 'AppRunnerServiceArn', {
-      value: appRunnerService.attrServiceArn,
-      description: 'App Runner Service ARN',
     });
 
     new cdk.CfnOutput(this, 'ApiUrl', {

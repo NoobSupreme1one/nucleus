@@ -465,22 +465,20 @@ export async function setupAuth(app: Express) {
       const tokenParams = new URLSearchParams({
         grant_type: 'authorization_code',
         client_id: clientId,
+        client_secret: clientSecret,
         code: code as string,
         redirect_uri: `${req.protocol}://${req.get('host')}/auth/callback`
       });
       
-      // Add client secret if available
-      if (clientSecret) {
-        const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-        var tokenHeaders = {
-          'Authorization': `Basic ${credentials}`,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        };
-      } else {
-        var tokenHeaders = {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        };
+      // For confidential clients, include client secret as parameter (not Basic Auth)
+      if (!clientSecret) {
+        console.error('Client secret not configured for confidential client');
+        return res.redirect('/login?error=config_error');
       }
+      
+      const tokenHeaders = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      };
       
       const response = await fetch(tokenUrl, {
         method: 'POST',
@@ -490,7 +488,13 @@ export async function setupAuth(app: Express) {
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Token exchange failed:', errorText);
+        console.error('Token exchange failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText,
+          tokenUrl,
+          requestBody: tokenParams.toString()
+        });
         return res.redirect('/login?error=token_exchange_failed');
       }
       
@@ -501,14 +505,30 @@ export async function setupAuth(app: Express) {
         return res.redirect('/login?error=no_access_token');
       }
       
-      // Get user info from the access token
-      const userCommand = new GetUserCommand({
-        AccessToken: tokens.access_token,
-      });
+      // Parse ID token to get user info (avoid GetUser API call)
+      let userInfo;
+      if (tokens.id_token) {
+        // Decode ID token (JWT) to get user info directly
+        const idTokenPayload = JSON.parse(Buffer.from(tokens.id_token.split('.')[1], 'base64').toString());
+        userInfo = {
+          Username: idTokenPayload.sub,
+          UserAttributes: [
+            { Name: 'sub', Value: idTokenPayload.sub },
+            { Name: 'email', Value: idTokenPayload.email },
+            { Name: 'given_name', Value: idTokenPayload.given_name },
+            { Name: 'family_name', Value: idTokenPayload.family_name },
+            { Name: 'picture', Value: idTokenPayload.picture }
+          ]
+        };
+      } else {
+        // Fallback to GetUser API call
+        const userCommand = new GetUserCommand({
+          AccessToken: tokens.access_token,
+        });
+        userInfo = await cognitoClient.send(userCommand);
+      }
       
-      const userResponse = await cognitoClient.send(userCommand);
-      
-      if (!userResponse.Username) {
+      if (!userInfo.Username && !userInfo.sub) {
         return res.redirect('/login?error=user_fetch_failed');
       }
       
@@ -528,15 +548,15 @@ export async function setupAuth(app: Express) {
       }
 
       // Create/update user in database
-      const userId = getUserAttribute(userResponse.UserAttributes, 'sub') || userResponse.Username;
-      const userEmail = getUserAttribute(userResponse.UserAttributes, 'email');
+      const userId = getUserAttribute(userInfo.UserAttributes, 'sub') || userInfo.Username;
+      const userEmail = getUserAttribute(userInfo.UserAttributes, 'email');
       
       await storage.upsertUser({
         id: userId,
         email: userEmail || null,
-        firstName: getUserAttribute(userResponse.UserAttributes, 'given_name') || null,
-        lastName: getUserAttribute(userResponse.UserAttributes, 'family_name') || null,
-        profileImageUrl: getUserAttribute(userResponse.UserAttributes, 'picture') || null,
+        firstName: getUserAttribute(userInfo.UserAttributes, 'given_name') || null,
+        lastName: getUserAttribute(userInfo.UserAttributes, 'family_name') || null,
+        profileImageUrl: getUserAttribute(userInfo.UserAttributes, 'picture') || null,
         role: null,
         location: null,
         bio: null,
