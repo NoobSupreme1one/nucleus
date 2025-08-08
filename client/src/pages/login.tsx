@@ -5,6 +5,7 @@ import { validatePassword, formatAuthError } from "@/lib/authUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
+import { useAuth } from "@/hooks/useAuth";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,6 +37,7 @@ export default function Login() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isSignUp, setIsSignUp] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(isSignUp ? registrationSchema : baseLoginSchema),
@@ -53,6 +55,13 @@ export default function Login() {
     const newResolver = zodResolver(isSignUp ? registrationSchema : baseLoginSchema);
     form.resolver = newResolver;
   }, [isSignUp, form]);
+
+  // If already authenticated, redirect away from login
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      setLocation("/");
+    }
+  }, [isAuthenticated, setLocation]);
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginFormData) => {

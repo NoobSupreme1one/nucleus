@@ -14,7 +14,6 @@ const corsOptions = {
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:5000',
-      'https://nucleus-app.vercel.app', // Replace with your production domain
       process.env.FRONTEND_URL,
     ].filter(Boolean);
 

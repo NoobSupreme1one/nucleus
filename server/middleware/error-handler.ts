@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library';
-// import { ErrorTracker } from '../services/sentry'; // Temporarily disabled
+// Sentry has been removed from the application
 
 // Custom error classes
 export class AppError extends Error {
@@ -110,12 +110,8 @@ export function enhancedErrorHandler() {
       context: errorContext,
     });
 
-    // Track error in Sentry if configured
+    // Log high severity errors
     if (err.isOperational === false || err.statusCode >= 500) {
-      // ErrorTracker.trackError(err, {
-      //   feature: 'error_handler',
-      //   metadata: errorContext,
-      // });
       console.error('High severity error:', err.message);
     }
 

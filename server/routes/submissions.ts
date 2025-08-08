@@ -24,7 +24,7 @@ submissionsRouter.post('/', [
 ], asyncHandler(async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user.id;
-    const storage = getStorage();
+    const storage = await getStorage();
     
     // Handle file URLs from cloud storage or local storage
     const fileUrls = req.files ? (req.files as any[]).map((file: any) => getFileUrl(file)) : [];
@@ -56,7 +56,7 @@ submissionsRouter.get('/',
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     try {
       const userId = req.user.id;
-      const storage = getStorage();
+      const storage = await getStorage();
       const submissions = await storage.getUserSubmissions(userId);
       res.json(submissions);
     } catch (error) {
@@ -71,7 +71,7 @@ submissionsRouter.put('/:id', [
   upload.array('files', 5)
 ], asyncHandler(async (req: AuthenticatedRequest, res) => {
   try {
-    const storage = getStorage();
+    const storage = await getStorage();
     const submission = await storage.getSubmission(req.params.id);
     
     if (!submission) {

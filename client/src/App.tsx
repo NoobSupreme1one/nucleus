@@ -39,12 +39,18 @@ function Router() {
 
   return (
     <Switch>
-      <Route path="/login" component={Login} />
-      <Route path="/pricing" component={Pricing} />
-      <Route path="/demo" component={Demo} />
-      {!isAuthenticated ? (
-        <Route path="/" component={Landing} />
-      ) : (
+      {/* Public routes */}
+      {!isAuthenticated && (
+        <>
+          <Route path="/login" component={Login} />
+          <Route path="/pricing" component={Pricing} />
+          <Route path="/demo" component={Demo} />
+          <Route path="/" component={Landing} />
+        </>
+      )}
+
+      {/* Authenticated routes */}
+      {isAuthenticated && (
         <>
           <Route path="/" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />
@@ -56,6 +62,7 @@ function Router() {
           <Route path="/matches" component={Matches} />
         </>
       )}
+
       <Route component={NotFound} />
     </Switch>
   );

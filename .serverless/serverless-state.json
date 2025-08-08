@@ -256,7 +256,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/nucleus-app/prod/1754585139457-2025-08-07T16:45:39.457Z/nucleus-app.zip"
+                "S3Key": "serverless/nucleus-app/prod/1754608588488-2025-08-07T23:16:28.488Z/nucleus-app.zip"
               },
               "Handler": "dist/lambda.handler",
               "Runtime": "nodejs18.x",
@@ -291,14 +291,14 @@
               "AppLogGroup"
             ]
           },
-          "AppLambdaVersionxlJUZKz12E4YsGAapzzdfMOPGWtxZsKy2QUwJU57uE": {
+          "AppLambdaVersion2BhxjnoHy8gsss7ndgcD1p0jyCroBJvrSYJw1PABAM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "QrctTfKFGhme41ygoJe/8M5XE+bRfC/+o9KQhn02FWE="
+              "CodeSha256": "lqaWByxqdcnbMcSsIv0FQP7NI9oBAxaQcLPIPlM9ao0="
             }
           },
           "ApiGatewayRestApi": {
@@ -516,7 +516,7 @@
               "AppLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1754585132080": {
+          "ApiGatewayDeployment1754608583849": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -581,7 +581,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionxlJUZKz12E4YsGAapzzdfMOPGWtxZsKy2QUwJU57uE"
+              "Ref": "AppLambdaVersion2BhxjnoHy8gsss7ndgcD1p0jyCroBJvrSYJw1PABAM"
             },
             "Export": {
               "Name": "sls-nucleus-app-prod-AppLambdaFunctionQualifiedArn"
@@ -779,7 +779,7 @@
         "timeout": 30,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "AppLambdaVersionxlJUZKz12E4YsGAapzzdfMOPGWtxZsKy2QUwJU57uE"
+        "versionLogicalId": "AppLambdaVersion2BhxjnoHy8gsss7ndgcD1p0jyCroBJvrSYJw1PABAM"
       }
     },
     "configValidationMode": "warn",
@@ -813,7 +813,7 @@
         ],
         "artifactsS3KeyDirname": "serverless/nucleus-app/prod/code-artifacts",
         "artifact": "/home/noob/test/nucleus/.serverless/nucleus-app.zip",
-        "artifactDirectoryName": "serverless/nucleus-app/prod/1754585139457-2025-08-07T16:45:39.457Z"
+        "artifactDirectoryName": "serverless/nucleus-app/prod/1754608588488-2025-08-07T23:16:28.488Z"
       }
     },
     "layers": {},
@@ -821,7 +821,7 @@
     "artifact": "/home/noob/test/nucleus/.serverless/nucleus-app.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/nucleus-app/prod/1754585139457-2025-08-07T16:45:39.457Z",
+    "artifactDirectoryName": "serverless/nucleus-app/prod/1754608588488-2025-08-07T23:16:28.488Z",
     "artifact": "nucleus-app.zip"
   }
 }

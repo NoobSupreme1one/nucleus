@@ -8,7 +8,7 @@ export const systemRouter = Router();
 systemRouter.get('/leaderboard', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit as string) || 100;
-    const storage = getStorage();
+    const storage = await getStorage();
     const leaderboard = await storage.getLeaderboard(limit);
     res.json(leaderboard);
   } catch (error) {
@@ -30,7 +30,8 @@ systemRouter.get('/', async (req, res) => {
         register: 'POST /api/auth/register',
         login: 'POST /api/auth/login',
         logout: 'POST /api/auth/logout',
-        profile: 'GET /api/auth/profile'
+        user: 'GET /api/auth/user',
+        updateUser: 'PUT /api/auth/user'
       },
       ideas: {
         validate: 'POST /api/ideas/validate',

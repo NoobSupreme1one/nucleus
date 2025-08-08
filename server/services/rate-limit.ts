@@ -1,7 +1,6 @@
 import rateLimit from 'express-rate-limit';
 import slowDownLib from 'express-slow-down';
 import type { Request, Response } from 'express';
-import { ErrorTracker } from './sentry';
 
 // Rate limiting configurations for different endpoints
 const rateLimitConfigs = {
@@ -16,17 +15,11 @@ const rateLimitConfigs = {
     standardHeaders: true,
     legacyHeaders: false,
     handler: (req, res) => {
-      ErrorTracker.trackBusinessError(
-        new Error('Rate limit exceeded'),
-        {
-          feature: 'rate_limiting',
-          metadata: {
-            ip: req.ip,
-            endpoint: req.path,
-            method: req.method,
-          }
-        }
-      );
+      console.warn('Rate limit exceeded:', {
+        ip: req.ip,
+        endpoint: req.path,
+        method: req.method,
+      });
       
       res.status(429).json({
         error: 'Too many requests from this IP, please try again later.',
@@ -161,19 +154,11 @@ export const ddosProtection = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {
-    console.warn(`DDoS protection triggered for IP: ${req.ip}`);
-    
-    ErrorTracker.trackBusinessError(
-      new Error('DDoS protection triggered'),
-      {
-        feature: 'ddos_protection',
-        metadata: {
-          ip: req.ip,
-          userAgent: req.get('User-Agent'),
-          endpoint: req.path,
-        }
-      }
-    );
+    console.warn(`DDoS protection triggered for IP: ${req.ip}`, {
+      ip: req.ip,
+      userAgent: req.get('User-Agent'),
+      endpoint: req.path,
+    });
     
     res.status(429).json({
       error: 'Too many requests. DDoS protection activated.',

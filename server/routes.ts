@@ -2,7 +2,6 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { setupAuth } from "./auth/auth-factory";
-import { addUserContextMiddleware, isSentryConfigured } from './services/sentry';
 import { rateLimiters, slowDownLimiters, ddosProtection, conditionalRateLimit } from './services/rate-limit';
 
 // Import route modules
@@ -22,11 +21,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Add general API rate limiting
   app.use('/api', conditionalRateLimit(rateLimiters.general));
-
-  // Add Sentry user context middleware for authenticated routes
-  if (isSentryConfigured()) {
-    app.use(addUserContextMiddleware());
-  }
 
   // Register route modules
   app.use('/api/ideas', ideasRouter);

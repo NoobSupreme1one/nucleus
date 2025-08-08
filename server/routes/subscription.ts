@@ -1,7 +1,6 @@
 import { Router, Response, Request } from "express";
 import express from "express";
 import { StripeService } from "../services/stripe";
-import { ErrorTracker } from "../services/sentry";
 import { getAuthMiddleware } from "../auth/auth-factory";
 import { 
   AuthenticatedRequest, 
@@ -16,8 +15,8 @@ export const subscriptionRouter = Router();
 const getAuth = () => getAuthMiddleware();
 
 // Initialize services
-const initServices = () => {
-  const storage = getStorage();
+const initServices = async () => {
+  const storage = await getStorage();
   const prisma = (storage as any).prisma;
   return {
     stripeService: new StripeService(prisma),
@@ -76,11 +75,6 @@ subscriptionRouter.post('/stripe/webhook',
       res.json({ received: true });
     } catch (error) {
       console.error('Stripe webhook error:', error);
-      
-      // Track payment errors with Sentry
-      ErrorTracker.trackPaymentError(error as Error, {
-        stripeEventType: req.body?.type,
-      });
       
       res.status(400).json({ error: 'Webhook error' });
     }

@@ -1,5 +1,4 @@
 import type { Request, Response, NextFunction } from "express";
-import { ErrorTracker } from "../services/sentry";
 
 // Common types for route handlers
 export interface AuthenticatedRequest extends Request {
@@ -45,13 +44,6 @@ export const handleRouteError = (
   defaultMessage: string = "Internal server error"
 ) => {
   console.error(`Error in ${req.method} ${req.path}:`, error);
-  
-  // Track error with Sentry if available
-  ErrorTracker.trackAiError(error, {
-    path: req.path,
-    method: req.method,
-    userId: (req as any).user?.id,
-  });
 
   // Determine error type and provide appropriate response
   let errorCode = 'INTERNAL_ERROR';
@@ -76,10 +68,22 @@ export const handleRouteError = (
 };
 
 // Storage helper function
-export const getStorage = () => {
-  const { storage } = require('../storage');
-  const { localStorage } = require('../localStorage');
-  return process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY ? storage : localStorage;
+export const getStorage = async () => {
+  // Use dynamic import for ES modules
+  try {
+    const { storage } = await import('../storage.js');
+    return storage;
+  } catch (error) {
+    console.error('Storage import error:', error);
+    // Fallback to localStorage if storage import fails
+    try {
+      const { localStorage } = await import('../localStorage.js');
+      return localStorage;
+    } catch (fallbackError) {
+      console.error('localStorage import error:', fallbackError);
+      throw new Error('Unable to load storage system');
+    }
+  }
 };
 
 // Analytics helper

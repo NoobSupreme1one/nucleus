@@ -14,19 +14,22 @@ export default function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
 
+  // Check for auth success query parameter
+  const isAuthCallback = window.location.search.includes('auth=success');
+
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!isLoading && !isAuthenticated && !isAuthCallback) {
       toast({
         title: "Unauthorized",
         description: "You are logged out. Logging in again...",
         variant: "destructive",
       });
       setTimeout(() => {
-        window.location.href = "/api/login";
+        window.location.href = "/login";
       }, 500);
       return;
     }
-  }, [isAuthenticated, isLoading, toast]);
+  }, [isAuthenticated, isLoading, toast, isAuthCallback]);
 
   const { data: matches = [], isLoading: matchesLoading } = useQuery<(Match & { user1: User; user2: User })[]>({
     queryKey: ["/api/matches"],
@@ -43,14 +46,34 @@ export default function Dashboard() {
     enabled: !!user,
   });
 
-  if (isLoading || !user) {
+  if (isLoading || (!user && !isAuthCallback)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 pulse-glow">
             <i className="fas fa-handshake text-white text-2xl"></i>
           </div>
-          <p className="text-gray-600">Loading dashboard...</p>
+          <p className="text-gray-600">
+            {isAuthCallback ? "Completing authentication..." : "Loading dashboard..."}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // If we're in auth callback state but not authenticated, show a helpful message
+  if (isAuthCallback && !isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 pulse-glow">
+            <i className="fas fa-check text-white text-2xl"></i>
+          </div>
+          <p className="text-gray-600 mb-4">Authentication successful!</p>
+          <p className="text-sm text-gray-500 mb-4">Please log in to continue to your dashboard.</p>
+          <Link href="/login">
+            <Button>Go to Login</Button>
+          </Link>
         </div>
       </div>
     );
@@ -94,7 +117,7 @@ export default function Dashboard() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => window.location.href = '/api/logout'}
+                onClick={() => window.location.href = '/api/auth/logout'}
               >
                 <i className="fas fa-sign-out-alt mr-1"></i>
                 Logout

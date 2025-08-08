@@ -27,7 +27,7 @@ ideasRouter.post('/validate',
   conditionalRateLimit(rateLimiters.aiFeatures),
   conditionalRateLimit(slowDownLimiters.ai),
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-    const storage = getStorage();
+    const storage = await getStorage();
     const prisma = (storage as any).prisma;
     
     await rateLimitFreeUsers(prisma, 5, 60 * 60 * 1000)(req, res, async () => {
@@ -68,7 +68,7 @@ ideasRouter.get('/:id',
   getAuth(),
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const storage = getStorage();
+      const storage = await getStorage();
       const idea = await storage.getIdea(req.params.id);
       
       if (!idea) {
@@ -100,7 +100,7 @@ ideasRouter.get('/',
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     try {
       const userId = req.user.id;
-      const storage = getStorage();
+      const storage = await getStorage();
       const ideas = await storage.getUserIdeas(userId);
       res.json(ideas);
     } catch (error) {
@@ -115,7 +115,7 @@ ideasRouter.post('/:id/generate-pro-report',
   conditionalRateLimit(rateLimiters.proReports),
   conditionalRateLimit(slowDownLimiters.ai),
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-    const storage = getStorage();
+    const storage = await getStorage();
     const prisma = (storage as any).prisma;
     const analytics = getAnalytics();
     

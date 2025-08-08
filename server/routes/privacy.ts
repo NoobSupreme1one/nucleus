@@ -22,7 +22,7 @@ privacyRouter.get('/privacy-settings',
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     try {
       const userId = req.user.id;
-      const storage = getStorage();
+      const storage = await getStorage();
       const prisma = (storage as any).prisma;
       const privacyManager = new PrivacyManagerService(prisma);
       const analytics = getAnalytics();
@@ -52,7 +52,7 @@ privacyRouter.put('/privacy-settings',
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     try {
       const userId = req.user.id;
-      const storage = getStorage();
+      const storage = await getStorage();
       const prisma = (storage as any).prisma;
       const privacyManager = new PrivacyManagerService(prisma);
       const analytics = getAnalytics();

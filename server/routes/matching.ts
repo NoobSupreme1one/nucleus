@@ -24,7 +24,7 @@ matchingRouter.get('/potential', [
   try {
     const userId = req.user.id;
     const limit = parseInt(req.query.limit as string) || 10;
-    const storage = getStorage();
+    const storage = await getStorage();
     const potentialMatches = await storage.findPotentialMatches(userId, limit);
     res.json(potentialMatches);
   } catch (error) {
@@ -39,7 +39,7 @@ matchingRouter.post('/',
     try {
       const userId = req.user.id;
       const { targetUserId, interested } = req.body;
-      const storage = getStorage();
+      const storage = await getStorage();
       
       if (!targetUserId) {
         return sendErrorResponse(res, 400, {
@@ -97,7 +97,7 @@ matchingRouter.get('/',
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     try {
       const userId = req.user.id;
-      const storage = getStorage();
+      const storage = await getStorage();
       const matches = await storage.getUserMatches(userId);
       res.json(matches);
     } catch (error) {
@@ -112,7 +112,7 @@ matchingRouter.get('/mutual',
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     try {
       const userId = req.user.id;
-      const storage = getStorage();
+      const storage = await getStorage();
       const mutualMatches = await storage.getMutualMatches(userId);
       res.json(mutualMatches);
     } catch (error) {
@@ -129,7 +129,7 @@ matchingRouter.post('/:matchId/messages',
       const userId = req.user.id;
       const { matchId } = req.params;
       const { content } = req.body;
-      const storage = getStorage();
+      const storage = await getStorage();
       
       // Verify user is part of this match
       const match = await storage.getMatch(matchId);
@@ -161,7 +161,7 @@ matchingRouter.get('/:matchId/messages',
     try {
       const userId = req.user.id;
       const { matchId } = req.params;
-      const storage = getStorage();
+      const storage = await getStorage();
       
       // Verify user is part of this match
       const match = await storage.getMatch(matchId);

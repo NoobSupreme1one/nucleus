@@ -1,6 +1,14 @@
 // OAuth callback handler for processing tokens from URL fragment
 export function handleOAuthCallback() {
   const hash = window.location.hash;
+  const search = window.location.search;
+  
+  // Handle query-based auth success (like ?auth=success)
+  if (search.includes('auth=success')) {
+    // Just clean the URL, don't reload (avoids infinite loop)
+    window.history.replaceState({}, document.title, window.location.pathname);
+    return true;
+  }
   
   if (!hash || !hash.includes('access_token')) {
     return false;
