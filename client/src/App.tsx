@@ -11,7 +11,6 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/landing";
 import Login from "@/pages/login";
-import Dashboard from "@/pages/dashboard";
 import IdeaValidation from "@/pages/idea-validation";
 import ValidationResults from "@/pages/validation-results";
 import Matching from "@/pages/matching";
@@ -20,6 +19,8 @@ import Portfolio from "@/pages/portfolio";
 import Matches from "@/pages/matches";
 import Pricing from "@/pages/pricing";
 import Demo from "@/pages/demo";
+import MockLanding from "@/pages/mock";
+import Profile from "@/pages/profile";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -42,11 +43,11 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/demo" component={Demo} />
-      {!isAuthenticated ? (
-        <Route path="/" component={Landing} />
-      ) : (
+      <Route path="/mock/:slug" component={MockLanding} />
+      <Route path="/profile" component={Profile} />
+      <Route path="/" component={Landing} />
+      {isAuthenticated && (
         <>
-          <Route path="/" component={Dashboard} />
           <Route path="/validate-idea" component={IdeaValidation} />
           <Route path="/validation-results/:ideaId" component={ValidationResults} />
           <Route path="/matching" component={Matching} />

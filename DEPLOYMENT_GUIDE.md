@@ -1,4 +1,34 @@
-# AWS App Runner Deployment Guide
+# Deployment Guide
+
+This project supports a new Cloudflare + Clerk deployment path, while retaining the legacy AWS App Runner option.
+
+## Cloudflare Pages + Clerk (Preferred)
+
+Prerequisites
+- Cloudflare account with Pages enabled.
+- Clerk application and keys.
+
+Environment Variables
+- VITE_CLERK_PUBLISHABLE_KEY
+- CLERK_SECRET_KEY
+- FRONTEND_URL (e.g., your Pages URL)
+- CLOUDFLARE_PAGES_URL (optional)
+
+Client Deployment (Pages)
+- Build: `npm run build` (outputs to `client/dist`)
+- Connect repo in Cloudflare Pages.
+- Build command: `npm run build`
+- Output directory: `client/dist`
+- Set the env vars above in the Pages project.
+
+Server Notes
+- The Express API now supports Clerk for auth when `CLERK_SECRET_KEY` is set.
+- During migration, you can continue running the API as a Node service; place it behind Cloudflare as needed.
+
+Wrangler Config
+- `wrangler.toml` is included with `pages_build_output_dir = "client/dist"`.
+
+## AWS App Runner Deployment Guide (Legacy)
 
 This guide will help you deploy your nucleus application to AWS App Runner with your custom domain `foundrcheck.com`.
 

@@ -4,7 +4,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { localStorage } from "./localStorage";
 import { setupAuth, getAuthMiddleware } from "./auth/auth-factory";
-import { validateStartupIdea, generateMatchingInsights } from "./services/bedrock";
+import { validateStartupIdea, generateMatchingInsights } from "./services/perplexity";
 import { performComprehensiveValidation } from "./services/enhanced-validation";
 import { ProReportGeneratorService } from "./services/pro-report-generator";
 import { PrivacyManagerService } from "./services/privacy-manager";
@@ -16,6 +16,8 @@ import { upload, getFileUrl, CloudStorageService } from './services/s3-storage';
 import { ErrorTracker, addUserContextMiddleware, isSentryConfigured } from './services/sentry';
 import { rateLimiters, slowDownLimiters, ddosProtection, conditionalRateLimit, createUserBasedRateLimit } from './services/rate-limit';
 import path from 'path';
+import { AvatarOverride } from './services/avatar';
+import fs from 'fs';
 
 // File upload is now handled by S3 storage service
 
@@ -421,6 +423,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Profile image upload (stores URL and applies override without requiring DB)
+  app.post('/api/users/profile-image', [
+    getAuthMiddleware(),
+    conditionalRateLimit(rateLimiters.fileUpload),
+    upload.single('avatar')
+  ], async (req: any, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+      const userId = req.user.id;
+      const url = getFileUrl(req.file);
+      // Remember override so /api/auth/user reflects the new avatar immediately
+      AvatarOverride.set(userId, url);
+      res.json({ profileImageUrl: url });
+    } catch (error) {
+      console.error('Avatar upload error:', error);
+      res.status(500).json({ message: 'Failed to upload profile image' });
+    }
+  });
+
   app.get('/api/submissions', getAuthMiddleware(), async (req: any, res) => {
     try {
       const userId = req.user.id;
@@ -429,6 +452,175 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching submissions:", error);
       res.status(500).json({ message: "Failed to fetch submissions" });
+    }
+  });
+
+  // Dev-only: seed mock users from images in /mockup
+  app.post('/api/dev/seed-mock-users', async (req, res) => {
+    try {
+      if (process.env.NODE_ENV !== 'development') {
+        return res.status(403).json({ message: 'Not available in production' });
+      }
+
+      const root = path.resolve(import.meta.dirname, '..');
+      const uploadsDir = path.resolve(process.cwd(), 'uploads');
+      if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+
+      const profiles = [
+        { firstName: 'Sarah', lastName: 'Chen', email: 'sarah.chen+mock@local.dev', file: 'mockup/Sarah_Chen.png', location: 'San Francisco, CA' },
+        { firstName: 'Marcus', lastName: 'Rodriguez', email: 'marcus.rodriguez+mock@local.dev', file: 'mockup/Marcus_Rodriguez.png', location: 'Austin, TX' },
+        { firstName: 'Aisha', lastName: 'Patel', email: 'aisha.patel+mock@local.dev', file: 'mockup/Aisha_Patel.png', location: 'Toronto, ON' },
+        { firstName: 'David', lastName: 'Kim', email: 'david.kim+mock@local.dev', file: 'mockup/david_kim.png', location: 'Seattle, WA' },
+        { firstName: 'Emma', lastName: 'Thompson', email: 'emma.thompson+mock@local.dev', file: 'mockup/Emma_Thompson.png', location: 'London, UK' },
+        { firstName: 'James', lastName: 'Wilson', email: 'james.wilson+mock@local.dev', file: 'mockup/james_wilson.png', location: 'Boston, MA' },
+      ];
+
+      const storageInstance = getStorage();
+
+      const results: any[] = [];
+      for (const p of profiles) {
+        const src = path.resolve(root, '..', p.file);
+        if (!fs.existsSync(src)) {
+          results.push({ email: p.email, status: 'skipped', reason: `missing file ${p.file}` });
+          continue;
+        }
+
+        const ext = path.extname(src).toLowerCase();
+        const base = `${p.firstName.toLowerCase()}_${p.lastName.toLowerCase()}_${Date.now()}${ext}`;
+        const dest = path.resolve(uploadsDir, base);
+        fs.copyFileSync(src, dest);
+        const url = `/uploads/${base}`;
+
+        // Upsert user
+        const user = await (storageInstance as any).upsertUser({
+          email: p.email,
+          firstName: p.firstName,
+          lastName: p.lastName,
+          profileImageUrl: url,
+          role: null,
+          location: p.location,
+          bio: '',
+          subscriptionTier: 'free',
+          totalIdeaScore: 0,
+          profileViews: 0,
+          profilePublic: true,
+          ideasPublic: true,
+          allowFounderMatching: true,
+          allowDirectContact: true,
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionStatus: null,
+          subscriptionPeriodEnd: null,
+          subscriptionCancelAtPeriodEnd: false,
+        });
+
+        // Ensure immediate override is visible even with Clerk auth
+        AvatarOverride.set(user.id, url);
+        results.push({ email: p.email, id: user.id, profileImageUrl: url, status: 'created' });
+      }
+
+      res.json({ success: true, results });
+    } catch (error) {
+      console.error('Seed users error:', error);
+      res.status(500).json({ message: 'Failed to seed mock users' });
+    }
+  });
+
+  // Dev-only: create real Clerk users and upload their profile pictures
+  app.post('/api/dev/seed-clerk-users', async (req, res) => {
+    try {
+      if (process.env.NODE_ENV !== 'development') {
+        return res.status(403).json({ message: 'Not available in production' });
+      }
+      if (!process.env.CLERK_SECRET_KEY) {
+        return res.status(400).json({ message: 'CLERK_SECRET_KEY is not configured' });
+      }
+
+      const { createClerkClient } = await import('@clerk/express');
+      const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY! });
+
+      const root = path.resolve(import.meta.dirname, '..');
+      const profiles = [
+        { firstName: 'Sarah', lastName: 'Chen', email: 'sarah.chen+mock@local.dev', file: 'mockup/Sarah_Chen.png', location: 'San Francisco, CA' },
+        { firstName: 'Marcus', lastName: 'Rodriguez', email: 'marcus.rodriguez+mock@local.dev', file: 'mockup/Marcus_Rodriguez.png', location: 'Austin, TX' },
+        { firstName: 'Aisha', lastName: 'Patel', email: 'aisha.patel+mock@local.dev', file: 'mockup/Aisha_Patel.png', location: 'Toronto, ON' },
+        { firstName: 'David', lastName: 'Kim', email: 'david.kim+mock@local.dev', file: 'mockup/david_kim.png', location: 'Seattle, WA' },
+        { firstName: 'Emma', lastName: 'Thompson', email: 'emma.thompson+mock@local.dev', file: 'mockup/Emma_Thompson.png', location: 'London, UK' },
+        { firstName: 'James', lastName: 'Wilson', email: 'james.wilson+mock@local.dev', file: 'mockup/james_wilson.png', location: 'Boston, MA' },
+      ];
+
+      const seeded: any[] = [];
+      for (const p of profiles) {
+        // ensure image exists
+        const src = path.resolve(root, '..', p.file);
+        if (!fs.existsSync(src)) {
+          seeded.push({ email: p.email, status: 'skipped', reason: `missing file ${p.file}` });
+          continue;
+        }
+
+        // find existing Clerk user by email
+        const existing = await clerk.users.getUserList({ emailAddress: [p.email] });
+        const user = existing?.data?.[0] || await clerk.users.createUser({
+          emailAddress: [p.email],
+          firstName: p.firstName,
+          lastName: p.lastName,
+          password: Math.random().toString(36).slice(2) + '!Aa9',
+          publicMetadata: { seeded: true, source: 'dev-seed' },
+        });
+
+        // upload profile image to Clerk
+        const buffer = fs.readFileSync(src);
+        const ext = path.extname(src).toLowerCase();
+        const mime = ext === '.png' ? 'image/png' : ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' : 'application/octet-stream';
+        const blob = new Blob([buffer], { type: mime });
+        const fd = new FormData();
+        fd.append('file', blob, path.basename(src));
+
+        const resp = await fetch(`https://api.clerk.com/v1/users/${user.id}/profile_image`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${process.env.CLERK_SECRET_KEY}` },
+          body: fd as any,
+        });
+        if (!resp.ok) {
+          const txt = await resp.text();
+          seeded.push({ email: p.email, id: user.id, status: 'image_failed', error: txt });
+          continue;
+        }
+
+        // Optionally persist in our storage for local features
+        try {
+          const details = await clerk.users.getUser(user.id);
+          await storageInstance.upsertUser({
+            email: p.email,
+            firstName: p.firstName,
+            lastName: p.lastName,
+            profileImageUrl: details.imageUrl || null,
+            role: null,
+            location: p.location,
+            bio: '',
+            subscriptionTier: 'free',
+            totalIdeaScore: 0,
+            profileViews: 0,
+            profilePublic: true,
+            ideasPublic: true,
+            allowFounderMatching: true,
+            allowDirectContact: true,
+            stripeCustomerId: null,
+            stripeSubscriptionId: null,
+            subscriptionStatus: null,
+            subscriptionPeriodEnd: null,
+            subscriptionCancelAtPeriodEnd: false,
+          });
+          AvatarOverride.set(user.id, details.imageUrl || '');
+        } catch {}
+
+        seeded.push({ email: p.email, id: user.id, status: 'created' });
+      }
+
+      res.json({ success: true, seeded });
+    } catch (error) {
+      console.error('Seed Clerk users error:', error);
+      res.status(500).json({ message: 'Failed to seed Clerk users' });
     }
   });
 

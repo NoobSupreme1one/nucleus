@@ -14,7 +14,9 @@ const corsOptions = {
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:5000',
-      'https://nucleus-app.vercel.app', // Replace with your production domain
+      'https://nucleus-app.vercel.app', // legacy prod domain
+      'https://*.pages.dev',
+      process.env.CLOUDFLARE_PAGES_URL,
       process.env.FRONTEND_URL,
     ].filter(Boolean);
 
@@ -42,12 +44,13 @@ const helmetOptions = {
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://*.clerk.com", "https://*.clerk.accounts.dev"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://*.clerk.com", "https://*.clerk.accounts.dev"],
       imgSrc: ["'self'", "data:", "https:", "blob:"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // Note: unsafe-eval needed for Vite in dev
-      connectSrc: ["'self'", "https://api.stripe.com", "wss:", "ws:"],
-      frameSrc: ["'self'", "https://js.stripe.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://*.clerk.com", "https://*.clerk.accounts.dev"], // unsafe-eval needed for Vite in dev
+      workerSrc: ["'self'", "blob:", "https://*.clerk.com", "https://*.clerk.accounts.dev"], // Allow Clerk workers
+      connectSrc: ["'self'", "https://api.stripe.com", "wss:", "ws:", "https://*.clerk.com", "https://*.clerk.accounts.dev"],
+      frameSrc: ["'self'", "https://js.stripe.com", "https://*.clerk.com", "https://*.clerk.accounts.dev"],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
     },

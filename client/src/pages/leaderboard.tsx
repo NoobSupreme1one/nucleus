@@ -55,12 +55,12 @@ export default function Leaderboard() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 pulse-glow">
             <i className="fas fa-trophy text-white text-2xl"></i>
           </div>
-          <p className="text-gray-600">Loading leaderboard...</p>
+          <p className="text-muted-foreground">Loading leaderboard...</p>
         </div>
       </div>
     );
@@ -83,9 +83,9 @@ export default function Leaderboard() {
   const remaining = filteredLeaderboard.slice(3);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-card shadow-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <Button 
@@ -101,7 +101,7 @@ export default function Leaderboard() {
               <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
                 <i className="fas fa-trophy text-white text-sm"></i>
               </div>
-              <span className="text-xl font-bold text-gray-900">Leaderboard</span>
+              <span className="text-xl font-bold text-foreground">Leaderboard</span>
             </div>
             
             <div className="flex items-center space-x-4">
@@ -119,10 +119,10 @@ export default function Leaderboard() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Top <span className="gradient-text">Innovators</span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Discover the entrepreneurs with the highest-scoring startup ideas and proven track records
           </p>
         </div>
@@ -145,15 +145,15 @@ export default function Leaderboard() {
                     </div>
                   )}
                   <div>
-                    <h3 className="font-semibold text-gray-900">Your Position</h3>
-                    <p className="text-gray-600">
+                    <h3 className="font-semibold text-foreground">Your Position</h3>
+                    <p className="text-muted-foreground">
                       You're ranked #{userRank} out of {leaderboard.length} entrepreneurs
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-primary">{user.totalIdeaScore || 0}</div>
-                  <div className="text-sm text-gray-500">points</div>
+                  <div className="text-sm text-muted-foreground">points</div>
                 </div>
               </div>
             </CardContent>
@@ -205,14 +205,14 @@ export default function Leaderboard() {
             {leaderboardLoading ? (
               <div className="space-y-4">
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl animate-pulse">
-                    <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
-                    <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+                  <div key={i} className="flex items-center space-x-4 p-4 bg-muted rounded-xl animate-pulse">
+                    <div className="w-8 h-8 bg-muted-foreground/20 rounded-full"></div>
+                    <div className="w-12 h-12 bg-muted-foreground/20 rounded-full"></div>
                     <div className="flex-1">
-                      <div className="h-4 bg-gray-200 rounded mb-2 w-1/3"></div>
-                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                      <div className="h-4 bg-muted-foreground/20 rounded mb-2 w-1/3"></div>
+                      <div className="h-3 bg-muted-foreground/20 rounded w-1/2"></div>
                     </div>
-                    <div className="w-16 h-8 bg-gray-200 rounded"></div>
+                    <div className="w-16 h-8 bg-muted-foreground/20 rounded"></div>
                   </div>
                 ))}
               </div>
@@ -231,7 +231,7 @@ export default function Leaderboard() {
                 
                 {/* Rest of the leaderboard */}
                 {remaining.length > 0 && (
-                  <div className="space-y-2 pt-4 border-t border-gray-200">
+                  <div className="space-y-2 pt-4 border-t border-border">
                     {remaining.map((leaderUser: any, index: number) => (
                       <LeaderboardCard 
                         key={leaderUser.id} 
@@ -246,11 +246,11 @@ export default function Leaderboard() {
               </div>
             ) : searchTerm || roleFilter !== "all" ? (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <i className="fas fa-search text-gray-400 text-2xl"></i>
+                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className="fas fa-search text-muted-foreground text-2xl"></i>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No results found</h3>
-                <p className="text-gray-600 mb-4">
+                <h3 className="text-lg font-semibold text-foreground mb-2">No results found</h3>
+                <p className="text-muted-foreground mb-4">
                   Try adjusting your search terms or filters
                 </p>
                 <Button 
@@ -265,11 +265,11 @@ export default function Leaderboard() {
               </div>
             ) : (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <i className="fas fa-trophy text-gray-400 text-2xl"></i>
+                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className="fas fa-trophy text-muted-foreground text-2xl"></i>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No leaderboard data yet</h3>
-                <p className="text-gray-600 mb-4">
+                <h3 className="text-lg font-semibold text-foreground mb-2">No leaderboard data yet</h3>
+                <p className="text-muted-foreground mb-4">
                   Be the first to validate your startup idea and claim the top spot!
                 </p>
                 <Button 
@@ -292,7 +292,7 @@ export default function Leaderboard() {
                 <div className="text-3xl font-bold text-primary mb-2">
                   {Math.max(...filteredLeaderboard.map((u: any) => u.totalIdeaScore || 0))}
                 </div>
-                <p className="text-gray-600">Highest Score</p>
+                <p className="text-muted-foreground">Highest Score</p>
               </CardContent>
             </Card>
             
@@ -301,7 +301,7 @@ export default function Leaderboard() {
                 <div className="text-3xl font-bold text-green-600 mb-2">
                   {Math.round(filteredLeaderboard.reduce((sum: number, u: any) => sum + (u.totalIdeaScore || 0), 0) / filteredLeaderboard.length) || 0}
                 </div>
-                <p className="text-gray-600">Average Score</p>
+                <p className="text-muted-foreground">Average Score</p>
               </CardContent>
             </Card>
             
@@ -310,7 +310,7 @@ export default function Leaderboard() {
                 <div className="text-3xl font-bold text-orange-600 mb-2">
                   {filteredLeaderboard.length}
                 </div>
-                <p className="text-gray-600">Active Entrepreneurs</p>
+                <p className="text-muted-foreground">Active Entrepreneurs</p>
               </CardContent>
             </Card>
           </div>

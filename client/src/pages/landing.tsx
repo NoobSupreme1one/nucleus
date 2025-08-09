@@ -2,19 +2,207 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import type { User } from "@shared/types";
-import LeaderboardCard from "@/components/LeaderboardCard";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useState, useEffect } from "react";
+import { Link } from "wouter";
+import avatar1 from "@/assets/avatars/user1.svg";
+import avatar2 from "@/assets/avatars/user2.svg";
+import avatar3 from "@/assets/avatars/user3.svg";
+import avatar4 from "@/assets/avatars/user4.svg";
+import avatar5 from "@/assets/avatars/user5.svg";
+import avatar6 from "@/assets/avatars/user6.svg";
+import MealPlanner from "@mockup/ai_meal_planner_landing_page_react_tailwind";
+import Sustainable from "@mockup/sustainable_packaging_marketplace_landing_page_react_tailwind";
+import RemoteEnergyDual from "@mockup/dual_landing_pages_remote_collaboration_smart_energy";
+import Energy from "@mockup/smart_home_energy_optimizer_landing_page_react_tailwind_shadcn_ui";
+import TeenMental from "@mockup/landing_page_teen_mental_health_chatbot";
+import BlockchainVoting from "@mockup/blockchain_voting_landing_page_react_tailwind";
+
+function ScaledPreview({ children }: { children: React.ReactNode }) {
+  // Render a scaled-down preview of a full-page component
+  const scale = 0.25; // 1280x800 scaled to ~320x200
+  const width = 1280;
+  const height = 800;
+  return (
+    <div className="relative rounded-lg border border-gray-200 overflow-hidden bg-white" style={{ height: height * scale }}>
+      <div style={{ width, height, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function MockPreview({ slug }: { slug: string }) {
+  switch (slug) {
+    case 'ai-meal-planner':
+      return <ScaledPreview><MealPlanner /></ScaledPreview>;
+    case 'sustainable-packaging':
+      return <ScaledPreview><Sustainable /></ScaledPreview>;
+    case 'remote-collab':
+      return <ScaledPreview><RemoteEnergyDual /></ScaledPreview>;
+    case 'smart-energy':
+      return <ScaledPreview><Energy /></ScaledPreview>;
+    case 'teen-mental-health':
+      return <ScaledPreview><TeenMental /></ScaledPreview>;
+    case 'blockchain-voting':
+      return <ScaledPreview><BlockchainVoting /></ScaledPreview>;
+    default:
+      return (
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg h-32 flex items-center justify-center border border-gray-200">
+          <div className="text-center">
+            <i className="fas fa-laptop text-gray-400 text-2xl mb-2"></i>
+            <p className="text-gray-500 text-sm">Landing Page Preview</p>
+          </div>
+        </div>
+      );
+  }
+}
 
 export default function Landing() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const { data: leaderboard = [] } = useQuery<User[]>({
-    queryKey: ["/api/leaderboard"],
-    staleTime: 5 * 60 * 1000, // 5 minutes
+  const [ideaInput, setIdeaInput] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const { user, logout } = useAuth();
+  
+  // Fetch community feed data
+  const { data: communityData = [], refetch: refetchCommunity, isLoading } = useQuery({
+    queryKey: ['/api/community-ideas'],
+    queryFn: async () => {
+      // For now, return sample data - in real app this would be an API call
+      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+      return communityShowcase;
+    },
+    staleTime: 30000, // 30 seconds
   });
+  
+  // Auto-refresh every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetchCommunity();
+    }, 30000);
+    
+    return () => clearInterval(interval);
+  }, [refetchCommunity]);
+  
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await refetchCommunity();
+    setRefreshing(false);
+  };
 
-  const topUsers = leaderboard.slice(0, 10);
+  // Sample user ideas history - in real app this would come from API
+  const userIdeas = [
+    {
+      id: 1,
+      idea: "AI-powered meal planning app with nutrition tracking",
+      score: 847,
+      createdAt: "2024-08-08",
+      status: "validated"
+    },
+    {
+      id: 2,
+      idea: "Blockchain-based carbon credit marketplace",
+      score: 692,
+      createdAt: "2024-08-07",
+      status: "validated"
+    },
+    {
+      id: 3,
+      idea: "Remote team productivity dashboard",
+      score: 758,
+      createdAt: "2024-08-06",
+      status: "validated"
+    }
+  ];
+
+  // Sample community data - in real app this would come from API
+  const communityShowcase = [
+    {
+      id: 1,
+      idea: "AI-powered meal planning app",
+      score: 847,
+      user: { 
+        name: "Sarah Chen", 
+        handle: "@sarahc",
+        title: "Product Designer",
+        location: "San Francisco, CA",
+        avatarUrl: avatar1
+      },
+      gradient: "from-blue-500 to-purple-600",
+      slug: "ai-meal-planner",
+    },
+    {
+      id: 2,
+      idea: "Sustainable packaging marketplace",
+      score: 923,
+      user: { 
+        name: "Marcus Rodriguez", 
+        handle: "@marcusrod",
+        title: "Sustainability Analyst",
+        location: "Austin, TX",
+        avatarUrl: avatar2
+      },
+      gradient: "from-green-500 to-blue-600",
+      slug: "sustainable-packaging",
+    },
+    {
+      id: 3,
+      idea: "Remote team collaboration platform",
+      score: 768,
+      user: { 
+        name: "Aisha Patel", 
+        handle: "@aishap",
+        title: "Founder, OrbitCollab",
+        location: "Toronto, ON",
+        avatarUrl: avatar3
+      },
+      gradient: "from-purple-500 to-pink-600",
+      slug: "remote-collab",
+    },
+    {
+      id: 4,
+      idea: "Smart home energy optimizer",
+      score: 892,
+      user: { 
+        name: "David Kim", 
+        handle: "@davkim",
+        title: "Energy Systems Eng",
+        location: "Seattle, WA",
+        avatarUrl: avatar4
+      },
+      gradient: "from-orange-500 to-red-600",
+      slug: "smart-energy",
+    },
+    {
+      id: 5,
+      idea: "Mental health chatbot for teens",
+      score: 715,
+      user: { 
+        name: "Emma Thompson", 
+        handle: "@emma_t",
+        title: "Youth Counselor",
+        location: "London, UK",
+        avatarUrl: avatar5
+      },
+      gradient: "from-teal-500 to-cyan-600",
+      slug: "teen-mental-health",
+    },
+    {
+      id: 6,
+      idea: "Blockchain-based voting system",
+      score: 683,
+      user: { 
+        name: "James Wilson", 
+        handle: "@jameswil",
+        title: "Civic Tech Lead",
+        location: "Boston, MA",
+        avatarUrl: avatar6
+      },
+      gradient: "from-indigo-500 to-purple-600",
+      slug: "blockchain-voting",
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -30,35 +218,90 @@ export default function Landing() {
       <nav className="bg-card shadow-sm border-b border-border sticky top-0 z-50" role="navigation" aria-label="Main navigation">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center" aria-hidden="true">
-                <i className="fas fa-handshake text-white text-sm" aria-hidden="true"></i>
+            <div className="flex items-center space-x-3">
+              {/* FoundrCheck Logo */}
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
-              <span className="text-xl font-bold text-foreground">Nucleus</span>
+              <span className="text-2xl font-bold text-foreground tracking-tight">FoundrCheck</span>
             </div>
             
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1">Features</a>
-              <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1">How It Works</a>
-              <a href="#leaderboard" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1">Leaderboard</a>
-              <a href="/pricing" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1">Pricing</a>
-              <ThemeToggle />
-              <Button
-                variant="outline"
-                onClick={() => window.location.href = '/login'}
-                aria-label="Sign in to your account"
-              >
-                Sign In
-              </Button>
-              <Button
-                className="gradient-primary hover:shadow-lg transition-all"
-                onClick={() => window.location.href = '/login'}
-                aria-label="Get started with Nucleus"
-              >
-                Get Started
-              </Button>
+            {/* Center - Empty for now */}
+            <div className="flex-1"></div>
+            
+            {/* Right side - Auth buttons or user menu */}
+            <div className="hidden md:flex items-center space-x-4">
+              {user ? (
+                <>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setSidebarOpen(true)}
+                    className="text-muted-foreground hover:text-primary"
+                  >
+                    My Ideas
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => (window.location.href = '/profile')}
+                    className="text-muted-foreground hover:text-primary"
+                  >
+                    Profile
+                  </Button>
+                  <div className="flex items-center space-x-3">
+                    {user?.profileImageUrl ? (
+                      <img
+                        src={user.profileImageUrl}
+                        alt="Me"
+                        className="w-8 h-8 rounded-full object-cover border"
+                        onClick={() => (window.location.href = '/profile')}
+                        title="Edit profile"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                        {(user?.firstName?.charAt(0) || user?.email?.charAt(0) || 'U')}
+                      </div>
+                    )}
+                    <Button
+                      variant="ghost"
+                      onClick={logout}
+                      className="text-muted-foreground hover:text-primary"
+                    >
+                      Log Out
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    onClick={() => window.location.href = '/profile'}
+                    aria-label="Go to profile"
+                    className="text-muted-foreground hover:text-primary"
+                  >
+                    Profile
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => window.location.href = '/login'}
+                    aria-label="Log in to your account"
+                    className="text-muted-foreground hover:text-primary"
+                  >
+                    Log In
+                  </Button>
+                  <Button
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-6 py-2 rounded-lg transition-all shadow-sm hover:shadow-md"
+                    onClick={() => window.location.href = '/login'}
+                    aria-label="Get started with FoundrCheck"
+                  >
+                    Get Started
+                  </Button>
+                </>
+              )}
             </div>
 
+            {/* Mobile menu button */}
             <Button
               variant="ghost"
               className="md:hidden min-h-[44px] min-w-[44px] p-3"
@@ -74,53 +317,73 @@ export default function Landing() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-card border-t border-border shadow-lg">
-            <div className="px-4 py-4 space-y-1">
-              <a
-                href="#features"
-                className="block py-3 px-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-md transition-colors min-h-[44px] flex items-center"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Features
-              </a>
-              <a
-                href="#how-it-works"
-                className="block py-3 px-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-md transition-colors min-h-[44px] flex items-center"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                How It Works
-              </a>
-              <a
-                href="#leaderboard"
-                className="block py-3 px-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-md transition-colors min-h-[44px] flex items-center"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Leaderboard
-              </a>
-              <a
-                href="/pricing"
-                className="block py-3 px-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-md transition-colors min-h-[44px] flex items-center"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Pricing
-              </a>
-              <div className="pt-4 space-y-3">
-                <div className="flex justify-center py-2">
-                  <ThemeToggle />
-                </div>
-                <Button
-                  variant="outline"
-                  className="w-full min-h-[44px] text-base"
-                  onClick={() => window.location.href = '/login'}
-                >
-                  Sign In
-                </Button>
-                <Button
-                  className="w-full gradient-primary min-h-[44px] text-base"
-                  onClick={() => window.location.href = '/login'}
-                >
-                  Get Started
-                </Button>
-              </div>
+            <div className="px-4 py-4 space-y-3">
+              {user ? (
+                <>
+                  <Button
+                    variant="ghost"
+                    className="w-full min-h-[44px] text-base text-muted-foreground hover:text-primary justify-start"
+                    onClick={() => {
+                      setSidebarOpen(true);
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    My Ideas
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="w-full min-h-[44px] text-base text-muted-foreground hover:text-primary justify-start"
+                    onClick={() => {
+                      window.location.href = '/profile';
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Profile
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="w-full min-h-[44px] text-base text-muted-foreground hover:text-primary justify-start"
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Log Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    className="w-full min-h-[44px] text-base text-muted-foreground hover:text-primary justify-start"
+                    onClick={() => {
+                      window.location.href = '/profile';
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Profile
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="w-full min-h-[44px] text-base text-muted-foreground hover:text-primary justify-start"
+                    onClick={() => {
+                      window.location.href = '/login';
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Log In
+                  </Button>
+                  <Button
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white min-h-[44px] text-base"
+                    onClick={() => {
+                      window.location.href = '/login';
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Get Started
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -128,537 +391,253 @@ export default function Landing() {
 
       {/* Hero Section */}
       <main id="main-content">
-        <section className="bg-background" aria-labelledby="hero-heading">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <div className="text-center fade-in-up">
-              <h1 id="hero-heading" className="text-3xl sm:text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
-                Validate Your Startup Idea{" "}
-                <span className="gradient-text">Before You Build</span>
-              </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground mb-6 max-w-3xl mx-auto leading-relaxed px-4 sm:px-0">
-                Get AI-powered analysis with a 1,000-point scoring system, then find the perfect co-founder to bring your validated idea to life.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-8 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2 min-h-[24px]">
-                  <i className="fas fa-check-circle text-green-500 text-base" aria-hidden="true"></i>
-                  <span className="font-medium">Free idea validation</span>
-                </div>
-                <div className="flex items-center gap-2 min-h-[24px]">
-                  <i className="fas fa-check-circle text-green-500 text-base" aria-hidden="true"></i>
-                  <span className="font-medium">AI-powered insights</span>
-                </div>
-                <div className="flex items-center gap-2 min-h-[24px]">
-                  <i className="fas fa-check-circle text-green-500 text-base" aria-hidden="true"></i>
-                  <span className="font-medium">Co-founder matching</span>
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center px-4 sm:px-0 fade-in-up" style={{animationDelay: '0.3s'}}>
-                <Button
-                  size="lg"
-                  className="gradient-primary hover:shadow-xl transition-all text-base sm:text-lg px-6 sm:px-8 py-4 min-h-[48px] w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 btn-hover-scale group"
-                  onClick={() => window.location.href = '/login'}
-                  aria-label="Validate your startup idea for free"
-                >
-                  Validate My Idea Free
-                  <i className="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform" aria-hidden="true"></i>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="text-base sm:text-lg px-6 sm:px-8 py-4 min-h-[48px] w-full sm:w-auto hover:border-primary hover:text-primary transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 btn-hover-scale group"
-                  onClick={() => window.location.href = '/demo'}
-                  aria-label="Try our interactive demo"
-                >
-                  <i className="fas fa-play mr-2 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
-                  Try Demo
-                </Button>
-              </div>
-            
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 px-4 sm:px-0 fade-in-up" style={{animationDelay: '0.5s'}} role="list">
-              <div className="text-center py-6 hover-lift" role="listitem">
-                <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 float" style={{animationDelay: '0.5s'}} aria-hidden="true">
-                  <i className="fas fa-lightbulb text-white text-2xl" aria-hidden="true"></i>
-                </div>
-                <h3 className="text-xl font-semibold text-foreground mb-3">Validate Ideas</h3>
-                <p className="text-muted-foreground leading-relaxed">AI-powered analysis with 1,000-point scoring system</p>
-              </div>
-              <div className="text-center py-6 hover-lift" role="listitem">
-                <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 float" style={{animationDelay: '1s'}} aria-hidden="true">
-                  <i className="fas fa-users text-white text-2xl" aria-hidden="true"></i>
-                </div>
-                <h3 className="text-xl font-semibold text-foreground mb-3">Match Co-Founders</h3>
-                <p className="text-muted-foreground leading-relaxed">Swipe through complementary skill sets and personalities</p>
-              </div>
-              <div className="text-center py-6 hover-lift" role="listitem">
-                <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 float" style={{animationDelay: '1.5s'}} aria-hidden="true">
-                  <i className="fas fa-rocket text-white text-2xl" aria-hidden="true"></i>
-                </div>
-                <h3 className="text-xl font-semibold text-foreground mb-3">Build Startups</h3>
-                <p className="text-muted-foreground leading-relaxed">Turn validated ideas into successful companies</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-        {/* Testimonials Section */}
-        <section className="py-20 bg-background" aria-labelledby="testimonials-heading">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 id="testimonials-heading" className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Trusted by Entrepreneurs Worldwide
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Join thousands of founders who have validated their ideas and found co-founders through Nucleus.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-              {/* Testimonial 1 */}
-              <div className="bg-muted rounded-lg p-8 relative">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                    S
-                  </div>
-                  <div className="ml-4">
-                    <h4 className="font-semibold text-gray-900">Sarah Chen</h4>
-                    <p className="text-sm text-gray-600">CEO, TechFlow AI</p>
-                  </div>
-                </div>
-                <blockquote className="text-gray-700 italic mb-4">
-                  "Nucleus helped me validate my AI startup idea and connected me with my technical co-founder.
-                  We raised $2M in seed funding within 6 months!"
-                </blockquote>
-                <div className="flex items-center text-yellow-400">
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <span className="ml-2 text-gray-600 text-sm">5.0</span>
-                </div>
-              </div>
-
-              {/* Testimonial 2 */}
-              <div className="bg-muted rounded-lg p-8 relative">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                    M
-                  </div>
-                  <div className="ml-4">
-                    <h4 className="font-semibold text-gray-900">Marcus Rodriguez</h4>
-                    <p className="text-sm text-gray-600">Founder, EcoLogistics</p>
-                  </div>
-                </div>
-                <blockquote className="text-gray-700 italic mb-4">
-                  "The AI analysis saved me months of market research. The 847/1000 score gave me confidence
-                  to pursue my logistics startup. Now we're profitable!"
-                </blockquote>
-                <div className="flex items-center text-yellow-400">
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <span className="ml-2 text-gray-600 text-sm">5.0</span>
-                </div>
-              </div>
-
-              {/* Testimonial 3 */}
-              <div className="bg-muted rounded-lg p-8 relative">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                    A
-                  </div>
-                  <div className="ml-4">
-                    <h4 className="font-semibold text-gray-900">Aisha Patel</h4>
-                    <p className="text-sm text-gray-600">Co-founder, HealthTech Solutions</p>
-                  </div>
-                </div>
-                <blockquote className="text-gray-700 italic mb-4">
-                  "Found my perfect co-founder through Nucleus! The proof-of-work approach meant I could see
-                  real skills, not just resumes. We're now building the future of healthcare."
-                </blockquote>
-                <div className="flex items-center text-yellow-400">
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <i className="fas fa-star" aria-hidden="true"></i>
-                  <span className="ml-2 text-gray-600 text-sm">5.0</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Trust Indicators */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              <div>
-                <div className="text-3xl font-bold text-primary mb-2">10,000+</div>
-                <div className="text-gray-600">Ideas Validated</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-primary mb-2">5,000+</div>
-                <div className="text-gray-600">Co-founder Matches</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-primary mb-2">$50M+</div>
-                <div className="text-gray-600">Funding Raised</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-primary mb-2">98%</div>
-                <div className="text-gray-600">Satisfaction Rate</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Leaderboard Preview */}
-        <section id="leaderboard" className="py-20 bg-muted/50" aria-labelledby="leaderboard-heading">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 id="leaderboard-heading" className="text-3xl md:text-4xl font-bold text-foreground mb-4">Top Innovators</h2>
-              <p className="text-xl text-muted-foreground">See who's leading with the highest-scoring startup ideas</p>
-            </div>
-          
-          <Card className="max-w-4xl mx-auto">
-            <CardContent className="p-8">
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-bold text-gray-900">Leaderboard</h3>
-                <span className="gradient-primary text-white px-4 py-2 rounded-lg text-sm font-semibold">Top 10</span>
-              </div>
-              
-              {topUsers.length > 0 ? (
-                <div className="space-y-4">
-                  {topUsers.map((user, index) => (
-                    <LeaderboardCard 
-                      key={user.id} 
-                      user={user} 
-                      rank={index + 1} 
-                      isTopThree={index < 3}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i className="fas fa-trophy text-gray-400 text-2xl"></i>
-                  </div>
-                  <p className="text-gray-500 text-lg">No leaderboard data available yet</p>
-                  <p className="text-gray-400 text-sm">Be the first to validate your startup idea!</p>
-                </div>
-              )}
-              
-              <div className="text-center mt-8">
-                <Button
-                  variant="link"
-                  className="text-primary hover:text-primary/80"
-                  onClick={() => window.location.href = '/login'}
-                >
-                  View Full Leaderboard (Top 100) <i className="fas fa-arrow-right ml-1"></i>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-        {/* Features Section */}
-        <section id="features" className="py-20 bg-white" aria-labelledby="features-heading">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 id="features-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Key Features</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Everything you need to validate your startup idea and find the perfect co-founder.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works Section */}
-        <section id="how-it-works" className="py-20 bg-gray-50" aria-labelledby="how-it-works-heading">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 id="how-it-works-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How Nucleus Works</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Our unique proof-of-work approach ensures you find co-founders based on demonstrated skills, not just credentials.
-              </p>
-            </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8" role="list">
-            <Card className="text-center p-8 hover:shadow-lg transition-shadow" role="listitem">
-              <CardContent className="pt-6">
-                <div className="w-20 h-20 gradient-primary rounded-full flex items-center justify-center mx-auto mb-6" aria-hidden="true">
-                  <i className="fas fa-clipboard-check text-white text-3xl" aria-hidden="true"></i>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">1. Validate Your Idea</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Submit your startup idea and get comprehensive AI-powered analysis with market insights,
-                  technical feasibility assessment, and a score out of 1,000 points.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center p-8 hover:shadow-lg transition-shadow" role="listitem">
-              <CardContent className="pt-6">
-                <div className="w-20 h-20 gradient-primary rounded-full flex items-center justify-center mx-auto mb-6" aria-hidden="true">
-                  <i className="fas fa-briefcase text-white text-3xl" aria-hidden="true"></i>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">2. Create Your Portfolio</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Showcase your skills with role-specific submissions. Engineers share code,
-                  designers show mockups, and marketers present campaigns.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center p-8 hover:shadow-lg transition-shadow" role="listitem">
-              <CardContent className="pt-6">
-                <div className="w-20 h-20 gradient-primary rounded-full flex items-center justify-center mx-auto mb-6" aria-hidden="true">
-                  <i className="fas fa-heart text-white text-3xl" aria-hidden="true"></i>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">3. Match & Connect</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Swipe through potential co-founders with complementary skills.
-                  When you both swipe right, start building together!
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-        {/* Team Section */}
-        <section className="py-20 bg-white" aria-labelledby="team-heading">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 id="team-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Built by Entrepreneurs, for Entrepreneurs
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Our team has been through the startup journey multiple times. We know the challenges you face.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-              {/* Team Member 1 */}
-              <div className="text-center">
-                <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-2xl">
-                  A
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Alex Chen</h3>
-                <p className="text-primary font-medium mb-2">Co-founder & CEO</p>
-                <p className="text-gray-600 text-sm mb-4">
-                  Former Y Combinator founder with 2 successful exits. Built and sold SaaS companies to Fortune 500.
-                </p>
-                <div className="flex justify-center space-x-3">
-                  <a href="https://linkedin.com/in/alexchen" className="text-gray-400 hover:text-primary transition-colors">
-                    <i className="fab fa-linkedin" aria-hidden="true"></i>
-                  </a>
-                  <a href="https://twitter.com/alexchen" className="text-gray-400 hover:text-primary transition-colors">
-                    <i className="fab fa-twitter" aria-hidden="true"></i>
-                  </a>
-                </div>
-              </div>
-
-              {/* Team Member 2 */}
-              <div className="text-center">
-                <div className="w-24 h-24 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-2xl">
-                  S
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Sarah Kim</h3>
-                <p className="text-primary font-medium mb-2">Co-founder & CTO</p>
-                <p className="text-gray-600 text-sm mb-4">
-                  Ex-Google AI researcher with 10+ years in machine learning. PhD in Computer Science from Stanford.
-                </p>
-                <div className="flex justify-center space-x-3">
-                  <a href="https://linkedin.com/in/sarahkim" className="text-gray-400 hover:text-primary transition-colors">
-                    <i className="fab fa-linkedin" aria-hidden="true"></i>
-                  </a>
-                  <a href="https://github.com/sarahkim" className="text-gray-400 hover:text-primary transition-colors">
-                    <i className="fab fa-github" aria-hidden="true"></i>
-                  </a>
-                </div>
-              </div>
-
-              {/* Team Member 3 */}
-              <div className="text-center">
-                <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-2xl">
-                  M
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Marcus Johnson</h3>
-                <p className="text-primary font-medium mb-2">Head of Growth</p>
-                <p className="text-gray-600 text-sm mb-4">
-                  Former VP of Growth at Stripe. Scaled multiple startups from 0 to $100M+ ARR. Expert in product-led growth.
-                </p>
-                <div className="flex justify-center space-x-3">
-                  <a href="https://linkedin.com/in/marcusjohnson" className="text-gray-400 hover:text-primary transition-colors">
-                    <i className="fab fa-linkedin" aria-hidden="true"></i>
-                  </a>
-                  <a href="https://twitter.com/marcusjohnson" className="text-gray-400 hover:text-primary transition-colors">
-                    <i className="fab fa-twitter" aria-hidden="true"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Company Stats */}
-            <div className="bg-gray-50 rounded-lg p-8 text-center">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Our Track Record</h3>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div>
-                  <div className="text-2xl font-bold text-primary mb-2">5</div>
-                  <div className="text-gray-600 text-sm">Successful Exits</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-primary mb-2">$500M+</div>
-                  <div className="text-gray-600 text-sm">Combined Exit Value</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-primary mb-2">15+</div>
-                  <div className="text-gray-600 text-sm">Years Experience</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-primary mb-2">100+</div>
-                  <div className="text-gray-600 text-sm">Startups Advised</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-16 sm:py-20 gradient-primary" aria-labelledby="cta-heading">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 id="cta-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
-              Ready to Find Your Co-Founder?
-            </h2>
-            <p className="text-lg sm:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Join thousands of entrepreneurs who are validating ideas and building teams on Nucleus.
+        <section className="bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900 min-h-screen flex items-center" aria-labelledby="hero-heading">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+            <h1 id="hero-heading" className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              Validate your startup idea{" "}
+              <span className="bg-gradient-to-r from-pink-400 to-yellow-400 bg-clip-text text-transparent">✨ before you build</span>
+            </h1>
+            <p className="text-lg sm:text-xl text-white/80 mb-8 max-w-2xl mx-auto">
+              Get AI-powered analysis with a 100-point scoring system. Join thousands of entrepreneurs who've validated their ideas.
             </p>
-            <Button
-              size="lg"
-              variant="secondary"
-              className="text-base sm:text-lg px-6 sm:px-8 py-4 min-h-[48px] bg-white text-primary hover:bg-gray-50 transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary w-full sm:w-auto max-w-sm"
-              onClick={() => window.location.href = '/login'}
-              aria-label="Get started with Nucleus for free"
-            >
-              Get Started Free <i className="fas fa-arrow-right ml-2" aria-hidden="true"></i>
-            </Button>
-        </div>
-      </section>
+            
+            {/* Single Input Field */}
+            <div className="max-w-2xl mx-auto mb-8">
+              <div className="relative bg-gray-800 rounded-2xl p-1 shadow-2xl">
+                <div className="flex items-center bg-gray-900 rounded-xl px-4 py-3">
+                  <i className="fas fa-lightbulb text-yellow-400 text-lg mr-3" aria-hidden="true"></i>
+                  <input
+                    type="text"
+                    placeholder="Describe your startup idea..."
+                    value={ideaInput}
+                    onChange={(e) => setIdeaInput(e.target.value)}
+                    className="flex-1 bg-transparent text-white placeholder-gray-400 text-lg focus:outline-none"
+                  />
+                  <Button
+                    className="ml-3 bg-gradient-to-r from-pink-500 to-yellow-500 hover:from-pink-600 hover:to-yellow-600 text-white font-semibold px-6 py-2 rounded-lg transition-all"
+                    onClick={() => {
+                      if (!user) {
+                        window.location.href = '/login';
+                      } else {
+                        // TODO: Handle idea validation
+                        console.log('Validating idea:', ideaInput);
+                      }
+                    }}
+                  >
+                    Validate
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        {/* Footer with Trust Signals */}
-        <footer className="bg-gray-900 text-white py-16">
+        {/* Community Showcase Section */}
+        <section className="py-20 bg-gray-100" aria-labelledby="community-heading">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Security Badges */}
             <div className="text-center mb-12">
-              <h3 className="text-xl font-semibold mb-6">Trusted & Secure</h3>
-              <div className="flex flex-wrap justify-center items-center gap-8 mb-8">
-                {/* Security Badge 1 */}
-                <div className="flex items-center gap-3 bg-gray-800 px-4 py-3 rounded-lg">
-                  <i className="fas fa-shield-alt text-green-400 text-xl" aria-hidden="true"></i>
-                  <div className="text-left">
-                    <div className="font-semibold text-sm">SSL Encrypted</div>
-                    <div className="text-xs text-gray-400">256-bit Security</div>
-                  </div>
-                </div>
-
-                {/* Security Badge 2 */}
-                <div className="flex items-center gap-3 bg-gray-800 px-4 py-3 rounded-lg">
-                  <i className="fas fa-lock text-blue-400 text-xl" aria-hidden="true"></i>
-                  <div className="text-left">
-                    <div className="font-semibold text-sm">GDPR Compliant</div>
-                    <div className="text-xs text-gray-400">Data Protected</div>
-                  </div>
-                </div>
-
-                {/* Security Badge 3 */}
-                <div className="flex items-center gap-3 bg-gray-800 px-4 py-3 rounded-lg">
-                  <i className="fas fa-user-shield text-purple-400 text-xl" aria-hidden="true"></i>
-                  <div className="text-left">
-                    <div className="font-semibold text-sm">SOC 2 Type II</div>
-                    <div className="text-xs text-gray-400">Audited Security</div>
-                  </div>
-                </div>
-
-                {/* Security Badge 4 */}
-                <div className="flex items-center gap-3 bg-gray-800 px-4 py-3 rounded-lg">
-                  <i className="fas fa-credit-card text-yellow-400 text-xl" aria-hidden="true"></i>
-                  <div className="text-left">
-                    <div className="font-semibold text-sm">PCI Compliant</div>
-                    <div className="text-xs text-gray-400">Secure Payments</div>
-                  </div>
-                </div>
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <h2 id="community-heading" className="text-3xl md:text-4xl font-bold text-gray-900">
+                  From the Community
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleRefresh}
+                  disabled={refreshing}
+                  className="p-2 hover:bg-gray-100"
+                >
+                  <i className={`fas fa-sync-alt ${refreshing ? 'fa-spin' : ''} text-gray-600`} />
+                </Button>
               </div>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                See what entrepreneurs are building with validated ideas • Updates in real-time
+              </p>
             </div>
-
-            {/* Footer Links */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-              <div>
-                <div className="flex items-center space-x-2 mb-4">
-                  <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-                    <i className="fas fa-handshake text-white text-sm" aria-hidden="true"></i>
-                  </div>
-                  <span className="text-xl font-bold">Nucleus</span>
-                </div>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  The trusted platform for startup idea validation and co-founder matching.
-                </p>
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-4">Product</h4>
-                <ul className="space-y-2 text-sm text-gray-400">
-                  <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
-                  <li><a href="/pricing" className="hover:text-white transition-colors">Pricing</a></li>
-                  <li><a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>
-                  <li><a href="#leaderboard" className="hover:text-white transition-colors">Leaderboard</a></li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-4">Company</h4>
-                <ul className="space-y-2 text-sm text-gray-400">
-                  <li><a href="/about" className="hover:text-white transition-colors">About Us</a></li>
-                  <li><a href="/team" className="hover:text-white transition-colors">Our Team</a></li>
-                  <li><a href="/careers" className="hover:text-white transition-colors">Careers</a></li>
-                  <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-4">Legal</h4>
-                <ul className="space-y-2 text-sm text-gray-400">
-                  <li><a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                  <li><a href="/terms" className="hover:text-white transition-colors">Terms of Service</a></li>
-                  <li><a href="/security" className="hover:text-white transition-colors">Security</a></li>
-                  <li><a href="/cookies" className="hover:text-white transition-colors">Cookie Policy</a></li>
-                </ul>
-              </div>
+            
+            {/* Community Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {isLoading ? (
+                // Loading skeleton
+                Array.from({ length: 6 }).map((_, index) => (
+                  <Card key={index} className="bg-white border border-gray-200">
+                    <CardContent className="p-6">
+                      <div className="animate-pulse">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+                            <div className="h-4 bg-gray-300 rounded w-20"></div>
+                          </div>
+                          <div className="h-6 bg-gray-300 rounded-full w-16"></div>
+                        </div>
+                        <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
+                        <div className="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
+                        <div className="h-32 bg-gray-300 rounded-lg"></div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                communityData.map((item) => (
+                <Card key={item.id} className="bg-white hover:shadow-lg transition-all duration-300 border border-gray-200">
+                  <CardContent className="p-6">
+                    {/* Header with Profile and Score */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <img 
+                          src={item.user.avatarUrl} 
+                          alt={`${item.user.name} avatar`} 
+                          className="w-10 h-10 rounded-full border border-gray-200 object-cover"
+                          loading="lazy"
+                        />
+                        <div className="leading-tight">
+                          <h4 className="font-medium text-gray-900 text-sm">{item.user.name}</h4>
+                          <div className="text-xs text-gray-500">{item.user.handle}</div>
+                          <div className="text-[11px] text-gray-400 truncate max-w-[140px]" title={`${item.user.title} • ${item.user.location}`}>
+                            {item.user.title} • {item.user.location}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        {(item.score / 10).toFixed(1)}
+                      </div>
+                    </div>
+                    
+                    {/* Idea Subtitle */}
+                    <p className="text-gray-700 font-medium mb-4 leading-relaxed">
+                      {item.idea}
+                    </p>
+                    
+                    {/* Embedded Landing Preview with link overlay */}
+                    <div className="relative">
+                      <MockPreview slug={item.slug} />
+                      <Link href={`/mock/${item.slug}`}>
+                        <a className="absolute top-2 right-2 inline-flex items-center gap-2 rounded-md bg-white/90 px-3 py-1.5 text-sm font-medium text-gray-900 border border-gray-200 shadow hover:bg-white">
+                          Open <i className="fas fa-arrow-right" />
+                        </a>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+                ))
+              )}
             </div>
+          </div>
+        </section>
 
-            {/* Bottom Bar */}
-            <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-              <div className="text-sm text-gray-400 mb-4 md:mb-0">
-                © 2024 Nucleus. All rights reserved. Built with ❤️ for entrepreneurs.
+
+        {/* Simple Footer */}
+        <footer className="bg-gray-900 text-white py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <div className="flex items-center justify-center space-x-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <span className="text-xl font-bold">FoundrCheck</span>
               </div>
-              <div className="flex items-center space-x-6">
-                <a href="https://twitter.com/nucleus" className="text-gray-400 hover:text-white transition-colors" aria-label="Follow us on Twitter">
-                  <i className="fab fa-twitter text-lg" aria-hidden="true"></i>
-                </a>
-                <a href="https://linkedin.com/company/nucleus" className="text-gray-400 hover:text-white transition-colors" aria-label="Connect on LinkedIn">
-                  <i className="fab fa-linkedin text-lg" aria-hidden="true"></i>
-                </a>
-                <a href="https://github.com/nucleus" className="text-gray-400 hover:text-white transition-colors" aria-label="View our GitHub">
-                  <i className="fab fa-github text-lg" aria-hidden="true"></i>
-                </a>
-                <a href="mailto:hello@nucleus.com" className="text-gray-400 hover:text-white transition-colors" aria-label="Email us">
-                  <i className="fas fa-envelope text-lg" aria-hidden="true"></i>
-                </a>
+              <p className="text-gray-400 text-sm mb-4">
+                Validate your startup ideas with AI-powered insights and scoring.
+              </p>
+              <div className="text-xs text-gray-500">
+                © 2024 FoundrCheck. All rights reserved.
               </div>
             </div>
           </div>
         </footer>
+        
+        {/* User Ideas Sidebar */}
+        {sidebarOpen && (
+          <>
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-50 z-50"
+              onClick={() => setSidebarOpen(false)}
+            />
+            
+            {/* Sidebar */}
+            <div className="fixed right-0 top-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out">
+              <div className="flex flex-col h-full">
+                {/* Header */}
+                <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                  <h2 className="text-xl font-bold text-gray-900">My Ideas</h2>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSidebarOpen(false)}
+                    className="p-2"
+                  >
+                    <i className="fas fa-times text-gray-500" />
+                  </Button>
+                </div>
+                
+                {/* Content */}
+                <div className="flex-1 overflow-y-auto p-6">
+                  {user && userIdeas.length > 0 ? (
+                    <div className="space-y-4">
+                      {userIdeas.map((idea) => (
+                        <Card key={idea.id} className="border border-gray-200 hover:shadow-md transition-shadow">
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-gray-900 leading-relaxed">
+                                  {idea.idea}
+                                </p>
+                                <p className="text-xs text-gray-500 mt-1">
+                                  {new Date(idea.createdAt).toLocaleDateString()}
+                                </p>
+                              </div>
+                              <div className="ml-3">
+                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                  {idea.score}/100
+                                </span>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-center justify-between">
+                              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                idea.status === 'validated' 
+                                  ? 'bg-green-100 text-green-800' 
+                                  : 'bg-yellow-100 text-yellow-800'
+                              }`}>
+                                {idea.status === 'validated' ? '✓ Validated' : 'Pending'}
+                              </span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-xs text-gray-500 hover:text-gray-700"
+                              >
+                                View Details
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i className="fas fa-lightbulb text-gray-400 text-2xl" />
+                      </div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">No ideas yet</h3>
+                      <p className="text-gray-500 text-sm mb-4">
+                        Start by validating your first startup idea!
+                      </p>
+                      <Button
+                        onClick={() => setSidebarOpen(false)}
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                      >
+                        Get Started
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </main>
     </div>
   );

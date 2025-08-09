@@ -2,6 +2,8 @@ import type { Express, RequestHandler } from 'express';
 import { insertUserSchema } from '@shared/validation';
 import type { User } from '@shared/types';
 import { localStorage } from './localStorage';
+import { upload, getFileUrl } from './services/s3-storage';
+import { AvatarOverride } from './services/avatar';
 import { accountLockoutProtection, trackLoginAttempt } from './middleware/security';
 
 // Simple in-memory session store for development
@@ -170,7 +172,8 @@ export async function setupAuth(app: Express) {
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       // In development mode, just return the user from the session
-      res.json(req.user);
+      const override = AvatarOverride.get(req.user.id);
+      res.json({ ...req.user, profileImageUrl: override || req.user.profileImageUrl });
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
@@ -216,6 +219,46 @@ export async function setupAuth(app: Express) {
     } catch (error) {
       console.error("Error updating user:", error);
       res.status(500).json({ message: "Failed to update user profile" });
+    }
+  });
+
+  // Upload profile image (dev auth)
+  app.post('/api/users/profile-image', [isAuthenticated, upload.single('avatar')], async (req: any, res) => {
+    try {
+      if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+      const url = getFileUrl(req.file);
+
+      // Update in-memory user
+      const userId = req.user.id;
+      const user = users.get(userId);
+      if (user) {
+        user.profileImageUrl = url;
+        user.updatedAt = new Date();
+        users.set(userId, user);
+      }
+
+      // Update session user
+      let token: string | undefined;
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.substring(7);
+      } else if (req.cookies && req.cookies.access_token) {
+        token = req.cookies.access_token;
+      }
+      if (token) {
+        const session = sessions.get(token);
+        if (session?.user) {
+          session.user.profileImageUrl = url;
+          sessions.set(token, session);
+        }
+      }
+
+      // Apply override for consistency across providers
+      AvatarOverride.set(userId, url);
+      res.json({ profileImageUrl: url });
+    } catch (error) {
+      console.error('Avatar upload error:', error);
+      res.status(500).json({ message: 'Failed to upload profile image' });
     }
   });
 

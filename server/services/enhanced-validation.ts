@@ -8,7 +8,7 @@ export interface ComprehensiveValidationResult {
   overallScore: number;
   executiveSummary: string;
   
-  // Enhanced 1000-point scoring system
+  // Enhanced 100-point scoring system
   enhancedScoring: EnhancedIdeaValidation;
   
   // Core Analysis
@@ -231,6 +231,45 @@ async function _performComprehensiveValidation(
 }
 
 // Helper functions for market intelligence gathering
+async function gatherMarketIntelligence(title: string, marketCategory: string, targetAudience: string) {
+  const params = { title, marketCategory, targetAudience };
+  return cacheManager.getOrSet(
+    'market-intelligence',
+    params,
+    () => _gatherMarketIntelligence(title, marketCategory, targetAudience),
+    {
+      ttl: 2 * 60 * 60 * 1000, // 2 hours
+      tags: ['market-research', `market:${marketCategory}`]
+    }
+  );
+}
+
+async function performCompetitiveAnalysis(title: string, marketCategory: string) {
+  const params = { title, marketCategory };
+  return cacheManager.getOrSet(
+    'competitive-analysis',
+    params,
+    () => _performCompetitiveAnalysis(title, marketCategory),
+    {
+      ttl: 2 * 60 * 60 * 1000, // 2 hours
+      tags: ['competitive-analysis', `market:${marketCategory}`]
+    }
+  );
+}
+
+async function analyzeTrends(marketCategory: string) {
+  const params = { marketCategory };
+  return cacheManager.getOrSet(
+    'trend-analysis',
+    params,
+    () => _analyzeTrends(marketCategory),
+    {
+      ttl: 4 * 60 * 60 * 1000, // 4 hours
+      tags: ['market-research', `market:${marketCategory}`]
+    }
+  );
+}
+
 async function _gatherMarketIntelligence(title: string, marketCategory: string, targetAudience: string) {
   if (!process.env.PERPLEXITY_API_KEY) {
     return {
@@ -415,10 +454,10 @@ function calculateCombinedScore(bedrockData: IdeaValidationResult | null, perple
 }
 
 function generateExecutiveSummary(title: string, score: number, bedrockData: any, perplexityData: any) {
-  const scoreLevel = score >= 750 ? 'Excellent' : score >= 600 ? 'Good' : score >= 400 ? 'Moderate' : 'Needs Improvement';
-  const recommendation = score >= 600 ? 'strongly recommended for development' : score >= 400 ? 'shows potential with refinements needed' : 'requires significant validation and pivoting';
+  const scoreLevel = score >= 75 ? 'Excellent' : score >= 60 ? 'Good' : score >= 40 ? 'Moderate' : 'Needs Improvement';
+  const recommendation = score >= 60 ? 'strongly recommended for development' : score >= 40 ? 'shows potential with refinements needed' : 'requires significant validation and pivoting';
   
-  return `${title} demonstrates ${scoreLevel.toLowerCase()} market potential with an overall validation score of ${score}/1000. This startup concept is ${recommendation}. The analysis combines AI-powered evaluation with real-time market research to provide comprehensive insights into market opportunity, technical feasibility, and competitive positioning.`;
+  return `${title} demonstrates ${scoreLevel.toLowerCase()} market potential with an overall validation score of ${score}/100. This startup concept is ${recommendation}. The analysis combines AI-powered evaluation with real-time market research to provide comprehensive insights into market opportunity, technical feasibility, and competitive positioning.`;
 }
 
 // Additional helper functions
@@ -650,7 +689,7 @@ function createFallbackResult(basicResult: IdeaValidationResult, title: string):
 
   return {
     overallScore: basicResult.overallScore,
-    executiveSummary: `${title} demonstrates ${basicResult.overallScore >= 600 ? 'strong' : 'moderate'} market potential with a validation score of ${basicResult.overallScore}/1000. This analysis combines AI-powered strategic evaluation with market research insights to provide comprehensive startup guidance.`,
+    executiveSummary: `${title} demonstrates ${basicResult.overallScore >= 60 ? 'strong' : 'moderate'} market potential with a validation score of ${Math.round(basicResult.overallScore / 10)}/100. This analysis combines AI-powered strategic evaluation with market research insights to provide comprehensive startup guidance.`,
     enhancedScoring: fallbackEnhancedScoring,
     marketAnalysis: {
       ...basicResult.marketAnalysis,

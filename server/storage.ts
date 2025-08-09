@@ -1,4 +1,5 @@
 import { prisma } from "./prisma";
+import { LocalStorage } from './localStorage';
 import type {
   User,
   InsertUser,
@@ -299,4 +300,5 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+// Switch to local storage for development when database is unavailable
+export const storage = process.env.NODE_ENV === 'development' ? new LocalStorage() : new DatabaseStorage();

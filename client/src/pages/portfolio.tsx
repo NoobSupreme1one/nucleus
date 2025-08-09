@@ -186,12 +186,12 @@ export default function Portfolio() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 pulse-glow">
             <i className="fas fa-briefcase text-white text-2xl"></i>
           </div>
-          <p className="text-gray-600">Loading portfolio...</p>
+          <p className="text-muted-foreground">Loading portfolio...</p>
         </div>
       </div>
     );
@@ -219,7 +219,7 @@ export default function Portfolio() {
       case 'engineer': return 'bg-blue-100 text-blue-800';
       case 'designer': return 'bg-purple-100 text-purple-800';
       case 'marketer': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      default: return 'bg-muted text-foreground';
     }
   };
 
@@ -228,9 +228,9 @@ export default function Portfolio() {
     : user.email?.split('@')[0] || 'User';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-card shadow-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <Button 
@@ -246,7 +246,7 @@ export default function Portfolio() {
               <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
                 <i className="fas fa-briefcase text-white text-sm"></i>
               </div>
-              <span className="text-xl font-bold text-gray-900">Portfolio</span>
+              <span className="text-xl font-bold text-foreground">Portfolio</span>
             </div>
             
             <div className="flex items-center space-x-4">
@@ -275,12 +275,12 @@ export default function Portfolio() {
                   className="w-20 h-20 rounded-full object-cover"
                 />
               ) : (
-                <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
-                  <i className="fas fa-user text-gray-400 text-3xl"></i>
+                <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center">
+                  <i className="fas fa-user text-muted-foreground text-3xl"></i>
                 </div>
               )}
               <div className="flex-1">
-                <h1 className="text-3xl font-bold text-gray-900">{displayName}</h1>
+                <h1 className="text-3xl font-bold text-foreground">{displayName}</h1>
                 <div className="flex items-center space-x-2 mt-2">
                   {user.role && (
                     <Badge className={getRoleColor(user.role)}>
@@ -528,7 +528,7 @@ export default function Portfolio() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-foreground mb-2">
                           Attachments (Images, Documents)
                         </label>
                         <input
@@ -536,9 +536,9 @@ export default function Portfolio() {
                           multiple
                           accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx"
                           onChange={(e) => setSelectedFiles(e.target.files)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                          className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                         />
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-muted-foreground mt-1">
                           Upload images, documents, or other files to showcase your work (max 10MB each)
                         </p>
                       </div>
@@ -574,26 +574,26 @@ export default function Portfolio() {
                   {submissionsLoading ? (
                     <div className="space-y-4">
                       {[1, 2, 3].map((i) => (
-                        <div key={i} className="p-4 border border-gray-200 rounded-lg animate-pulse">
-                          <div className="h-4 bg-gray-200 rounded mb-2 w-1/3"></div>
-                          <div className="h-3 bg-gray-200 rounded w-full"></div>
+                        <div key={i} className="p-4 border border-border rounded-lg animate-pulse">
+                          <div className="h-4 bg-muted rounded mb-2 w-1/3"></div>
+                          <div className="h-3 bg-muted rounded w-full"></div>
                         </div>
                       ))}
                     </div>
                   ) : submissions.length > 0 ? (
                     <div className="space-y-4">
                       {submissions.map((submission: any) => (
-                        <div key={submission.id} className="p-6 border border-gray-200 rounded-lg hover:border-primary/50 transition-colors">
+                        <div key={submission.id} className="p-6 border border-border rounded-lg hover:border-primary/50 transition-colors">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <div className="flex items-center space-x-2 mb-2">
-                                <h3 className="text-lg font-semibold text-gray-900">{submission.title}</h3>
+                                <h3 className="text-lg font-semibold text-foreground">{submission.title}</h3>
                                 <Badge className={getRoleColor(submission.role)}>
                                   <i className={`${getRoleIcon(submission.role)} mr-1`}></i>
                                   <span className="capitalize">{submission.role}</span>
                                 </Badge>
                               </div>
-                              <p className="text-gray-600 mb-4">{submission.description}</p>
+                              <p className="text-muted-foreground mb-4">{submission.description}</p>
                               
                               <div className="flex flex-wrap gap-2">
                                 {submission.portfolioUrl && (
@@ -630,7 +630,7 @@ export default function Portfolio() {
                             </div>
                             
                             <div className="text-right ml-4">
-                              <div className="text-sm text-gray-500">
+                              <div className="text-sm text-muted-foreground">
                                 {new Date(submission.createdAt).toLocaleDateString()}
                               </div>
                               {submission.qualityScore > 0 && (
@@ -645,11 +645,11 @@ export default function Portfolio() {
                     </div>
                   ) : (
                     <div className="text-center py-12">
-                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i className="fas fa-briefcase text-gray-400 text-2xl"></i>
+                      <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i className="fas fa-briefcase text-muted-foreground text-2xl"></i>
                       </div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">No submissions yet</h3>
-                      <p className="text-gray-600 mb-4">
+                      <h3 className="text-lg font-semibold text-foreground mb-2">No submissions yet</h3>
+                      <p className="text-muted-foreground mb-4">
                         Create your first portfolio submission to showcase your skills and attract co-founders
                       </p>
                       <Button 

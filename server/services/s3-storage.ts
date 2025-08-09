@@ -149,6 +149,8 @@ export class S3StorageService {
    * Check if S3 is properly configured
    */
   static isConfigured(): boolean {
+    // Default to local uploads in development to avoid relying on network/S3.
+    if (process.env.NODE_ENV === 'development') return false;
     return !!(
       process.env.AWS_ACCESS_KEY_ID &&
       process.env.AWS_SECRET_ACCESS_KEY &&

@@ -41,6 +41,15 @@ app.use(cookieParser());
 // Add input sanitization (after body parsing)
 app.use(sanitizeInput());
 
+// Serve local uploads in development or when using local storage fallback
+import path from 'path';
+import fs from 'fs';
+const uploadsDir = path.resolve(process.cwd(), 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  try { fs.mkdirSync(uploadsDir, { recursive: true }); } catch {}
+}
+app.use('/uploads', express.static(uploadsDir));
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;

@@ -45,12 +45,12 @@ export default function Dashboard() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 pulse-glow">
             <i className="fas fa-handshake text-white text-2xl"></i>
           </div>
-          <p className="text-gray-600">Loading dashboard...</p>
+          <p className="text-muted-foreground">Loading dashboard...</p>
         </div>
       </div>
     );
@@ -66,16 +66,16 @@ export default function Dashboard() {
   const highestIdeaScore = Math.max(...ideas.map((idea: any) => idea.validationScore || 0), 0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-card shadow-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
                 <i className="fas fa-handshake text-white text-sm"></i>
               </div>
-              <span className="text-xl font-bold text-gray-900">Nucleus</span>
+              <span className="text-xl font-bold text-foreground">Nucleus</span>
             </div>
             
             <div className="flex items-center space-x-4">
@@ -117,13 +117,13 @@ export default function Dashboard() {
                     className="w-16 h-16 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
-                    <i className="fas fa-user text-gray-400 text-2xl"></i>
+                  <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
+                    <i className="fas fa-user text-muted-foreground text-2xl"></i>
                   </div>
                 )}
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Welcome back, {displayName.split(' ')[0]}!</h1>
-                  <div className="flex items-center space-x-2 text-gray-600">
+                  <h1 className="text-2xl font-bold text-foreground">Welcome back, {displayName.split(' ')[0]}!</h1>
+                  <div className="flex items-center space-x-2 text-muted-foreground">
                     {user.role && <span className="capitalize">{user.role}</span>}
                     {user.location && (
                       <>
@@ -141,16 +141,16 @@ export default function Dashboard() {
               <div className="flex items-center space-x-6">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">{user.totalIdeaScore || 0}</div>
-                  <div className="text-sm text-gray-500">Idea Score</div>
+                  <div className="text-sm text-muted-foreground">Idea Score</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-600">{mutualMatches.length}</div>
-                  <div className="text-sm text-gray-500">Matches</div>
+                  <div className="text-sm text-muted-foreground">Matches</div>
                 </div>
                 {userRank > 0 && (
                   <div className="text-center">
                     <div className="text-2xl font-bold text-yellow-600">#{userRank}</div>
-                    <div className="text-sm text-gray-500">Rank</div>
+                    <div className="text-sm text-muted-foreground">Rank</div>
                   </div>
                 )}
               </div>
@@ -169,22 +169,22 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <Button asChild className="gradient-primary h-auto p-4 flex-col space-y-2">
+                  <Button asChild className="gradient-primary h-auto px-4 py-3 flex-col space-y-1">
                     <Link href="/matching">
-                      <i className="fas fa-heart text-2xl"></i>
-                      <div className="font-semibold">Start Matching</div>
+                      <i className="fas fa-heart text-xl"></i>
+                      <div className="font-semibold text-sm">Start Matching</div>
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" className="h-auto p-4 flex-col space-y-2">
+                  <Button asChild variant="outline" className="h-auto px-4 py-3 flex-col space-y-1">
                     <Link href="/validate-idea">
-                      <i className="fas fa-lightbulb text-2xl text-blue-600"></i>
-                      <div className="font-semibold">Validate Idea</div>
+                      <i className="fas fa-lightbulb text-xl text-blue-600"></i>
+                      <div className="font-semibold text-sm">Validate Idea</div>
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" className="h-auto p-4 flex-col space-y-2">
+                  <Button asChild variant="outline" className="h-auto px-4 py-3 flex-col space-y-1">
                     <Link href="/portfolio">
-                      <i className="fas fa-briefcase text-2xl text-green-600"></i>
-                      <div className="font-semibold">Update Portfolio</div>
+                      <i className="fas fa-briefcase text-xl text-green-600"></i>
+                      <div className="font-semibold text-sm">Update Portfolio</div>
                     </Link>
                   </Button>
                 </div>
@@ -205,11 +205,11 @@ export default function Dashboard() {
                 {matchesLoading ? (
                   <div className="space-y-4">
                     {[1, 2, 3].map((i) => (
-                      <div key={i} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl animate-pulse">
-                        <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+                      <div key={i} className="flex items-center space-x-4 p-4 bg-muted rounded-xl animate-pulse">
+                        <div className="w-12 h-12 bg-muted-foreground/20 rounded-full"></div>
                         <div className="flex-1">
-                          <div className="h-4 bg-gray-200 rounded mb-2 w-1/3"></div>
-                          <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                          <div className="h-4 bg-muted-foreground/20 rounded mb-2 w-1/3"></div>
+                          <div className="h-3 bg-muted-foreground/20 rounded w-1/2"></div>
                         </div>
                       </div>
                     ))}
@@ -223,7 +223,7 @@ export default function Dashboard() {
                         : otherUser?.email?.split('@')[0] || 'Anonymous';
                       
                       return (
-                        <div key={match.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                        <div key={match.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-xl hover:bg-muted transition-colors">
                           <div className="flex items-center space-x-4">
                             {otherUser?.profileImageUrl ? (
                               <img 
@@ -232,13 +232,13 @@ export default function Dashboard() {
                                 className="w-12 h-12 rounded-full object-cover"
                               />
                             ) : (
-                              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                                <i className="fas fa-user text-gray-400"></i>
+                              <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
+                                <i className="fas fa-user text-muted-foreground"></i>
                               </div>
                             )}
                             <div>
-                              <h3 className="font-semibold text-gray-900">{otherUserName}</h3>
-                              <p className="text-sm text-gray-600">
+                              <h3 className="font-semibold text-foreground">{otherUserName}</h3>
+                              <p className="text-sm text-muted-foreground">
                                 {otherUser?.role && <span className="capitalize">{otherUser.role}</span>}
                                 {otherUser?.location && (
                                   <>
@@ -270,11 +270,11 @@ export default function Dashboard() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <i className="fas fa-users text-gray-400 text-2xl"></i>
+                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                      <i className="fas fa-users text-muted-foreground text-2xl"></i>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No matches yet</h3>
-                    <p className="text-gray-600 mb-4">Start swiping to find your perfect co-founder!</p>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">No matches yet</h3>
+                    <p className="text-muted-foreground mb-4">Start swiping to find your perfect co-founder!</p>
                     <Button asChild className="gradient-primary">
                       <Link href="/matching">
                         <i className="fas fa-heart mr-2"></i>
@@ -297,31 +297,31 @@ export default function Dashboard() {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Leaderboard Rank</span>
+                    <span className="text-muted-foreground">Leaderboard Rank</span>
                     <span className="font-bold text-yellow-600">
                       {userRank > 0 ? `#${userRank}` : 'Unranked'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Profile Views</span>
-                    <span className="font-bold text-gray-900">{user.profileViews || 0}</span>
+                    <span className="text-muted-foreground">Profile Views</span>
+                    <span className="font-bold text-foreground">{user.profileViews || 0}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Total Matches</span>
+                    <span className="text-muted-foreground">Total Matches</span>
                     <span className="font-bold text-blue-600">{matches.length}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Mutual Matches</span>
+                    <span className="text-muted-foreground">Mutual Matches</span>
                     <span className="font-bold text-green-600">{mutualMatches.length}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Ideas Validated</span>
+                    <span className="text-muted-foreground">Ideas Validated</span>
                     <span className="font-bold text-purple-600">{ideas.length}</span>
                   </div>
                 </div>
                 
                 {user.subscriptionTier === 'free' && (
-                  <div className="mt-6 pt-6 border-t border-gray-200">
+                  <div className="mt-6 pt-6 border-t border-border">
                     <Button
                       className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:shadow-lg transition-all"
                       onClick={() => window.location.href = '/pricing'}
@@ -358,10 +358,10 @@ export default function Dashboard() {
                   </div>
                 ) : (
                   <div className="text-center py-4">
-                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <i className="fas fa-trophy text-gray-400"></i>
+                    <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
+                      <i className="fas fa-trophy text-muted-foreground"></i>
                     </div>
-                    <p className="text-gray-500 text-sm">No leaderboard data available</p>
+                    <p className="text-muted-foreground text-sm">No leaderboard data available</p>
                   </div>
                 )}
               </CardContent>

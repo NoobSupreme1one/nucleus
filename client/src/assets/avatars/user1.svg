@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg1" x1="0" x2="1">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="url(#bg1)"/>
+  <!-- neck and shoulders -->
+  <path d="M20 50c4-6 20-6 24 0v6H20z" fill="#1f2937" opacity=".9"/>
+  <!-- face -->
+  <circle cx="32" cy="28" r="12" fill="#fde1c8"/>
+  <!-- hair -->
+  <path d="M20 28c0-8 6-13 12-13s12 5 12 12c-4-3-8-4-12-4s-8 1-12 5z" fill="#111827"/>
+  <!-- eyes -->
+  <circle cx="28" cy="28" r="1.3" fill="#111827"/>
+  <circle cx="36" cy="28" r="1.3" fill="#111827"/>
+  <!-- smile -->
+  <path d="M26 33c2 2 8 2 12 0" stroke="#b45309" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- shirt -->
+  <path d="M16 56c2-8 10-14 16-14s14 6 16 14H16z" fill="#10b981"/>
+</svg>

@@ -11,7 +11,7 @@ export class EnhancedScoringService {
     basicAnalysis?: any
   ): EnhancedIdeaValidation {
     
-    // Create scoring categories based on the 1000-point system
+    // Create scoring categories based on the 100-point system
     const categories = {
       marketOpportunity: this.scoreMarketOpportunity(marketCategory, problemDescription, solutionDescription, targetAudience, basicAnalysis),
       problemSolutionFit: this.scoreProblemSolutionFit(problemDescription, solutionDescription, basicAnalysis),
@@ -28,18 +28,18 @@ export class EnhancedScoringService {
     // Calculate overall score
     const overallScore = Object.values(categories).reduce((total, category) => total + category.score, 0);
     
-    // Determine grade level
-    const gradeLevel = this.determineGradeLevel(overallScore);
+    // Determine grade level (using 100-point scale)
+    const gradeLevel = this.determineGradeLevel(Math.round(overallScore / 10));
     
-    // Generate recommendation
-    const recommendation = this.generateRecommendation(overallScore, gradeLevel);
+    // Generate recommendation (using 100-point scale)
+    const recommendation = this.generateRecommendation(Math.round(overallScore / 10), gradeLevel);
     
     // Generate detailed analysis
     const detailedAnalysis = this.generateDetailedAnalysis(categories, basicAnalysis);
 
     return {
-      overallScore,
-      maxScore: 1000,
+      overallScore: Math.round(overallScore / 10), // Convert to 100-point scale
+      maxScore: 100,
       gradeLevel,
       recommendation,
       categories,
@@ -77,8 +77,8 @@ export class EnhancedScoringService {
     
     return {
       name: 'Market Opportunity',
-      score: totalScore,
-      maxScore: 150,
+      score: Math.round(totalScore * 1.5), // Adjust to maintain proportion in 100-point system
+      maxScore: 15,
       criteria
     };
   }
@@ -106,8 +106,8 @@ export class EnhancedScoringService {
     
     return {
       name: 'Problem-Solution Fit',
-      score: totalScore,
-      maxScore: 120,
+      score: Math.round(totalScore * 1.2), // Adjust to maintain proportion in 100-point system
+      maxScore: 12,
       criteria
     };
   }
@@ -137,8 +137,8 @@ export class EnhancedScoringService {
     
     return {
       name: 'Execution Feasibility',
-      score: totalScore,
-      maxScore: 140,
+      score: Math.round(totalScore * 1.4), // Adjust to maintain proportion in 100-point system
+      maxScore: 14,
       criteria
     };
   }
@@ -333,10 +333,10 @@ export class EnhancedScoringService {
   }
 
   private static determineGradeLevel(score: number): 'Poor' | 'Weak' | 'Moderate' | 'Strong' | 'Exceptional' {
-    if (score >= 850) return 'Exceptional';
-    if (score >= 750) return 'Strong';
-    if (score >= 650) return 'Moderate';
-    if (score >= 550) return 'Weak';
+    if (score >= 85) return 'Exceptional';
+    if (score >= 75) return 'Strong';
+    if (score >= 65) return 'Moderate';
+    if (score >= 55) return 'Weak';
     return 'Poor';
   }
 

@@ -117,12 +117,12 @@ export default function Matching() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <div className="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 pulse-glow">
             <i className="fas fa-heart text-white text-2xl"></i>
           </div>
-          <p className="text-gray-600">Finding potential co-founders...</p>
+          <p className="text-muted-foreground">Finding potential co-founders...</p>
         </div>
       </div>
     );
@@ -131,9 +131,9 @@ export default function Matching() {
   const currentProfile = potentialMatches[currentIndex];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-card shadow-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <Button 
@@ -146,12 +146,12 @@ export default function Matching() {
             </Button>
             
             <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-900">Find Your Co-Founder</h1>
-              <p className="text-gray-600">Swipe right to match, left to pass</p>
+              <h1 className="text-2xl font-bold text-foreground">Find Your Co-Founder</h1>
+              <p className="text-muted-foreground">Swipe right to match, left to pass</p>
             </div>
 
             <div className="text-right">
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-muted-foreground">
                 {potentialMatches.length > 0 ? `${currentIndex + 1} of ${potentialMatches.length}` : '0 of 0'}
               </div>
             </div>
@@ -163,11 +163,11 @@ export default function Matching() {
         {potentialMatches.length === 0 ? (
           <Card className="text-center">
             <CardContent className="pt-6 pb-8">
-              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="fas fa-users text-gray-400 text-3xl"></i>
+              <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <i className="fas fa-users text-muted-foreground text-3xl"></i>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">No More Profiles</h2>
-              <p className="text-gray-600 mb-6">
+              <h2 className="text-2xl font-bold text-foreground mb-2">No More Profiles</h2>
+              <p className="text-muted-foreground mb-6">
                 You've seen all available co-founders! Check back later for new profiles.
               </p>
               <div className="space-y-3">
@@ -216,11 +216,11 @@ export default function Matching() {
         ) : (
           <Card className="text-center">
             <CardContent className="pt-6">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="fas fa-exclamation-triangle text-gray-400 text-2xl"></i>
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <i className="fas fa-exclamation-triangle text-muted-foreground text-2xl"></i>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Something went wrong</h3>
-              <p className="text-gray-600 mb-4">Unable to load profiles at the moment.</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Something went wrong</h3>
+              <p className="text-muted-foreground mb-4">Unable to load profiles at the moment.</p>
               <Button onClick={() => refetch()}>
                 Try Again
               </Button>
@@ -230,10 +230,10 @@ export default function Matching() {
 
         {/* Keyboard shortcuts hint */}
         {potentialMatches.length > 0 && (
-          <div className="text-center mt-6 text-sm text-gray-500">
+          <div className="text-center mt-6 text-sm text-muted-foreground">
             <p>
-              Press <kbd className="px-2 py-1 bg-gray-200 rounded text-xs">←</kbd> to pass, 
-              <kbd className="px-2 py-1 bg-gray-200 rounded text-xs ml-1">→</kbd> to like
+              Press <kbd className="px-2 py-1 bg-muted rounded text-xs">←</kbd> to pass, 
+              <kbd className="px-2 py-1 bg-muted rounded text-xs ml-1">→</kbd> to like
             </p>
           </div>
         )}

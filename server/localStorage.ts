@@ -263,4 +263,5 @@ class LocalStorage implements IStorage {
   }
 }
 
+export { LocalStorage };
 export const localStorage = new LocalStorage();
