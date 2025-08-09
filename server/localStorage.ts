@@ -119,7 +119,7 @@ class LocalStorage implements IStorage {
       console.log(`[LocalStorage] Found idea, updating score from ${idea.validationScore} to ${score}`);
       idea.validationScore = score;
       idea.analysisReport = report;
-      idea.updatedAt = new Date();
+      // Remove updatedAt as it doesn't exist in the type
       this.ideas.set(ideaId, idea);
     } else {
       console.log(`[LocalStorage] Idea not found: ${ideaId}`);
@@ -135,7 +135,7 @@ class LocalStorage implements IStorage {
       id,
       ...submission,
       createdAt: now,
-      updatedAt: now,
+      qualityScore: 0,
     };
     
     this.submissions.set(id, newSubmission);
@@ -167,7 +167,7 @@ class LocalStorage implements IStorage {
     const newMatch: Match = {
       id,
       ...match,
-      status: 'pending',
+      status: match.status || 'pending',
       createdAt: now,
       updatedAt: now,
     };
@@ -244,7 +244,6 @@ class LocalStorage implements IStorage {
       id,
       ...message,
       createdAt: now,
-      updatedAt: now,
     };
     
     this.messages.set(id, newMessage);

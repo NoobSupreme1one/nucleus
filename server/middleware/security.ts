@@ -14,7 +14,6 @@ const corsOptions = {
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:5000',
-      'https://nucleus-app.vercel.app', // legacy prod domain
       'https://*.pages.dev',
       process.env.CLOUDFLARE_PAGES_URL,
       process.env.FRONTEND_URL,

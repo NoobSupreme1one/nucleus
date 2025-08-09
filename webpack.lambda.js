@@ -15,20 +15,35 @@ export default {
     rules: [
       {
         test: /\.ts$/,
-        use: 'ts-loader',
+        use: {
+          loader: 'ts-loader',
+          options: {
+            configFile: path.resolve(__dirname, 'tsconfig.lambda.json'),
+            transpileOnly: true
+          }
+        },
         exclude: /node_modules/,
       },
     ],
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    alias: {
+      '@': path.resolve(__dirname, 'client/src'),
+      '@shared': path.resolve(__dirname, 'shared'),
+    }
   },
   output: {
-    path: path.resolve(__dirname, 'infrastructure', 'dist'),
+    path: path.resolve(__dirname, 'dist'),
     filename: 'lambda.js',
     libraryTarget: 'commonjs2',
   },
   optimization: {
     minimize: false, // Keep readable for debugging
   },
-};
+  ignoreWarnings: [
+    {
+      module: /node_modules\/@vendia\/serverless-express/,
+    },
+  ],
+}; 

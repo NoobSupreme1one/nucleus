@@ -6,13 +6,20 @@ import path from 'path';
 import { nanoid } from 'nanoid';
 
 // Initialize AWS S3 client
-const s3Client = new S3Client({
-  region: process.env.AWS_S3_REGION || process.env.AWS_REGION || 'us-east-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  }
-});
+// In Lambda, use IAM role credentials automatically
+const s3ClientConfig: any = {
+  region: process.env.AWS_S3_REGION || process.env.AWS_REGION || 'us-west-1',
+};
+
+// Only use explicit credentials if available (for local development)
+if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
+  s3ClientConfig.credentials = {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  };
+}
+
+const s3Client = new S3Client(s3ClientConfig);
 
 const bucketName = process.env.AWS_S3_BUCKET_NAME!;
 
@@ -151,11 +158,16 @@ export class S3StorageService {
   static isConfigured(): boolean {
     // Default to local uploads in development to avoid relying on network/S3.
     if (process.env.NODE_ENV === 'development') return false;
-    return !!(
+    
+    const hasCredentials = !!(
       process.env.AWS_ACCESS_KEY_ID &&
-      process.env.AWS_SECRET_ACCESS_KEY &&
-      process.env.AWS_S3_BUCKET_NAME
+      process.env.AWS_SECRET_ACCESS_KEY
     );
+    const hasBucket = !!process.env.AWS_S3_BUCKET_NAME;
+    const isLambda = !!process.env.AWS_LAMBDA_FUNCTION_NAME;
+    
+    // In Lambda, we don't need explicit credentials
+    return hasBucket && (hasCredentials || isLambda);
   }
 
   /**
@@ -204,27 +216,8 @@ export class S3StorageService {
   }
 }
 
-// Fallback to local storage if S3 is not configured
-const localStorage = multer({
-  dest: 'uploads/',
-  limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
-  },
-  fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx/;
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype);
-    
-    if (mimetype && extname) {
-      return cb(null, true);
-    } else {
-      cb(new Error('Only images and documents are allowed'));
-    }
-  }
-});
-
-// Export the appropriate upload handler based on configuration
-export const upload = S3StorageService.isConfigured() ? uploadToS3 : localStorage;
+// Export S3 upload handler - fallback only for development
+export const upload = uploadToS3;
 
 // Helper to get file URL regardless of storage type
 export function getFileUrl(file: any): string {

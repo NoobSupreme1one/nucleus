@@ -1,11 +1,7 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
-import { initializeSentry } from "./lib/sentry";
 import { ClerkProvider } from '@clerk/clerk-react';
-
-// Initialize Sentry for error monitoring
-initializeSentry();
 
 const publishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 

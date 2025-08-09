@@ -21,6 +21,7 @@ import Pricing from "@/pages/pricing";
 import Demo from "@/pages/demo";
 import MockLanding from "@/pages/mock";
 import Profile from "@/pages/profile";
+import Dashboard from "@/pages/dashboard";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -40,14 +41,19 @@ function Router() {
 
   return (
     <Switch>
+      {/* Public routes */}
       <Route path="/login" component={Login} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/demo" component={Demo} />
       <Route path="/mock/:slug" component={MockLanding} />
       <Route path="/profile" component={Profile} />
-      <Route path="/" component={Landing} />
+      
+      {/* Conditional routing based on authentication */}
+      {!isAuthenticated && <Route path="/" component={Landing} />}
       {isAuthenticated && (
         <>
+          <Route path="/" component={Dashboard} />
+          <Route path="/dashboard" component={Dashboard} />
           <Route path="/validate-idea" component={IdeaValidation} />
           <Route path="/validation-results/:ideaId" component={ValidationResults} />
           <Route path="/matching" component={Matching} />
@@ -56,6 +62,7 @@ function Router() {
           <Route path="/matches" component={Matches} />
         </>
       )}
+
       <Route component={NotFound} />
     </Switch>
   );

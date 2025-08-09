@@ -2,7 +2,6 @@ import express, { type Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { initializeSentry, sentryRequestHandler, sentryErrorHandler, isSentryConfigured } from "./services/sentry";
 import {
   corsMiddleware,
   helmetMiddleware,
@@ -16,18 +15,10 @@ import {
   setupUnhandledErrorHandlers
 } from "./middleware/error-handler";
 
-// Initialize Sentry as early as possible
-const sentryEnabled = initializeSentry();
-
 // Setup unhandled error handlers
 setupUnhandledErrorHandlers();
 
 const app = express();
-
-// Add Sentry request handler first (before other middleware)
-if (sentryEnabled) {
-  app.use(sentryRequestHandler());
-}
 
 // Add security middleware
 app.use(corsMiddleware);
@@ -90,11 +81,6 @@ app.use((req, res, next) => {
     await setupVite(app, server);
   } else {
     serveStatic(app);
-  }
-
-  // Add Sentry error handler before custom error handler
-  if (sentryEnabled) {
-    app.use(sentryErrorHandler());
   }
 
   // Add 404 handler for unmatched routes (after Vite setup)

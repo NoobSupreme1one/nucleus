@@ -14,19 +14,22 @@ export default function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
 
+  // Check for auth success query parameter
+  const isAuthCallback = window.location.search.includes('auth=success');
+
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!isLoading && !isAuthenticated && !isAuthCallback) {
       toast({
         title: "Unauthorized",
         description: "You are logged out. Logging in again...",
         variant: "destructive",
       });
       setTimeout(() => {
-        window.location.href = "/api/login";
+        window.location.href = "/login";
       }, 500);
       return;
     }
-  }, [isAuthenticated, isLoading, toast]);
+  }, [isAuthenticated, isLoading, toast, isAuthCallback]);
 
   const { data: matches = [], isLoading: matchesLoading } = useQuery<(Match & { user1: User; user2: User })[]>({
     queryKey: ["/api/matches"],
@@ -43,7 +46,7 @@ export default function Dashboard() {
     enabled: !!user,
   });
 
-  if (isLoading || !user) {
+  if (isLoading || (!user && !isAuthCallback)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -94,7 +97,7 @@ export default function Dashboard() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => window.location.href = '/api/logout'}
+                onClick={() => window.location.href = '/api/auth/logout'}
               >
                 <i className="fas fa-sign-out-alt mr-1"></i>
                 Logout

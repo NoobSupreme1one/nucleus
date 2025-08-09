@@ -1,0 +1,60 @@
+{
+  "ServiceName": "nucleus-app",
+  "SourceConfiguration": {
+    "AutoDeploymentsEnabled": false,
+    "CodeRepository": {
+      "RepositoryUrl": "https://github.com/your-username/nucleus",
+      "SourceCodeVersion": {
+        "Type": "BRANCH",
+        "Value": "main"
+      },
+      "CodeConfiguration": {
+        "ConfigurationSource": "REPOSITORY",
+        "CodeConfigurationValues": {
+          "Runtime": "NODEJS_18",
+          "BuildCommand": "npm ci && npm run build && npx prisma generate",
+          "StartCommand": "npm start",
+          "RuntimeEnvironmentVariables": {
+            "NODE_ENV": "production",
+            "PORT": "8080",
+            "DATABASE_URL": "postgresql://nucleus:NucleusDB2024!@nucleus-db.cnugkau8sbzn.us-west-1.rds.amazonaws.com:5432/nucleus",
+            "AWS_REGION": "us-west-1",
+            "AWS_COGNITO_USER_POOL_ID": "us-west-1_OFUJ1nGHS",
+            "AWS_COGNITO_CLIENT_ID": "65rt4elpftmbse0nv1bloofp39",
+            "AWS_COGNITO_CLIENT_SECRET": "1u49r28nup8og0jbtm781hqilacqdkho3ns3c6heul3gcs8kdhte",
+            "VITE_AWS_COGNITO_CLIENT_ID": "65rt4elpftmbse0nv1bloofp39",
+            "AWS_S3_BUCKET_NAME": "nucleus-uploads-1754338091",
+            "AWS_BEDROCK_REGION": "us-west-2",
+            "CUSTOM_DOMAIN": "foundrcheck.com",
+            "STRIPE_SECRET_KEY": "sk_test_your_stripe_secret_key_here",
+            "AWS_ACCESS_KEY_ID": "AKIAWBUTHNIRVBOXIPXK",
+            "AWS_SECRET_ACCESS_KEY": "b2COz/BxhoTHPBW5lUdSrpiHcUNWFrOlU8eA9F6D"
+          }
+        }
+      }
+    }
+  },
+  "InstanceConfiguration": {
+    "Cpu": "0.25 vCPU",
+    "Memory": "0.5 GB",
+    "InstanceRoleArn": "arn:aws:iam::415846853155:role/NucleusExecutionRole"
+  },
+  "HealthCheckConfiguration": {
+    "Protocol": "HTTP",
+    "Path": "/",
+    "Interval": 10,
+    "Timeout": 5,
+    "HealthyThreshold": 2,
+    "UnhealthyThreshold": 3
+  },
+  "Tags": [
+    {
+      "Key": "Project",
+      "Value": "Nucleus"
+    },
+    {
+      "Key": "Environment",
+      "Value": "Production"
+    }
+  ]
+}

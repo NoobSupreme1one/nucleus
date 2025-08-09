@@ -1,4 +1,4 @@
-import type { Express } from 'express';
+import type { Express, RequestHandler } from 'express';
 import { setupAuth as setupCognitoAuth, isAuthenticated as cognitoAuth } from '../cognitoAuth';
 import { setupAuth as setupLocalAuth, isAuthenticated as localAuth } from '../localAuth';
 import { setupAuth as setupClerkAuth, isAuthenticated as clerkAuth } from '../clerkAuth';
@@ -23,6 +23,7 @@ export async function setupAuth(app: Express): Promise<void> {
     await setupLocalAuth(app);
   }
 }
+
 
 /**
  * Get authentication middleware based on environment

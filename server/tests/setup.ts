@@ -72,18 +72,7 @@ jest.mock('../services/stripe', () => ({
 }));
 
 
-// Mock Sentry
-jest.mock('../services/sentry', () => ({
-  ErrorTracker: {
-    trackError: jest.fn(),
-    trackBusinessError: jest.fn(),
-  },
-  initializeSentry: jest.fn().mockReturnValue(false),
-  sentryRequestHandler: jest.fn().mockReturnValue((req: any, res: any, next: any) => next()),
-  sentryErrorHandler: jest.fn().mockReturnValue((err: any, req: any, res: any, next: any) => next(err)),
-  addUserContextMiddleware: jest.fn().mockReturnValue((req: any, res: any, next: any) => next()),
-  isSentryConfigured: jest.fn().mockReturnValue(false),
-}));
+// Sentry has been removed from the application
 
 // Console override for cleaner test output
 const originalConsole = console;
